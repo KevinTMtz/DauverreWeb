@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import Header from './components/Header';
+import ForgotPasswordPage from './views/ForgotPasswordPage';
 import LoginPage from './views/LoginPage';
 import PostsRouter from './views/post';
 import ResdientsRouter from './views/resident';
@@ -15,6 +16,9 @@ const App: React.FC = () => (
     <Switch>
       <Route path="/login">
         <LoginPage />
+      </Route>
+      <Route path="/forgotpass">
+        <ForgotPasswordPage />
       </Route>
       <Route path="/posts">
         <PostsRouter />
