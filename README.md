@@ -1,6 +1,12 @@
 # Dauverre Web
 
-Webpage and web application for Dauverre, A.C. Foster Home.
+Webpage and Web application for Dauverre A.C. (foster home for elders).
+
+<br/>
+
+---
+
+<br/>
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
