@@ -4,7 +4,6 @@ import React from 'react';
 
 const divStyle = css({
   margin: '0px',
-  borderBottom: '1px solid black',
   padding: '8px 16px',
   display: 'flex',
   justifyContent: 'space-between',
@@ -13,7 +12,8 @@ const divStyle = css({
 
 const pStyle = css({
   margin: '0px',
-  fontSize: '24px'
+  fontSize: '24px',
+  fontWeight: 'bold'
 })
 
 const buttonStyle = css({
