@@ -29,6 +29,7 @@
     "extends": "react-app",
     "rules": {
       "quotes": [
+        "warn",
         "single",
         {
           "avoidEscape": true
