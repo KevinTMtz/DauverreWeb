@@ -25,15 +25,18 @@ const buttonStyle = css({
 });
 
 const Header: React.FC = () => {
-  const location = useLocation();
-  console.log(location);
-  const match = useRouteMatch();
-  console.log(match);
+  let loginButton = null;
+
+  if (useLocation().pathname === "/") {
+    loginButton = (
+      <button css={buttonStyle}>Iniciar sesión</button>
+    );
+  }
 
   return (
     <div css={divStyle}>
       <p css={pStyle}>Dauverre Web</p>
-      <button css={buttonStyle}>Iniciar sesión</button>
+      {loginButton}
     </div>
   );
 };
