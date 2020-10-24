@@ -8,7 +8,12 @@ const divStyle = css({
   borderRadius: '10px',
   boxShadow: '0 2px 4px 0 rgba(0,0,0,0.2)',
   maxWidth: '40vw',
+  '@media (max-width: 600px)': {
+    maxWidth: '90vw',
+  },
 });
+
+// {isSmallScreen ? '90vw' : '40vw'}
 
 const h1Style = css({
   margin: '5px 0px',
