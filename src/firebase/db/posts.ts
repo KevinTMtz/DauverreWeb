@@ -1,3 +1,5 @@
+import { postDocSchema } from './validation';
+
 const posts: Post[] = [
   {
     _id: '1234',
@@ -20,3 +22,46 @@ const posts: Post[] = [
 ];
 
 export const getPosts = async (): Promise<Post[]> => posts;
+
+export const getPost = async (
+  postID: string,
+): Promise<Post | NotFoundError> => {
+  const post = posts.find((p) => p._id === postID);
+  return post ? post : { notFound: true };
+};
+
+export const createPost = async (
+  postData: PostData,
+): Promise<SuccessMessage | ValidationErrors> => {
+  try {
+    const validatedPost = await postDocSchema.validate(postData);
+    console.log('Creating post:', validatedPost);
+  } catch (error) {
+    if (error.name === 'ValidationError') {
+      return error.errors;
+    }
+  }
+  return { success: true };
+};
+
+export const updatePost = async (
+  post: Post,
+): Promise<SuccessMessage | NotFoundError> => {
+  try {
+    const postID = post._id;
+    const validatedPost = await postDocSchema.validate(post);
+    console.log('Updating post with ID', postID, 'with info', validatedPost);
+  } catch (error) {
+    if (error.name === 'ValidationError') {
+      return error.errors;
+    }
+  }
+  return { success: true };
+};
+
+export const deletePost = async (
+  postID: string,
+): Promise<SuccessMessage | NotFoundError> => {
+  console.log('Deleting post:', postID);
+  return { success: true };
+};
