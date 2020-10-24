@@ -12,16 +12,20 @@ interface ReportParams extends ResidentParams {
   reportID: string;
 }
 
-interface Post {
+interface DocID {
   _id: string;
+}
+
+interface PostData {
   title: string;
-  createdAt: number;
+  date: number;
   content: string;
   imageUrl: string;
 }
 
-interface Resident {
-  _id: string;
+type Post = PostData & DocID;
+
+interface ResidentData {
   firstName: string;
   lastName: string;
   gender: string;
@@ -29,10 +33,10 @@ interface Resident {
   age: number;
 }
 
-interface Report {
-  _id: string;
-  residentID: string;
-  date: number;
+type Resident = ResidentData & DocID;
+
+interface ReportData {
+  date: Date;
   mood: number;
   health: number;
   sad: boolean;
@@ -42,3 +46,15 @@ interface Report {
   lonely: boolean;
   comments: string;
 }
+
+type Report = ReportData & DocID;
+
+interface SuccessMessage {
+  success: boolean;
+}
+
+interface NotFoundError {
+  notFound: boolean;
+}
+
+type ValidationErrors = string[];
