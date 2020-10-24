@@ -2,7 +2,7 @@ import { postDocSchema } from './validation';
 
 const posts: Post[] = [
   {
-    _id: '1234',
+    postID: '1234',
     title: 'Post falso 1',
     date: Date.now(),
     content:
@@ -11,7 +11,7 @@ const posts: Post[] = [
       'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/D%27Urville_Island%2C_New_Zealand_%28Unsplash%29.jpg/1024px-D%27Urville_Island%2C_New_Zealand_%28Unsplash%29.jpg',
   },
   {
-    _id: '2345',
+    postID: '2345',
     title: 'Post falso 2',
     date: Date.now(),
     content:
@@ -26,7 +26,7 @@ export const getPosts = async (): Promise<Post[]> => posts;
 export const getPost = async (
   postID: string,
 ): Promise<Post | NotFoundError> => {
-  const post = posts.find((p) => p._id === postID);
+  const post = posts.find((p) => p.postID === postID);
   return post ? post : { notFound: true };
 };
 
@@ -48,7 +48,7 @@ export const updatePost = async (
   post: Post,
 ): Promise<SuccessMessage | NotFoundError> => {
   try {
-    const postID = post._id;
+    const { postID } = post;
     const validatedPost = await postDocSchema.validate(post);
     console.log('Updating post with ID', postID, 'with info', validatedPost);
   } catch (error) {

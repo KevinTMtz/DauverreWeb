@@ -2,7 +2,7 @@ import { residentDocSchema } from './validation';
 
 const residents: Resident[] = [
   {
-    _id: '1',
+    residentID: '1',
     firstName: 'El',
     lastName: 'Kevin',
     gender: 'Macho',
@@ -10,7 +10,7 @@ const residents: Resident[] = [
     age: 69,
   },
   {
-    _id: '2',
+    residentID: '2',
     firstName: 'Seb',
     lastName: 'iti',
     gender: 'Diario',
@@ -24,7 +24,7 @@ export const getResidents = async (): Promise<Resident[]> => residents;
 export const getResident = async (
   residentID: string,
 ): Promise<Resident | NotFoundError> => {
-  const resident = residents.find((r) => r._id === residentID);
+  const resident = residents.find((r) => r.residentID === residentID);
   return resident ? resident : { notFound: true };
 };
 
@@ -46,7 +46,7 @@ export const updateResident = async (
   resident: Resident,
 ): Promise<SuccessMessage | NotFoundError> => {
   try {
-    const residentID = resident._id;
+    const { residentID } = resident;
     const validatedResident = await residentDocSchema.validate(resident);
     console.log(
       'Updating resident with ID',
