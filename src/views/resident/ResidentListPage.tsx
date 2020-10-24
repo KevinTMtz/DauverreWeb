@@ -11,7 +11,7 @@ const ResidentListPage: React.FC = () => {
     <div>
       <h1>Resident List Page</h1>
       {residents.map((r) => (
-        <div key={r._id}>
+        <div key={r.residentID}>
           <h2>
             Nombre: {r.firstName} {r.lastName}
           </h2>
