@@ -12,10 +12,6 @@ interface ReportParams extends ResidentParams {
   reportID: string;
 }
 
-interface DocID {
-  _id: string;
-}
-
 interface PostData {
   title: string;
   date: number;
@@ -23,7 +19,7 @@ interface PostData {
   imageUrl: string;
 }
 
-type Post = PostData & DocID;
+type Post = PostData & PostParams;
 
 interface ResidentData {
   firstName: string;
@@ -33,7 +29,7 @@ interface ResidentData {
   age: number;
 }
 
-type Resident = ResidentData & DocID;
+type Resident = ResidentData & ResidentParams;
 
 interface ReportData {
   date: Date;
@@ -47,7 +43,7 @@ interface ReportData {
   comments: string;
 }
 
-type Report = ReportData & DocID;
+type Report = ReportData & ReportParams;
 
 interface SuccessMessage {
   success: boolean;
