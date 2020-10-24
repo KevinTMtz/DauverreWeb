@@ -1,4 +1,4 @@
-import { useLocation, useRouteMatch } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 /** @jsx jsx */ import { css, jsx } from '@emotion/core';
 import React from 'react';
 
@@ -25,18 +25,16 @@ const buttonStyle = css({
 });
 
 const Header: React.FC = () => {
-  let loginButton = null;
-
-  if (useLocation().pathname === "/") {
-    loginButton = (
-      <button css={buttonStyle}>Iniciar sesión</button>
-    );
-  }
+  const isInLoginPage = useLocation().pathname === '/'
 
   return (
     <div css={divStyle}>
       <p css={pStyle}>Dauverre Web</p>
-      {loginButton}
+      {isInLoginPage && 
+        <button css={buttonStyle}>
+          Iniciar sesión
+        </button>
+      }
     </div>
   );
 };

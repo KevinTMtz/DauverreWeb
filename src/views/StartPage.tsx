@@ -16,6 +16,9 @@ const mainImgStyle = css({
 
 const dauverreInfo = css({
   display: 'flex',
+  '@media (max-width: 550px)': {
+    flexDirection: 'column',
+  },
 });
 
 const dauverreInfoImg = css({
@@ -25,12 +28,19 @@ const dauverreInfoImg = css({
   backgroundSize: 'cover',
   width: '50vw',
   height: 'auto',
+  '@media (max-width: 550px)': {
+    height: '25vh',
+    width: '100%',
+  },
 });
 
 const dauverreInfoSubContainer = css({
   padding: '16px',
   width: '50vw',
   minHeight: '25vh',
+  '@media (max-width: 550px)': {
+    width: '100%',
+  },
 });
 
 const postContainerStyle = css({
@@ -47,21 +57,19 @@ const StartPage: React.FC = () => {
       <div css={mainImgStyle} />
       <Divisor />
       <div css={dauverreInfo}>
-        <div css={dauverreInfoImg} />
         <div css={dauverreInfoSubContainer}>
           <h1>Nuestra misión</h1>
           <Markdown>{missionText}</Markdown>
         </div>
+        <div css={dauverreInfoImg} />
       </div>
       <Divisor />
       <div className="postContainer" css={postContainerStyle}>
         <Post />
         <Post />
         <Post />
-        <Post />
-        <Post />
-        <Post />
       </div>
+      <Divisor />
     </div>
   );
 };
