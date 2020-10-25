@@ -13,8 +13,6 @@ const divStyle = css({
   },
 });
 
-// {isSmallScreen ? '90vw' : '40vw'}
-
 const h1Style = css({
   margin: '5px 0px',
 });

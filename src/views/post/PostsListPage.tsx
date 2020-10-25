@@ -12,7 +12,7 @@ const PostsListPage: React.FC = () => {
     <div>
       <h1>Posts List Page</h1>
       {posts.map((p) => (
-        <div key={p._id}>
+        <div key={p.postID}>
           <img
             alt={`Imagen para el post "${p.title}"`}
             src={p.imageUrl}
