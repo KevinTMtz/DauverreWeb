@@ -1,14 +1,19 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import styled from '@emotion/styled';
+/** @jsx jsx */ import { css, jsx } from '@emotion/core';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
 import CenteredLoginForm from '../components/CenteredLoginForm';
 
-const StyledLink = styled(Link)`
-  padding: 10px;
-`;
+const styledLink = css({
+  padding: '16px',
+  textDecoration: 'inherit',
+});
+
+const styledTitle = css({
+  textAlign: 'center',
+});
 
 const LoginPage: React.FC = () => {
   const [username, setUsername] = useState('');
@@ -19,7 +24,7 @@ const LoginPage: React.FC = () => {
   };
   return (
     <div>
-      <h1>Login Page</h1>
+      <h1 css={styledTitle}>Login Page</h1>
       <CenteredLoginForm noValidate onSubmit={onSubmit}>
         <TextField
           variant="outlined"
@@ -50,7 +55,9 @@ const LoginPage: React.FC = () => {
         <Button type="submit" fullWidth variant="contained" color="primary">
           Inicia sesión
         </Button>
-        <StyledLink to="/forgotpass">¿Olvidaste tu contraseña?</StyledLink>
+        <Link to="/forgotpass" css={styledLink}>
+          ¿Olvidaste tu contraseña?
+        </Link>
       </CenteredLoginForm>
     </div>
   );

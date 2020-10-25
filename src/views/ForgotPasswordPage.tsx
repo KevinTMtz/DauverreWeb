@@ -1,8 +1,19 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+/** @jsx jsx */ import { css, jsx } from '@emotion/core';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
 import CenteredLoginForm from '../components/CenteredLoginForm';
+
+const styledLink = css({
+  padding: '16px',
+  textDecoration: 'inherit',
+});
+
+const styledTitle = css({
+  textAlign: 'center',
+});
 
 const ForgotPasswordPage: React.FC = () => {
   const [username, setUsername] = useState('');
@@ -12,7 +23,7 @@ const ForgotPasswordPage: React.FC = () => {
   };
   return (
     <div>
-      <h1>Forgot Password Page</h1>
+      <h1 css={styledTitle}>Forgot Password Page</h1>
       <CenteredLoginForm noValidate onSubmit={onSubmit}>
         <TextField
           variant="outlined"
@@ -30,6 +41,9 @@ const ForgotPasswordPage: React.FC = () => {
         <Button type="submit" fullWidth variant="contained" color="primary">
           Enviar solicitud
         </Button>
+        <Link to="/login" css={styledLink}>
+          Cancelar
+        </Link>
       </CenteredLoginForm>
     </div>
   );

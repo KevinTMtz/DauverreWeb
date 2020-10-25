@@ -80,9 +80,9 @@ const StartPage: React.FC = () => {
       <Divisor />
       <h1 css={publicationsDivTitle}>Publicaciones</h1>
       <div className="postContainer" css={postContainerStyle}>
-        {posts.map((p) => {
-          return <Post key={p.title} {...p} />;
-        })}
+        {posts.map((p) => (
+          <Post key={p.postID} {...p} />
+        ))}
       </div>
       <Divisor />
     </div>
