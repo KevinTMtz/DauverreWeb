@@ -21,7 +21,6 @@ const linkStyle = css({
   textDecoration: 'inherit',
   color: 'inherit',
   backgroundColor: '#74b9ff',
-  border: '0px solid black',
   borderRadius: '10px',
   fontSize: '18px',
   padding: '5px 10px',
