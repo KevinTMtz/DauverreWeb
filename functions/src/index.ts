@@ -4,16 +4,19 @@ import * as express from 'express';
 import * as cors from 'cors';
 import { json } from 'body-parser';
 
-import createResidentFamiliarAccount from './createResidentFamiliarAccount';
-import { logger } from './util';
-import resetPasswordResidentFamAcc from './resetPasswordResidentFamAcc';
+import {
+  createResidentFamiliarAccount,
+  resetPasswordResidentFamAcc,
+} from './functions';
+import { isAuthenticatedAsAdmin, logging } from './middleware';
 
 admin.initializeApp();
 
 const app = express();
 app.use(json());
 app.use(cors({ origin: true }));
-app.use(logger);
+app.use(logging);
+app.use(isAuthenticatedAsAdmin);
 
 app.use('/users/reset/:uid', resetPasswordResidentFamAcc);
 

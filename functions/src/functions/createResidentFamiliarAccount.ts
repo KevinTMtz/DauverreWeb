@@ -1,8 +1,8 @@
 import { logger, firestore, EventContext } from 'firebase-functions';
 import * as admin from 'firebase-admin';
 
-import { Resident } from './types';
-import { dateToPass, phoneToMail } from './util';
+import { Resident } from '../types';
+import { dateToPass, phoneToMail } from '../util';
 
 const createResidentFamiliarAccount = async (
   snapshot: firestore.QueryDocumentSnapshot,
@@ -20,7 +20,7 @@ const createResidentFamiliarAccount = async (
       password: dateToPass(birthDate.toDate()),
     });
     logger.info(
-      `Created resident relative account for resident with ID ${uid}`,
+      `Successfully created resident relative account for resident with ID ${uid}`,
     );
   } catch (err) {
     logger.error(err);
