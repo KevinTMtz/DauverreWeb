@@ -13,7 +13,6 @@ import StartPage from './views/StartPage';
 import MenuPage from './views/MenuPage';
 import AccessModule from './views/AccessModule';
 import WebpageReport from './views/WebpageReport';
-import './index.css';
 
 const App: React.FC = () => {
   firebase.initializeApp(firebaseConfig);
