@@ -26,7 +26,8 @@ interface ResidentData {
   lastName: string;
   gender: string;
   isVisible: boolean;
-  age: number;
+  birthDate: Date;
+  telephone: string;
 }
 
 type Resident = ResidentData & ResidentParams;
