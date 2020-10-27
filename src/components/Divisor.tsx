@@ -2,6 +2,7 @@
 import React from 'react';
 
 const divisorStyle = css({
+  width: '100%',
   height: '2vh',
   backgroundColor: '#74b9ff',
 });
