@@ -1,8 +1,10 @@
 import React from 'react';
 
+import PageTitle from '../../components/PageTitle';
+
 const RegisterResidentPage: React.FC = () => (
   <div>
-    <h1>Register Resident Page</h1>
+    <PageTitle message={'Registrar residente'} />
   </div>
 );
 
