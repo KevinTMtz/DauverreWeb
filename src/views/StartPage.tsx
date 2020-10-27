@@ -59,7 +59,7 @@ const StartPage: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   useEffect(() => {
     getPosts().then((ps) => setPosts(ps));
-  });
+  }, []);
 
   return (
     <div>
