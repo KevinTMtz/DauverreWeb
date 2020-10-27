@@ -1,56 +1,52 @@
+import { firestore } from 'firebase/app';
+
+import { db } from '../app';
 import { postDocSchema } from './validation';
 
-const posts: Post[] = [
-  {
-    postID: '1234',
-    title: 'Post falso 1',
-    date: Date.now(),
-    content:
-      '### Lorem ipsum\n\ndolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut\n\n * labore\n * et dolore magna aliqua.\n\nUt enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat **nulla pariatur**. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-    imageUrl:
-      'https://lh5.googleusercontent.com/p/AF1QipP3Ll5USMkZfqPJRnKbH1BSFK1XGk5x2r1La6vF=s1016-k-no',
-  },
-  {
-    postID: '2345',
-    title: 'Post falso 2',
-    date: Date.now(),
-    content:
-      '### Lorem ipsum\n\ndolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut\n\n * labore\n * et dolore magna aliqua.\n\nUt enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat **nulla pariatur**. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-    imageUrl:
-      'https://lh5.googleusercontent.com/p/AF1QipP3Ll5USMkZfqPJRnKbH1BSFK1XGk5x2r1La6vF=s1016-k-no',
-  },
-  {
-    postID: '3456',
-    title: 'Post falso 3',
-    date: Date.now(),
-    content:
-      '### Lorem ipsum\n\ndolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut\n\n * labore\n * et dolore magna aliqua.\n\nUt enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat **nulla pariatur**. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-    imageUrl:
-      'https://lh5.googleusercontent.com/p/AF1QipP3Ll5USMkZfqPJRnKbH1BSFK1XGk5x2r1La6vF=s1016-k-no',
-  },
-];
+const postsCollection = db.collection('posts');
 
-export const getPosts = async (): Promise<Post[]> => posts;
+export const getPosts = async (): Promise<Post[]> => {
+  const snapshot = await postsCollection.get();
+  return snapshot.docs.map((doc) => {
+    const data = doc.data();
+    return {
+      postID: doc.id,
+      title: data.title,
+      date: data.date.toDate(),
+      content: data.content.replaceAll('\\n', '\n'),
+      imageUrl: data.imageUrl,
+    };
+  });
+};
 
 export const getPost = async (
   postID: string,
 ): Promise<Post | NotFoundError> => {
-  const post = posts.find((p) => p.postID === postID);
-  return post ? post : { notFound: true };
+  const doc = await postsCollection.doc(postID).get();
+  if (!doc.exists) return { notFound: true };
+  const data = doc.data() as firestore.DocumentData;
+  return {
+    postID: doc.id,
+    title: data.title,
+    date: data.date.toDate(),
+    content: data.content.replaceAll('\\n', '\n'),
+    imageUrl: data.imageUrl,
+  };
 };
 
 export const createPost = async (
   postData: PostData,
 ): Promise<SuccessMessage | ValidationErrors> => {
   try {
-    const validatedPost = await postDocSchema.validate(postData);
-    console.log('Creating post:', validatedPost);
+    const validatedPost = (await postDocSchema.validate(postData)) as PostData;
+    const doc = await postsCollection.add(validatedPost);
+    return { success: true, url: `/posts/${doc.id}` };
   } catch (error) {
     if (error.name === 'ValidationError') {
       return error.errors;
     }
+    return error;
   }
-  return { success: true };
 };
 
 export const updatePost = async (
@@ -58,19 +54,18 @@ export const updatePost = async (
 ): Promise<SuccessMessage | NotFoundError> => {
   try {
     const { postID } = post;
-    const validatedPost = await postDocSchema.validate(post);
-    console.log('Updating post with ID', postID, 'with info', validatedPost);
+    const validatedPost = (await postDocSchema.validate(post)) as PostData;
+    await postsCollection.doc(postID).update(validatedPost);
+    return { success: true, url: `/posts/${postID}` };
   } catch (error) {
     if (error.name === 'ValidationError') {
       return error.errors;
     }
+    return error;
   }
-  return { success: true };
 };
 
-export const deletePost = async (
-  postID: string,
-): Promise<SuccessMessage | NotFoundError> => {
-  console.log('Deleting post:', postID);
-  return { success: true };
+export const deletePost = async (postID: string): Promise<SuccessMessage> => {
+  await postsCollection.doc(postID).delete();
+  return { success: true, url: '/posts' };
 };
