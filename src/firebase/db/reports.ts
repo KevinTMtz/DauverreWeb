@@ -1,86 +1,74 @@
+import { firestore } from 'firebase/app';
+
+import { db } from '../app';
 import { reportDocSchema } from './validation';
 
-const reports: Report[] = [
-  {
-    residentID: '1',
-    reportID: 'rep1',
-    date: new Date(Date.now()),
-    mood: 1,
-    health: 4,
-    sad: true,
-    angry: false,
-    rested: true,
-    wellFed: true,
-    lonely: true,
-    comments: 'Un rifado',
-  },
-  {
-    residentID: '2',
-    reportID: 'rep2',
-    date: new Date(Date.now()),
-    mood: 4,
-    health: 1,
-    sad: false,
-    angry: true,
-    rested: false,
-    wellFed: false,
-    lonely: false,
-    comments: 'Un rifado',
-  },
-  {
-    residentID: '1',
-    reportID: 'rep3',
-    date: new Date(Date.now()),
-    mood: 1,
-    health: 3,
-    sad: true,
-    angry: false,
-    rested: true,
-    wellFed: true,
-    lonely: true,
-    comments: 'Un rifado',
-  },
-  {
-    residentID: '2',
-    reportID: 'rep4',
-    date: new Date(Date.now()),
-    mood: 5,
-    health: 5,
-    sad: true,
-    angry: false,
-    rested: true,
-    wellFed: true,
-    lonely: true,
-    comments: 'Un rifado',
-  },
-];
+const reportsCollection = (residentID: string) =>
+  db.collection(`residents/${residentID}/reports`);
 
 export const getReports = async (residentID: string): Promise<Report[]> => {
-  return reports.filter((rep) => rep.residentID === residentID);
+  const snapshot = await reportsCollection(residentID).get();
+  return snapshot.docs.map((doc) => {
+    const data = doc.data();
+    return {
+      reportID: doc.id,
+      residentID,
+      date: data.date.toDate(),
+      mood: data.mood,
+      health: data.health,
+      sad: data.sad,
+      angry: data.angry,
+      rested: data.rested,
+      wellFed: data.wellFed,
+      lonely: data.lonely,
+      comments: data.comments,
+    };
+  });
 };
 
 export const getReport = async (
   residentID: string,
   reportID: string,
 ): Promise<Report | NotFoundError> => {
-  const report = reports
-    .filter((rep) => rep.residentID === residentID)
-    .find((r) => r.reportID === reportID);
-  return report ? report : { notFound: true };
+  const doc = await reportsCollection(residentID).doc(reportID).get();
+  if (!doc.exists) return { notFound: true };
+  const data = doc.data() as firestore.DocumentData;
+  return {
+    reportID: doc.id,
+    residentID,
+    date: data.date.toDate(),
+    mood: data.mood,
+    health: data.health,
+    sad: data.sad,
+    angry: data.angry,
+    rested: data.rested,
+    wellFed: data.wellFed,
+    lonely: data.lonely,
+    comments: data.comments,
+  };
 };
 
 export const createReport = async (
+  residentID: string,
   reportData: ReportData,
 ): Promise<SuccessMessage | ValidationErrors> => {
   try {
-    const validatedReport = await reportDocSchema.validate(reportData);
-    console.log('Creating report:', validatedReport);
+    const validatedReport = (await reportDocSchema.validate(
+      reportData,
+    )) as ReportData;
+    const date = firestore.Timestamp.fromDate(validatedReport.date);
+    const doc = await reportsCollection(residentID).add({
+      ...validatedReport,
+      date,
+    });
+    return { success: true, url: `/residents/${residentID}/reports/${doc.id}` };
   } catch (error) {
     if (error.name === 'ValidationError') {
       return error.errors;
     }
+    console.error(error);
+    return error;
   }
-  return { success: true };
 };
 
 export const updateReport = async (
@@ -88,27 +76,33 @@ export const updateReport = async (
 ): Promise<SuccessMessage | NotFoundError> => {
   try {
     const { residentID, reportID } = report;
-    const validatedReport = await reportDocSchema.validate(report);
-    console.log(
-      'Updating report',
-      reportID,
-      'from resident ',
-      residentID,
-      'with info',
-      validatedReport,
-    );
+    const validatedReport = (await reportDocSchema.validate(
+      report,
+    )) as ReportData;
+    const date = firestore.Timestamp.fromDate(validatedReport.date);
+    await reportsCollection(residentID)
+      .doc(reportID)
+      .update({
+        ...validatedReport,
+        date,
+      });
+    return {
+      success: true,
+      url: `/residents/${residentID}/reports/${reportID}`,
+    };
   } catch (error) {
     if (error.name === 'ValidationError') {
       return error.errors;
     }
+    console.error(error);
+    return error;
   }
-  return { success: true };
 };
 
 export const deleteReport = async (
   residentID: string,
   reportID: string,
 ): Promise<SuccessMessage | NotFoundError> => {
-  console.log('Deleting report', reportID, 'from resident', residentID);
-  return { success: true };
+  await reportsCollection(residentID).doc(reportID).delete();
+  return { success: true, url: `/residents/${residentID}/reports` };
 };
