@@ -1,8 +1,10 @@
 import React from 'react';
 
+import PageTitle from '../../components/PageTitle';
+
 const CreatePostPage: React.FC = () => (
   <div>
-    <h1>Create Post Page</h1>
+    <PageTitle message={'Crear publicación'} />
   </div>
 );
 

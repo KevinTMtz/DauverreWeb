@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import { getResidents } from '../../firebase/db/resident';
+import PageTitle from '../../components/PageTitle';
 
 const ResidentListPage: React.FC = () => {
   const [residents, setResidents] = useState<Resident[]>([]);
@@ -9,7 +10,7 @@ const ResidentListPage: React.FC = () => {
   });
   return (
     <div>
-      <h1>Resident List Page</h1>
+      <PageTitle message={'Residentes'} />
       {residents.map((r) => (
         <div key={r.residentID}>
           <h2>

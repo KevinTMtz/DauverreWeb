@@ -4,6 +4,7 @@ import Markdown from 'markdown-to-jsx';
 
 import Post from '../components/Post';
 import Divisor from '../components/Divisor';
+import PageTitle from '../components/PageTitle';
 
 import { getPosts } from '../firebase/db/posts';
 
@@ -51,12 +52,6 @@ const postContainerStyle = css({
   justifyContent: 'space-around',
 });
 
-const publicationsDivTitle = css({
-  display: 'flex',
-  flexWrap: 'wrap',
-  justifyContent: 'space-around',
-});
-
 const StartPage: React.FC = () => {
   const missionText =
     'Lorem ipsum\n\ndolor sit amet, consectetur adipiscing elit, sed do  eiusmod tempor incididunt ut\n\n * labore\n * et dolore magna aliqua.\n\nUt enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.';
@@ -72,13 +67,13 @@ const StartPage: React.FC = () => {
       <Divisor />
       <div css={dauverreInfo}>
         <div css={dauverreInfoSubContainer}>
-          <h1>Nuestra misión</h1>
+          <PageTitle message={'Nuestra misión'} />
           <Markdown>{missionText}</Markdown>
         </div>
         <div css={dauverreInfoImg} />
       </div>
       <Divisor />
-      <h1 css={publicationsDivTitle}>Publicaciones</h1>
+      <PageTitle message={'Publicaciones'} />
       <div className="postContainer" css={postContainerStyle}>
         {posts.map((p) => (
           <Post key={p.postID} {...p} />

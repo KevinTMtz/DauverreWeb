@@ -2,6 +2,8 @@ import { Link } from 'react-router-dom';
 import React from 'react';
 /** @jsx jsx */ import { css, jsx } from '@emotion/core';
 
+import PageTitle from '../components/PageTitle';
+
 const styledMainDiv = css({
   width: '100%',
   display: 'flex',
@@ -52,7 +54,7 @@ const MenuPage: React.FC = () => {
 
   return (
     <div css={styledMainDiv}>
-      <h1>Menú</h1>
+      <PageTitle message={'Menú'} />
       <div css={styledCellContainer}>
         {options.map((module) => (
           <div key={module.name} css={styledCell}>

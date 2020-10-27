@@ -1,14 +1,11 @@
 import React from 'react';
-/** @jsx jsx */ import { css, jsx } from '@emotion/core';
 
-const styledTitle = css({
-  textAlign: 'center',
-});
+import PageTitle from '../components/PageTitle';
 
 const WebpageReport: React.FC = () => {
   return (
     <div>
-      <h1 css={styledTitle}>Reporte de la página</h1>
+      <PageTitle message={'Reporte de la página'} />
     </div>
   );
 };
