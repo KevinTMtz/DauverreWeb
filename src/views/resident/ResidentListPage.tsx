@@ -7,7 +7,7 @@ const ResidentListPage: React.FC = () => {
   const [residents, setResidents] = useState<Resident[]>([]);
   useEffect(() => {
     getResidents().then((resid) => setResidents(resid));
-  });
+  }, []);
   return (
     <div>
       <PageTitle message={'Residentes'} />
