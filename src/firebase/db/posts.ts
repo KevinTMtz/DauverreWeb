@@ -39,12 +39,16 @@ export const createPost = async (
 ): Promise<SuccessMessage | ValidationErrors> => {
   try {
     const validatedPost = (await postDocSchema.validate(postData)) as PostData;
-    const doc = await postsCollection.add(validatedPost);
+    const doc = await postsCollection.add({
+      ...validatedPost,
+      date: firestore.Timestamp.fromDate(validatedPost.date),
+    });
     return { success: true, url: `/posts/${doc.id}` };
   } catch (error) {
     if (error.name === 'ValidationError') {
       return error.errors;
     }
+    console.error(error);
     return error;
   }
 };
@@ -55,12 +59,16 @@ export const updatePost = async (
   try {
     const { postID } = post;
     const validatedPost = (await postDocSchema.validate(post)) as PostData;
-    await postsCollection.doc(postID).update(validatedPost);
+    await postsCollection.doc(postID).update({
+      ...validatedPost,
+      date: firestore.Timestamp.fromDate(validatedPost.date),
+    });
     return { success: true, url: `/posts/${postID}` };
   } catch (error) {
     if (error.name === 'ValidationError') {
       return error.errors;
     }
+    console.error(error);
     return error;
   }
 };
