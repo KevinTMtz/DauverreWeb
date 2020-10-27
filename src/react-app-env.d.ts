@@ -48,7 +48,7 @@ type Report = ReportData & ReportParams;
 
 interface SuccessMessage {
   success: boolean;
-  url?: string;
+  url: string;
 }
 
 interface NotFoundError {
