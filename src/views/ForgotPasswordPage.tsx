@@ -5,14 +5,11 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
 import CenteredLoginForm from '../components/CenteredLoginForm';
+import PageTitle from '../components/PageTitle';
 
 const styledLink = css({
   padding: '16px',
   textDecoration: 'inherit',
-});
-
-const styledTitle = css({
-  textAlign: 'center',
 });
 
 const ForgotPasswordPage: React.FC = () => {
@@ -23,7 +20,7 @@ const ForgotPasswordPage: React.FC = () => {
   };
   return (
     <div>
-      <h1 css={styledTitle}>Forgot Password Page</h1>
+      <PageTitle message={'Recuperar contraseña'} />
       <CenteredLoginForm noValidate onSubmit={onSubmit}>
         <TextField
           variant="outlined"
@@ -42,7 +39,7 @@ const ForgotPasswordPage: React.FC = () => {
           Enviar solicitud
         </Button>
         <Link to="/login" css={styledLink}>
-          Cancelar
+          Regresar a inicio de sesión
         </Link>
       </CenteredLoginForm>
     </div>

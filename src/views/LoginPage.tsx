@@ -5,14 +5,11 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
 import CenteredLoginForm from '../components/CenteredLoginForm';
+import PageTitle from '../components/PageTitle';
 
 const styledLink = css({
   padding: '16px',
   textDecoration: 'inherit',
-});
-
-const styledTitle = css({
-  textAlign: 'center',
 });
 
 const LoginPage: React.FC = () => {
@@ -24,7 +21,7 @@ const LoginPage: React.FC = () => {
   };
   return (
     <div>
-      <h1 css={styledTitle}>Login Page</h1>
+      <PageTitle message={'Iniciar sesión'} />
       <CenteredLoginForm noValidate onSubmit={onSubmit}>
         <TextField
           variant="outlined"

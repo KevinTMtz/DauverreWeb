@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import Markdown from 'markdown-to-jsx';
 
 import { getPosts } from '../../firebase/db/posts';
+
+import PostListCell from '../../components/PostListCell';
+import PageTitle from '../../components/PageTitle';
 
 const PostsListPage: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -10,17 +12,9 @@ const PostsListPage: React.FC = () => {
   });
   return (
     <div>
-      <h1>Posts List Page</h1>
+      <PageTitle message={'Posts List Page'} />
       {posts.map((p) => (
-        <div key={p.postID}>
-          <img
-            alt={`Imagen para el post "${p.title}"`}
-            src={p.imageUrl}
-            height="200px"
-          />
-          <h1>{p.title}</h1>
-          <Markdown>{p.content}</Markdown>
-        </div>
+        <PostListCell key={p.postID} {...p} />
       ))}
     </div>
   );
