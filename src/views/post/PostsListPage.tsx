@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import PostListCell from '../../components/post-components/PostListCell';
 import PageTitle from '../../components/PageTitle';
 
-import { getPosts } from '../../firebase/db/posts';
+import { getPosts, deletePost } from '../../firebase/db/posts';
 
 const addButtonStyle = css({
   width: 'calc(90%)',
@@ -28,13 +28,23 @@ const divStyle = css({
 });
 
 const PostsListPage: React.FC = () => {
+  const match = useRouteMatch();
+  const history = useHistory();
+
   const [posts, setPosts] = useState<Post[]>([]);
   useEffect(() => {
     getPosts().then((ps) => setPosts(ps));
   }, []);
 
-  const match = useRouteMatch();
-  const history = useHistory();
+  const deleteSelectedPost = (postIndex: number, postID: string) => {
+    deletePost(postID).then((value) => {
+      if ((value as SuccessMessage).success) {
+        const newPosts = [...posts];
+        newPosts.splice(postIndex, 1);
+        setPosts(newPosts);
+      }
+    });
+  };
 
   return (
     <div css={divStyle}>
@@ -45,8 +55,12 @@ const PostsListPage: React.FC = () => {
       >
         Añadir publicación
       </button>
-      {posts.map((p) => (
-        <PostListCell key={p.postID} {...p} />
+      {posts.map((p, index) => (
+        <PostListCell
+          key={p.postID}
+          {...p}
+          deletePost={() => deleteSelectedPost(index, p.postID)}
+        />
       ))}
     </div>
   );
