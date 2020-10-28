@@ -1,3 +1,4 @@
+import { useHistory } from 'react-router-dom';
 import React, { useState } from 'react';
 
 import PageTitle from '../../components/PageTitle';
@@ -6,6 +7,8 @@ import PostForm from '../../components/post-components/PostForm';
 import { createPost } from '../../firebase/db/posts';
 
 const CreatePostPage: React.FC = () => {
+  const history = useHistory();
+
   const [newPostState, setNewPostState] = useState<PostData>({
     title: '',
     date: new Date(),
@@ -16,7 +19,12 @@ const CreatePostPage: React.FC = () => {
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    createPost(newPostState);
+
+    createPost(newPostState).then((value) => {
+      if ((value as SuccessMessage).success) {
+        history.push('/posts');
+      }
+    });
   };
 
   return (
@@ -26,7 +34,7 @@ const CreatePostPage: React.FC = () => {
         <PostForm
           post={newPostState}
           onSubmit={onSubmit}
-          setNewPostState={setNewPostState}
+          setPostState={setNewPostState}
           buttonMessage={'Crear publicación'}
         />
       }

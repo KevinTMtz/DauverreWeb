@@ -35,7 +35,7 @@ const PostForm: React.FC<any> = (props) => {
         autoFocus
         value={props.post.title}
         onChange={(event) =>
-          props.setNewPostState({ ...props.post, title: event.target.value })
+          props.setPostState({ ...props.post, title: event.target.value })
         }
       />
       <p>Fecha</p>
@@ -50,7 +50,7 @@ const PostForm: React.FC<any> = (props) => {
           fullWidth
           value={props.post.date}
           onChange={(event) =>
-            props.setNewPostState({
+            props.setPostState({
               ...props.post,
               date: new Date(event!.valueOf()),
             })
@@ -74,7 +74,7 @@ const PostForm: React.FC<any> = (props) => {
         autoFocus
         value={props.post.content}
         onChange={(event) =>
-          props.setNewPostState({ ...props.post, content: event.target.value })
+          props.setPostState({ ...props.post, content: event.target.value })
         }
       />
       <p>Imagen</p>
