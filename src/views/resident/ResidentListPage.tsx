@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 
-import { getResidents } from '../../firebase/db/resident';
+import { getResidents } from '../../firebase/db/residents';
 import PageTitle from '../../components/PageTitle';
 
 const ResidentListPage: React.FC = () => {
   const [residents, setResidents] = useState<Resident[]>([]);
   useEffect(() => {
     getResidents().then((resid) => setResidents(resid));
-  });
+  }, []);
   return (
     <div>
       <PageTitle message={'Residentes'} />
@@ -16,7 +16,6 @@ const ResidentListPage: React.FC = () => {
           <h2>
             Nombre: {r.firstName} {r.lastName}
           </h2>
-          <h5>Edad: {r.age}</h5>
           <h5>Sexo: {r.gender}</h5>
           {r.isVisible || (
             <h5>

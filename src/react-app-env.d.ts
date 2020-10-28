@@ -14,7 +14,7 @@ interface ReportParams extends ResidentParams {
 
 interface PostData {
   title: string;
-  date: number;
+  date: Date;
   content: string;
   imageUrl: string;
 }
@@ -26,7 +26,8 @@ interface ResidentData {
   lastName: string;
   gender: string;
   isVisible: boolean;
-  age: number;
+  birthDate: Date;
+  telephone: string;
 }
 
 type Resident = ResidentData & ResidentParams;
@@ -47,6 +48,7 @@ type Report = ReportData & ReportParams;
 
 interface SuccessMessage {
   success: boolean;
+  url: string;
 }
 
 interface NotFoundError {
@@ -54,3 +56,7 @@ interface NotFoundError {
 }
 
 type ValidationErrors = string[];
+
+type FirebaseCollection = firebase.firestore.CollectionReference<
+  firebase.firestore.DocumentData
+>;

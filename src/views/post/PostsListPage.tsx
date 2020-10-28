@@ -2,11 +2,11 @@ import { useHistory, useRouteMatch } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 /** @jsx jsx */ import { css, jsx } from '@emotion/core';
 
-import { getPosts } from '../../firebase/db/posts';
-
 import PostListCell from '../../components/PostListCell';
 import PageTitle from '../../components/PageTitle';
 import Divisor from '../../components/Divisor';
+
+import { getPosts } from '../../firebase/db/posts';
 
 const addButtonStyle = css({
   width: 'calc(90%)',
@@ -32,7 +32,7 @@ const PostsListPage: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   useEffect(() => {
     getPosts().then((ps) => setPosts(ps));
-  });
+  }, []);
 
   const match = useRouteMatch();
   const history = useHistory();
