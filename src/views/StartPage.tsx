@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Markdown from 'markdown-to-jsx';
 /** @jsx jsx */ import { css, jsx } from '@emotion/core';
 
-import Post from '../components/Post';
+import Post from '../components/post-components/Post';
 import Divisor from '../components/Divisor';
 import PageTitle from '../components/PageTitle';
 
@@ -79,7 +79,6 @@ const StartPage: React.FC = () => {
           <Post key={p.postID} {...p} />
         ))}
       </div>
-      <Divisor />
     </div>
   );
 };
