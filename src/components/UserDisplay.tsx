@@ -38,6 +38,9 @@ const UserDisplay: React.FC <{username: string, password:string, privilege:strin
         console.log('Iniciando sesión con datos:', username2, password2,privilege2);
       }
     };
+    const update = (event: React.ChangeEvent<any>) => {
+      setPrivilege(event.target.value)
+    }
     return(
         <div css={divStyle}>
           {!edit &&
@@ -76,10 +79,11 @@ const UserDisplay: React.FC <{username: string, password:string, privilege:strin
               <MuiSelect
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
-                value={privilege}
+                value={privilege2}
+                onChange={ (e) => update(e) } 
               >
-                <MuiMenuItem value={'Administrador'}>Administrador</MuiMenuItem>
-                <MuiMenuItem value={'Psicologo'}>Psicólogo</MuiMenuItem>
+                <MuiMenuItem value={'1'}>Administrador</MuiMenuItem>
+                <MuiMenuItem value={'2'}>Psicólogo</MuiMenuItem>
               </MuiSelect>
               <div>
                 <Button type="submit" variant="contained" color="primary" onClick={() => { onSubmit() }}>
