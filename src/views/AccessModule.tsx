@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, MouseEvent} from 'react';
 /** @jsx jsx */ import { css, jsx } from '@emotion/core';
 import UserDisplay from '../components/UserDisplay'
 
@@ -41,6 +41,7 @@ const users = [{
 
 
 const AccessModule: React.FC = () => {
+  const [edit, setEdit] = useState(false);
   return (
     <div>
       <PageTitle message={'Módulo de acceso'} />
