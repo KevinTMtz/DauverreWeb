@@ -34,6 +34,9 @@ const CreatePostPage: React.FC = () => {
         <PostForm
           post={newPostState}
           onSubmit={onSubmit}
+          cancelOperation={() => {
+            history.push('/posts');
+          }}
           setPostState={setNewPostState}
           buttonMessage={'Crear publicación'}
         />

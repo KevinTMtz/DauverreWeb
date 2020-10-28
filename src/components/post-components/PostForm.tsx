@@ -82,6 +82,16 @@ const PostForm: React.FC<any> = (props) => {
       <Button type="submit" variant="contained" color="primary" fullWidth>
         {props.buttonMessage}
       </Button>
+      <Button
+        type="submit"
+        variant="contained"
+        color="secondary"
+        fullWidth
+        style={{ marginTop: '20px' }}
+        onClick={props.cancelOperation}
+      >
+        Cancelar
+      </Button>
     </form>
   );
 };
