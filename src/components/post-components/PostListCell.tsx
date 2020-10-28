@@ -3,8 +3,6 @@ import React from 'react';
 import Markdown from 'markdown-to-jsx';
 /** @jsx jsx */ import { css, jsx } from '@emotion/core';
 
-import { deletePost } from '../../firebase/db/posts';
-
 const divStyle = css({
   display: 'flex',
   flexDirection: 'column',
@@ -48,27 +46,31 @@ const editAndDeleteButton = css({
   },
 });
 
-const PostListCell: React.FC<Post> = ({ postID, title, imageUrl, content }) => {
+const PostListCell: React.FC<any> = (props) => {
   const match = useRouteMatch();
   const history = useHistory();
 
   return (
     <div css={divStyle}>
-      <h1 css={h1Style}>{title}</h1>
-      <img src={imageUrl} alt={`Imagen de ${title}`} css={imgStyle}></img>
-      <Markdown>{content}</Markdown>
+      <h1 css={h1Style}>{props.title}</h1>
+      <img
+        src={props.imageUrl}
+        alt={`Imagen de ${props.title}`}
+        css={imgStyle}
+      ></img>
+      <Markdown>{props.content}</Markdown>
       <div css={buttonsDiv}>
         <button
           css={editAndDeleteButton}
           style={{ backgroundColor: '#d63031' }}
-          onClick={() => deletePost(postID)}
+          onClick={props.deletePost}
         >
           Borrar
         </button>
         <button
           css={editAndDeleteButton}
           style={{ backgroundColor: '#00b894' }}
-          onClick={() => history.push(`${match.path}/${postID}/edit`)}
+          onClick={() => history.push(`${match.path}/${props.postID}/edit`)}
         >
           Editar
         </button>
