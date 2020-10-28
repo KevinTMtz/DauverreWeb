@@ -21,6 +21,7 @@ const imgStyle = css({
   width: '100%',
   height: '300px',
   objectFit: 'cover',
+  margin: '20px auto',
 });
 
 const Post: React.FC<Post> = ({ title, imageUrl, content }) => {
