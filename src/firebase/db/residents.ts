@@ -46,6 +46,10 @@ export const createResident = async (
       residentData,
     )) as ResidentData;
     validatedResident.birthDate.setHours(12, 1);
+    validatedResident.telephone = validatedResident.telephone
+      .split('')
+      .filter((ch) => /\d/.test(ch))
+      .join('');
     const birthDate = firestore.Timestamp.fromDate(validatedResident.birthDate);
     const doc = await residentsCollection.add({
       ...validatedResident,
@@ -70,6 +74,10 @@ export const updateResident = async (
       resident,
     )) as ResidentData;
     validatedResident.birthDate.setHours(12, 1);
+    validatedResident.telephone = validatedResident.telephone
+      .split('')
+      .filter((ch) => /\d/.test(ch))
+      .join('');
     const birthDate = firestore.Timestamp.fromDate(validatedResident.birthDate);
     await residentsCollection.doc(residentID).update({
       ...validatedResident,
