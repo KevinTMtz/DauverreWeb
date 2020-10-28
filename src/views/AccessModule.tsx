@@ -1,6 +1,5 @@
-import React, {useState, MouseEvent} from 'react';
+import React from 'react';
 /** @jsx jsx */ import { css, jsx } from '@emotion/core';
-import Button from '@material-ui/core/Button';
 import UserDisplay from '../components/UserDisplay'
 
 import PageTitle from '../components/PageTitle';
@@ -41,21 +40,16 @@ const users = [{
 }]
 
 
-
-
 const AccessModule: React.FC = () => {
-  const [edit, setEdit] = useState(false);
   return (
     <div>
       <PageTitle message={'Módulo de acceso'} />
-      <h1 css={styledTitle}>
-        Módulo de acceso</h1>
       <div>
         {users.map((u)=>(
             <div css={divStyle}>
-                <h1 css={h1Style}>
+                <h2 css={h1Style}>
                     {u.username}
-                </h1>
+                </h2>
                 <UserDisplay username={u.username} password={u.password} privilege={u.privilege} />
             </div>
             
