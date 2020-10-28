@@ -2,9 +2,8 @@ import { useHistory, useRouteMatch } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 /** @jsx jsx */ import { css, jsx } from '@emotion/core';
 
-import PostListCell from '../../components/PostListCell';
+import PostListCell from '../../components/post-components/PostListCell';
 import PageTitle from '../../components/PageTitle';
-import Divisor from '../../components/Divisor';
 
 import { getPosts } from '../../firebase/db/posts';
 
@@ -36,20 +35,19 @@ const PostsListPage: React.FC = () => {
 
   const match = useRouteMatch();
   const history = useHistory();
-  function onAddClick() {
-    history.push(`${match.path}/new`);
-  }
 
   return (
     <div css={divStyle}>
       <PageTitle message={'Publicaciones'} />
-      <button css={addButtonStyle} onClick={onAddClick}>
+      <button
+        css={addButtonStyle}
+        onClick={() => history.push(`${match.path}/new`)}
+      >
         Añadir publicación
       </button>
       {posts.map((p) => (
         <PostListCell key={p.postID} {...p} />
       ))}
-      <Divisor />
     </div>
   );
 };

@@ -3,14 +3,18 @@ import React from 'react';
 import Markdown from 'markdown-to-jsx';
 /** @jsx jsx */ import { css, jsx } from '@emotion/core';
 
+import { deletePost } from '../../firebase/db/posts';
+
 const divStyle = css({
+  display: 'flex',
+  flexDirection: 'column',
   padding: '16px',
   margin: '10px 0px',
   borderRadius: '10px',
   boxShadow: '0 4px 12px 0 rgba(0,0,0,0.2)',
-  maxWidth: 'calc(90% - 32px)',
+  width: 'calc(90% - 32px)',
   '@media (max-width: 600px)': {
-    maxWidth: 'calc(90% - 32px)',
+    width: 'calc(90% - 32px)',
   },
 });
 
@@ -22,11 +26,13 @@ const imgStyle = css({
   width: '150px',
   height: '150px',
   objectFit: 'cover',
+  margin: '20px auto',
 });
 
 const buttonsDiv = css({
   display: 'flex',
   justifyContent: 'space-between',
+  marginTop: '20px',
 });
 
 const editAndDeleteButton = css({
@@ -46,10 +52,6 @@ const PostListCell: React.FC<Post> = ({ postID, title, imageUrl, content }) => {
   const match = useRouteMatch();
   const history = useHistory();
 
-  function onEditClick() {
-    history.push(`${match.path}/${postID}/edit`);
-  }
-
   return (
     <div css={divStyle}>
       <h1 css={h1Style}>{title}</h1>
@@ -59,13 +61,14 @@ const PostListCell: React.FC<Post> = ({ postID, title, imageUrl, content }) => {
         <button
           css={editAndDeleteButton}
           style={{ backgroundColor: '#d63031' }}
+          onClick={() => deletePost(postID)}
         >
           Borrar
         </button>
         <button
           css={editAndDeleteButton}
           style={{ backgroundColor: '#00b894' }}
-          onClick={onEditClick}
+          onClick={() => history.push(`${match.path}/${postID}/edit`)}
         >
           Editar
         </button>
