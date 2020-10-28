@@ -44,6 +44,9 @@ const EditPostPage: React.FC = () => {
       <PostForm
         post={post}
         onSubmit={onSubmit}
+        cancelOperation={() => {
+          history.push('/posts');
+        }}
         setPostState={setPost}
         buttonMessage={'Guardar cambios'}
       />
