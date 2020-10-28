@@ -4,12 +4,12 @@ import Markdown from 'markdown-to-jsx';
 
 const divStyle = css({
   padding: '16px',
-  margin: '10px',
+  margin: '10px 0px',
   borderRadius: '10px',
   boxShadow: '0 4px 12px 0 rgba(0,0,0,0.2)',
-  maxWidth: '40vw',
+  maxWidth: 'calc(45vw - 32px)',
   '@media (max-width: 600px)': {
-    maxWidth: '85vw',
+    maxWidth: 'calc(90vw - 32px)',
   },
 });
 

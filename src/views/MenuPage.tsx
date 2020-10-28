@@ -20,7 +20,6 @@ const styledCellContainer = css({
 
 const styledCell = css({
   display: 'flex',
-  flexDirection: 'row',
   alignItems: 'center',
   justifyContent: 'space-between',
   border: '2px solid #74b9ff',
@@ -30,11 +29,10 @@ const styledCell = css({
   borderRadius: '10px',
 });
 
-const styledLogOut = css({
+const styledLink = css({
   textDecoration: 'inherit',
   color: 'inherit',
-  marginTop: '16px',
-  backgroundColor: '#e74c3c',
+  backgroundColor: '#74b9ff',
   borderRadius: '10px',
   fontSize: '18px',
   padding: '5px 10px',
@@ -59,11 +57,17 @@ const MenuPage: React.FC = () => {
         {options.map((module) => (
           <div key={module.name} css={styledCell}>
             <h2>{module.name}</h2>
-            <Link to={module.linkPathname}>Ingresar</Link>
+            <Link to={module.linkPathname} css={styledLink}>
+              Ingresar
+            </Link>
           </div>
         ))}
       </div>
-      <Link css={styledLogOut} to="/">
+      <Link
+        to="/"
+        css={styledLink}
+        style={{ backgroundColor: '#e74c3c', margin: '16px 0px' }}
+      >
         Cerrar sesión
       </Link>
     </div>
