@@ -7,8 +7,6 @@ const divisorStyle = css({
   backgroundColor: '#74b9ff',
 });
 
-const Post: React.FC = () => {
-  return <div css={divisorStyle}></div>;
-};
+const Divisor: React.FC = () => <div css={divisorStyle}></div>;
 
-export default Post;
+export default Divisor;
