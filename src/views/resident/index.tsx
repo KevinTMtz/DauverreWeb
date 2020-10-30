@@ -21,9 +21,6 @@ const ResdientsRouter: React.FC = () => {
       <Route path={`${match.path}/:residentID/edit`}>
         <EditResidentPage />
       </Route>
-      <Route path={`${match.path}/:residentID/:reportID`}>
-        <ReportsRouter />
-      </Route>
       <Route path={`${match.path}/:residentID`}>
         <ViewResidentPage />
       </Route>
