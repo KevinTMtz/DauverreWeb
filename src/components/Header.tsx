@@ -34,14 +34,19 @@ const Header: React.FC = () => {
   const locationPathname = useLocation().pathname;
   const isInLoginPage =
     locationPathname === '/login' || locationPathname === '/forgotpass';
-  const isInStartPage = locationPathname === '/' || isInLoginPage;
+  const isInStartPage = locationPathname === '/';
 
   return (
     <div css={divStyle}>
       <p css={pStyle}>Dauverre Web</p>
       {isInStartPage && (
-        <Link to={isInLoginPage ? '/' : '/login'} css={linkStyle}>
-          {isInLoginPage ? 'Cancelar' : 'Iniciar sesión'}
+        <Link to="/login" css={linkStyle}>
+          Iniciar sesión
+        </Link>
+      )}
+      {isInLoginPage && (
+        <Link to="/" css={linkStyle}>
+          Cancelar
         </Link>
       )}
     </div>
