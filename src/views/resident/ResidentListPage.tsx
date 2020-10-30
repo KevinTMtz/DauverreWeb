@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import { getResidents } from '../../firebase/db/residents';
 import PageTitle from '../../components/PageTitle';
+import CenteredListResident from '../../components/resident-components/CenteredListResident';
 
 const ResidentListPage: React.FC = () => {
   const [residents, setResidents] = useState<Resident[]>([]);
@@ -11,6 +12,7 @@ const ResidentListPage: React.FC = () => {
   return (
     <div>
       <PageTitle message={'Residentes'} />
+      <CenteredListResident>
       {residents.map((r) => (
         <div key={r.residentID}>
           <h2>
@@ -24,6 +26,7 @@ const ResidentListPage: React.FC = () => {
           )}
         </div>
       ))}
+      </CenteredListResident>
     </div>
   );
 };
