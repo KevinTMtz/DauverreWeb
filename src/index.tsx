@@ -4,14 +4,15 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import Header from './components/Header';
+import AccessModule from './views/AccessModule';
 import ForgotPasswordPage from './views/ForgotPasswordPage';
+import GlobalReportPage from './views/GlobalReportPage';
 import LoginPage from './views/LoginPage';
+import MenuPage from './views/MenuPage';
 import PostsRouter from './views/post';
 import ResidentsRouter from './views/resident';
 import StartPage from './views/StartPage';
-import MenuPage from './views/MenuPage';
-import AccessModule from './views/AccessModule';
-import WebpageReport from './views/WebpageReport';
+import WeeklyReportPage from './views/WeeklyReportPage';
 import './firebase/app';
 
 declare global {
@@ -42,8 +43,11 @@ const App: React.FC = () => (
       <Route path="/accessmodule">
         <AccessModule />
       </Route>
-      <Route path="/webpagereport">
-        <WebpageReport />
+      <Route path="/globalreport">
+        <GlobalReportPage />
+      </Route>
+      <Route path="/weeklyreport">
+        <WeeklyReportPage />
       </Route>
       <Route path="/">
         <StartPage />
