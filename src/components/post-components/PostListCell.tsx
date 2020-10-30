@@ -1,5 +1,5 @@
-import { useHistory, useRouteMatch } from 'react-router-dom';
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import Markdown from 'markdown-to-jsx';
 /** @jsx jsx */ import { css, jsx } from '@emotion/core';
 
@@ -57,7 +57,6 @@ const PostListCell: React.FC<PostListCellProps> = ({
   deletePost,
   imageUrl,
 }) => {
-  const match = useRouteMatch();
   const history = useHistory();
 
   return (
@@ -76,7 +75,7 @@ const PostListCell: React.FC<PostListCellProps> = ({
         <button
           css={editAndDeleteButton}
           style={{ backgroundColor: '#00b894' }}
-          onClick={() => history.push(`${match.path}/${postID}/edit`)}
+          onClick={() => history.push(`/posts/${postID}/edit`)}
         >
           Editar
         </button>

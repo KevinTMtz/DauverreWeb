@@ -24,14 +24,12 @@ const imgStyle = css({
   margin: '20px auto',
 });
 
-const Post: React.FC<Post> = ({ title, imageUrl, content }) => {
-  return (
-    <div css={divStyle}>
-      <h1 css={h1Style}>{title}</h1>
-      <img src={imageUrl} alt={`Imagen de ${title}`} css={imgStyle}></img>
-      <Markdown>{content}</Markdown>
-    </div>
-  );
-};
+const Post: React.FC<Post> = ({ title, imageUrl, content }) => (
+  <div css={divStyle}>
+    <h1 css={h1Style}>{title}</h1>
+    <img src={imageUrl} alt={`Imagen de ${title}`} css={imgStyle}></img>
+    <Markdown>{content}</Markdown>
+  </div>
+);
 
 export default Post;
