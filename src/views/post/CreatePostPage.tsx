@@ -1,9 +1,8 @@
-import { useHistory } from 'react-router-dom';
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import PageTitle from '../../components/PageTitle';
 import PostForm from '../../components/post-components/PostForm';
-
 import { createPost } from '../../firebase/db/posts';
 
 const CreatePostPage: React.FC = () => {
@@ -30,17 +29,15 @@ const CreatePostPage: React.FC = () => {
   return (
     <div>
       <PageTitle message={'Crear publicación'} />
-      {
-        <PostForm
-          post={newPostState}
-          onSubmit={onSubmit}
-          cancelOperation={() => {
-            history.push('/posts');
-          }}
-          setPostState={setNewPostState}
-          buttonMessage={'Crear publicación'}
-        />
-      }
+      <PostForm
+        post={newPostState}
+        onSubmit={onSubmit}
+        cancelOperation={() => {
+          history.push('/posts');
+        }}
+        setPostState={setNewPostState}
+        buttonMessage={'Crear publicación'}
+      />
     </div>
   );
 };
