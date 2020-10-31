@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { getReports } from '../../firebase/db/reports';
+import { getReports } from '../firebase/db/reports';
 
-const ResidentListPage: React.FC = () => {
+const ReportsList: React.FC = () => {
   const { residentID } = useParams<ResidentParams>();
   const [reports, setReports] = useState<Report[]>([]);
   useEffect(() => {
@@ -34,4 +34,4 @@ const ResidentListPage: React.FC = () => {
   );
 };
 
-export default ResidentListPage;
+export default ReportsList;
