@@ -1,5 +1,6 @@
 import React from 'react';
 import { useParams, Route, Switch, useRouteMatch } from 'react-router-dom';
+import CreateReport from '../../components/CreateReport';
 import PageTitle from '../../components/PageTitle';
 import ReportsList from '../../components/ReportList';
 import ViewReport from '../../components/ViewReport';
@@ -12,6 +13,9 @@ const ViewResidentPage: React.FC = () => {
       <PageTitle message={'Residente'} />
       <h3>Viewing resident "{residentID}"</h3>
       <Switch>
+        <Route path={`${match.path}/newreport`}>
+          <CreateReport />
+        </Route>
         <Route path={`${match.path}/:reportID`}>
           <ViewReport />
         </Route>
