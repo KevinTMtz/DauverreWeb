@@ -14,7 +14,7 @@ const ResidentListPage: React.FC = () => {
       {residents.map((r) => (
         <div key={r.residentID}>
           <h2>
-            Nombre: {r.firstName} {r.lastName}
+            Nombre: {r.firstName} {r.lastName} {r.residentID}
           </h2>
           <h5>Sexo: {r.gender}</h5>
           {r.isVisible || (
