@@ -1,5 +1,4 @@
-import React, {useState} from 'react';
-
+import React from 'react';
 import Button from '@material-ui/core/Button';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
@@ -7,11 +6,10 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
-
-//import {functions} from '../firebase/app';
 import resetPasswordResidentFamAcc from '../../functions/src/functions/resetPasswordResidentFamAcc';
-
+import {functions} from '../firebase/app'
 /** @jsx jsx */ import { css, jsx } from '@emotion/core';
+import { AnalyticsEvent } from 'firebase-functions/lib/providers/analytics';
 
 
 const divStyle = css({
@@ -35,30 +33,30 @@ const h1Style = css({
 
 
 
-const UserDisplay: React.FC <{key: string, firstName: string, lastName: string, gender:string}>= ({key, firstName, lastName, 
-  gender}) => {
+//const UserDisplay: React.FC <{key: string, firstName: string, lastName: string}>= ({key, firstName, lastName}) => {
+  const UserDisplay: React.FC <{ key:string, resident:any}>= ({key, resident}) => {
     const [open, setOpen] = React.useState(false);
+
     const handleClose = () => {
       setOpen(false);
     };
 
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
-    const onSubmit = () => {/*
+    const onSubmit = () => {
       const resetPasswordResidentFamAcc = functions.httpsCallable('resetPasswordResidentFamAcc');
-      resetPasswordResidentFamAcc({uid : key}).then(function(result) {
-        // Read result of the Cloud Function.
-        setOpen(result.data.text);
-        // ...
-      });*/
-      console.log(key)
       setOpen(true)
-    }
+      /*resetPasswordResidentFamAcc({key}).then((result) =>{
+        if (result) {
+          setOpen(true);
+        }
+      });*/
+    };
     return(
         <div css={divStyle}>
           
               <h1 css={h1Style}>
-                  {firstName} {"  "}  {lastName}
+                  {resident.firstName} {"  "}  {resident.lastName}
               </h1>
               <Button type="submit" variant="contained" color="primary" onClick={() => { onSubmit() }}>
                 Cambiar
