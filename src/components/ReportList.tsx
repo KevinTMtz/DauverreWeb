@@ -7,10 +7,10 @@ const ReportsList: React.FC = () => {
   const [reports, setReports] = useState<Report[]>([]);
   useEffect(() => {
     getReports(residentID).then((repid) => setReports(repid));
-  }, []);
+  }, [residentID]);
   return (
     <div>
-      <h1>Reports List Page</h1>
+      <h1>Reports List Page from</h1>
       {reports.map((r) => (
         <div key={r.reportID}>
           <h2>{r.reportID}</h2>

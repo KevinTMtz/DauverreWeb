@@ -10,12 +10,12 @@ const ViewReport: React.FC = () => {
   useEffect(() => {
     getReport(residentID, reportID).then((repid) => {
       if ((repid as NotFoundError).notFound) {
-        history.push('/:residentID');
+        history.push(`/residents/${residentID}`);
       } else {
         setReport(repid as Report);
       }
     });
-  }, []);
+  }, [history, residentID, reportID]);
   return (
     <div>
       <PageTitle message={'Reporte'} />

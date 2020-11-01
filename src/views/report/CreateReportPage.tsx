@@ -1,9 +1,9 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 
-import PageTitle from '../components/PageTitle';
+import PageTitle from '../../components/PageTitle';
 
-const CreateReport: React.FC = () => {
+const CreateReportPage: React.FC = () => {
   const { residentID } = useParams<ResidentParams>();
   return (
     <div>
@@ -13,4 +13,4 @@ const CreateReport: React.FC = () => {
   );
 };
 
-export default CreateReport;
+export default CreateReportPage;

@@ -4,6 +4,7 @@ import EditResidentPage from './EditResidentPage';
 import RegisterResidentPage from './RegisterResidentPage';
 import ResidentListPage from './ResidentListPage';
 import ViewResidentPage from './ViewResidentPage';
+import CreateReportPage from '../report/CreateReportPage';
 
 const ResdientsRouter: React.FC = () => {
   const match = useRouteMatch();
@@ -14,6 +15,9 @@ const ResdientsRouter: React.FC = () => {
       </Route>
       <Route path={`${match.path}/:residentID/edit`}>
         <EditResidentPage />
+      </Route>
+      <Route path={`${match.path}/:residentID/newreport`}>
+        <CreateReportPage />
       </Route>
       <Route path={`${match.path}/:residentID`}>
         <ViewResidentPage />
