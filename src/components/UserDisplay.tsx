@@ -6,10 +6,10 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
-import resetPasswordResidentFamAcc from '../../functions/src/functions/resetPasswordResidentFamAcc';
+//import resetPasswordResidentFamAcc from '../../functions/src/functions/resetPasswordResidentFamAcc';
 import {functions} from '../firebase/app'
 /** @jsx jsx */ import { css, jsx } from '@emotion/core';
-import { AnalyticsEvent } from 'firebase-functions/lib/providers/analytics';
+//import { AnalyticsEvent } from 'firebase-functions/lib/providers/analytics';
 
 
 const divStyle = css({
@@ -34,7 +34,7 @@ const h1Style = css({
 
 
 //const UserDisplay: React.FC <{key: string, firstName: string, lastName: string}>= ({key, firstName, lastName}) => {
-  const UserDisplay: React.FC <{ key:string, resident:any}>= ({key, resident}) => {
+  const UserDisplay: React.FC <{  resident:any}>= ({ resident}) => {
     const [open, setOpen] = React.useState(false);
 
     const handleClose = () => {
@@ -43,11 +43,15 @@ const h1Style = css({
 
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
+    const resID = resident.residentID;
+    console.log(resID);
+
+
     const onSubmit = () => {
       const resetPasswordResidentFamAcc = functions.httpsCallable('resetPasswordResidentFamAcc');
       setOpen(true)
-      /*resetPasswordResidentFamAcc({key}).then((result) =>{
-        if (result) {
+      /*resetPasswordResidentFamAcc({uid:resID}).then((value) =>{
+        if ((value as unknown as SuccessMessage).success) {
           setOpen(true);
         }
       });*/
