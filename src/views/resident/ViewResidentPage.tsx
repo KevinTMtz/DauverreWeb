@@ -1,9 +1,10 @@
 import React from 'react';
 import { useParams, Route, Switch, useRouteMatch } from 'react-router-dom';
-import CreateReport from '../../components/CreateReport';
+
 import PageTitle from '../../components/PageTitle';
-import ReportsList from '../../components/ReportList';
-import ViewReport from '../../components/ViewReport';
+import CreateReport from '../../components/report-components/CreateReport';
+import ReportsList from '../../components/report-components/ReportList';
+import ViewReport from '../../components/report-components/ViewReport';
 
 const ViewResidentPage: React.FC = () => {
   const { residentID } = useParams<ResidentParams>();
