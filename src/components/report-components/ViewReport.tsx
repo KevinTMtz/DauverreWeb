@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
-import PageTitle from './PageTitle';
-import { getReport } from '../firebase/db/reports';
+
+import PageTitle from '../PageTitle';
+import { getReport } from '../../firebase/db/reports';
 
 const ViewReport: React.FC = () => {
   const history = useHistory();
