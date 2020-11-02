@@ -1,7 +1,7 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 
-import PageTitle from '../components/PageTitle';
+import PageTitle from '../PageTitle';
 
 const CreateReport: React.FC = () => {
   const { residentID } = useParams<ResidentParams>();
