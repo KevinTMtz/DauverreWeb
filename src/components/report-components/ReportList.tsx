@@ -12,10 +12,17 @@ const ReportsList: React.FC = () => {
   }, [residentID]);
   return (
     <div>
-      <h1>Últimos reportes</h1>
-      {reports.map((r) => (
-        <ReportListCell key={r.reportID} {...r} />
-      ))}
+      <h1 style={{ textAlign: 'center' }}>Últimos reportes</h1>
+      {reports.length === 0 ? (
+        /*No sé como podría ponerle, porque quiero que esto aparezca 
+        cuando no hay reportes pero aparecerá mintras carga la base de datos*/
+        <h1 style={{ textAlign: 'center' }}>No hay reportes</h1>
+      ) : (
+        reports
+          .slice(0)
+          .reverse()
+          .map((r) => <ReportListCell key={r.reportID} {...r} />)
+      )}
     </div>
   );
 };

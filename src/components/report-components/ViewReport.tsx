@@ -18,6 +18,8 @@ const ViewReport: React.FC = () => {
     });
   }, [history, residentID, reportID]);
   return (
+    /*Creo que ya no necesitaré este componente, ya que no la maestra dijo 
+    que no se pueden editar reportes, esta view no es necesaria*/
     <div>
       <PageTitle message={'Reporte'} />
       <h3>
