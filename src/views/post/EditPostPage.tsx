@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 
 import PageTitle from '../../components/PageTitle';
-import Post from '../../components/post-components/Post';
 import PostForm from '../../components/post-components/PostForm';
 
 import { getPost, updatePost } from '../../firebase/db/posts';
+import { getFileLink, uploadFile } from '../../firebase/db/storage';
 
 const EditPostPage: React.FC = () => {
   const history = useHistory();
@@ -19,6 +19,8 @@ const EditPostPage: React.FC = () => {
     postID: postID,
   });
 
+  const [imageFile, setImageFile] = useState<File>();
+
   useEffect(() => {
     getPost(postID).then((value) => {
       if ((value as NotFoundError).notFound) {
@@ -27,15 +29,36 @@ const EditPostPage: React.FC = () => {
         setPost(value as Post);
       }
     });
+
+    getFileLink(`post_images/${postID}`).then((value) => {
+      if ((value as SuccessMessage).success) {
+        const xhr = new XMLHttpRequest();
+        xhr.responseType = 'blob';
+        xhr.onload = () => {
+          const file = xhr.response;
+          file.name = postID;
+          setImageFile(file);
+        };
+        xhr.open('GET', (value as SuccessMessage).url);
+        xhr.send();
+      }
+    });
   }, [postID, history]);
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    updatePost({ ...post, postID }).then((value) => {
-      if ((value as SuccessMessage).success) {
-        history.push('/posts');
-      }
-    });
+
+    uploadFile(`post_images/${postID}`, imageFile as File).then(
+      (uploadImageAns) => {
+        if ((uploadImageAns as SuccessMessage).success) {
+          updatePost({ ...post, postID }).then((value) => {
+            if ((value as SuccessMessage).success) {
+              history.push('/posts');
+            }
+          });
+        }
+      },
+    );
   };
 
   return (
@@ -43,12 +66,14 @@ const EditPostPage: React.FC = () => {
       <PageTitle message={'Editar publicación'} />
       <PostForm
         post={post}
+        setPostState={setPost}
+        imageFile={imageFile}
+        setImageFile={setImageFile}
+        buttonMessage={'Guardar cambios'}
         onSubmit={onSubmit}
         cancelOperation={() => {
           history.push('/posts');
         }}
-        setPostState={setPost}
-        buttonMessage={'Guardar cambios'}
       />
     </div>
   );

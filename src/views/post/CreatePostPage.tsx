@@ -3,7 +3,9 @@ import { useHistory } from 'react-router-dom';
 
 import PageTitle from '../../components/PageTitle';
 import PostForm from '../../components/post-components/PostForm';
+import { db } from '../../firebase/app';
 import { createPost } from '../../firebase/db/posts';
+import { uploadFile } from '../../firebase/db/storage';
 
 const CreatePostPage: React.FC = () => {
   const history = useHistory();
@@ -12,18 +14,33 @@ const CreatePostPage: React.FC = () => {
     title: '',
     date: new Date(),
     content: '',
-    imageUrl:
-      'https://lh5.googleusercontent.com/p/AF1QipP3Ll5USMkZfqPJRnKbH1BSFK1XGk5x2r1La6vF=s1016-k-no',
+    imageUrl: '',
   });
+
+  const [imageFile, setImageFile] = useState<File>();
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    createPost(newPostState).then((value) => {
-      if ((value as SuccessMessage).success) {
-        history.push('/posts');
-      }
-    });
+    const postID = db.collection('posts').doc().id;
+
+    uploadFile(`post_images/${postID}`, imageFile as File).then(
+      (uploadImageAns) => {
+        if ((uploadImageAns as SuccessMessage).success) {
+          createPost(
+            {
+              ...newPostState,
+              imageUrl: (uploadImageAns as SuccessMessage).url,
+            },
+            postID,
+          ).then((value) => {
+            if ((value as SuccessMessage).success) {
+              history.push('/posts');
+            }
+          });
+        }
+      },
+    );
   };
 
   return (
@@ -31,12 +48,14 @@ const CreatePostPage: React.FC = () => {
       <PageTitle message={'Crear publicación'} />
       <PostForm
         post={newPostState}
+        setPostState={setNewPostState}
+        imageFile={imageFile}
+        setImageFile={setImageFile}
+        buttonMessage={'Crear publicación'}
         onSubmit={onSubmit}
         cancelOperation={() => {
           history.push('/posts');
         }}
-        setPostState={setNewPostState}
-        buttonMessage={'Crear publicación'}
       />
     </div>
   );
