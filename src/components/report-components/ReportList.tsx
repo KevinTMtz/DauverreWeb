@@ -16,14 +16,26 @@ const ReportsList: React.FC = () => {
   }, [residentID]);
   return (
     <div>
-      <h1 style={{ textAlign: 'center' }}>Últimos reportes</h1>
       {typeof reports === 'undefined' ? (
-        <h1 style={{ textAlign: 'center' }}>No hay reportes</h1>
+        <div style={{ display: 'flex', alignContent: 'center' }}>
+          <CircularProgress
+            style={{
+              width: '100px',
+              height: '100px',
+              margin: ' 20vh auto',
+              color: '#74b9ff',
+            }}
+          />
+        </div>
       ) : reports.length === 0 ? (
-        // No sé porque no está funcionando
-        <CircularProgress style={{ margin: 'auto' }} />
+        <h1 style={{ textAlign: 'center' }}>No hay reportes</h1>
       ) : (
-        reports.map((r) => <ReportListCell key={r.reportID} {...r} />)
+        <div>
+          <h1 style={{ textAlign: 'center' }}>Últimos reportes</h1>
+          {reports.map((r) => (
+            <ReportListCell key={r.reportID} {...r} />
+          ))}
+        </div>
       )}
     </div>
   );
