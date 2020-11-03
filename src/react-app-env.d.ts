@@ -56,7 +56,7 @@ interface NotFoundError {
 }
 
 interface UnableToUploadFile {
-  notFound: boolean;
+  notUploaded: boolean;
 }
 
 type ValidationErrors = string[];
