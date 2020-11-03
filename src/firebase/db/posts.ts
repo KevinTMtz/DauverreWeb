@@ -36,14 +36,15 @@ export const getPost = async (
 
 export const createPost = async (
   postData: PostData,
+  postID: string,
 ): Promise<SuccessMessage | ValidationErrors> => {
   try {
     const validatedPost = (await postDocSchema.validate(postData)) as PostData;
-    const doc = await postsCollection.add({
+    await postsCollection.doc(postID).set({
       ...validatedPost,
       date: firestore.Timestamp.fromDate(validatedPost.date),
     });
-    return { success: true, url: `/posts/${doc.id}` };
+    return { success: true, url: `/posts/${postID}` };
   } catch (error) {
     if (error.name === 'ValidationError') {
       return error.errors;
