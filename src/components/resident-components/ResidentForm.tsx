@@ -103,7 +103,7 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
       <FormControl
         variant="outlined"
         margin="normal"
-        // required
+        required
         fullWidth
         component="fieldset"
       >
@@ -113,16 +113,20 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
             control={<Radio />}
             label="Masculino"
             value="male"
-            // onChange={(event) =>
-            //   setResidentState({ ...resident, gender: event.target.checked})
-            // }
+            onChange={() => setResidentState({ ...resident, gender: 'Hombre' })}
           />
           <FormControlLabel
             control={<Radio />}
             label="Femenino"
             value="female"
+            onChange={() => setResidentState({ ...resident, gender: 'Mujer' })}
           />
-          <FormControlLabel control={<Radio />} label="Otro" value="other" />
+          <FormControlLabel
+            control={<Radio />}
+            label="Otro"
+            value="other"
+            onChange={() => setResidentState({ ...resident, gender: 'Otro' })}
+          />
         </RadioGroup>
       </FormControl>
       <TextField
