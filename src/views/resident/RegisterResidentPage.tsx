@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import PageTitle from '../../components/PageTitle';
-import ResidentForm from '../../components/resident-components/ResidentForm'
-import { createResident } from '../../firebase/db/residents'
+import ResidentForm from '../../components/resident-components/ResidentForm';
+import { createResident } from '../../firebase/db/residents';
 
 const RegisterResidentPage: React.FC = () => {
   const history = useHistory();
@@ -39,8 +39,8 @@ const RegisterResidentPage: React.FC = () => {
         setResidentState={setNewResidentState}
         buttonMessage={'Registrar'}
       />
-    </div> 
+    </div>
   );
-}
+};
 
 export default RegisterResidentPage;
