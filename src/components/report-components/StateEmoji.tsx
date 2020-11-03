@@ -1,28 +1,35 @@
 import React, { SVGProps } from 'react';
 
-import { ReactComponent as StateEmoji1 } from '../../assets/emojis/alone.svg';
-import { ReactComponent as StateEmoji2 } from '../../assets/emojis/angry.svg';
-import { ReactComponent as StateEmoji3 } from '../../assets/emojis/crying.svg';
-import { ReactComponent as StateEmoji4 } from '../../assets/emojis/food.svg';
-import { ReactComponent as StateEmoji5 } from '../../assets/emojis/sleepy.svg';
+import { ReactComponent as StateEmojiAlone } from '../../assets/emojis/alone.svg';
+import { ReactComponent as StateEmojiAngry } from '../../assets/emojis/angry.svg';
+import { ReactComponent as StateEmojiCrying } from '../../assets/emojis/crying.svg';
+import { ReactComponent as StateEmojiFood } from '../../assets/emojis/food.svg';
+import { ReactComponent as StateEmojiSleepy } from '../../assets/emojis/sleepy.svg';
+
+type StateEmojiType =
+  | 'alone'
+  | 'angry'
+  | 'crying'
+  | 'crying'
+  | 'food'
+  | 'sleepy';
 
 interface StateEmojiProps extends SVGProps<SVGSVGElement> {
-  state: string;
+  state: StateEmojiType;
 }
 
 const StateEmoji: React.FC<StateEmojiProps> = ({ state, ...props }) => {
-  if (state === 'alone') {
-    return <StateEmoji1 {...props} />;
-  } else if (state === 'angry') {
-    return <StateEmoji2 {...props} />;
-  } else if (state === 'crying') {
-    return <StateEmoji3 {...props} />;
-  } else if (state === 'food') {
-    return <StateEmoji4 {...props} />;
-  } else if (state === 'sleepy') {
-    return <StateEmoji5 {...props} />;
-  } else {
-    return <div></div>;
+  switch (state) {
+    case 'alone':
+      return <StateEmojiAlone {...props} />;
+    case 'angry':
+      return <StateEmojiAngry {...props} />;
+    case 'crying':
+      return <StateEmojiCrying {...props} />;
+    case 'food':
+      return <StateEmojiFood {...props} />;
+    case 'sleepy':
+      return <StateEmojiSleepy {...props} />;
   }
 };
 
