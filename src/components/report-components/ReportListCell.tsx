@@ -17,6 +17,7 @@ const cellStyle = css({
     width: 'calc(90% - 32px)',
   },
 });
+
 const info = css({
   width: '100%',
   display: 'flex',
@@ -57,7 +58,7 @@ const ReportListCell: React.FC<ReportListCellProps> = ({
   sad,
   wellFed,
 }) => (
-  <div css={cellStyle} id={'rep-' + reportID}>
+  <div css={cellStyle} id={`rep-${reportID}`}>
     <h2 style={{ textAlign: 'center' }}>
       Reporte del {format(date, 'PPPP', { locale: es })}
     </h2>
