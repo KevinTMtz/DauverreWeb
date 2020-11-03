@@ -6,6 +6,7 @@ import PostListCell from '../../components/post-components/PostListCell';
 import PageTitle from '../../components/PageTitle';
 
 import { getPosts, deletePost } from '../../firebase/db/posts';
+import { deleteFile } from '../../firebase/db/storage';
 
 const addButtonStyle = css({
   width: 'calc(90%)',
@@ -42,6 +43,8 @@ const PostsListPage: React.FC = () => {
         const newPosts = [...posts];
         newPosts.splice(postIndex, 1);
         setPosts(newPosts);
+
+        deleteFile(`post_images/${postID}`);
       }
     });
   };
