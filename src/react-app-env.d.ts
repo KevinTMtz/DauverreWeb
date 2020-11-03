@@ -55,6 +55,10 @@ interface NotFoundError {
   notFound: boolean;
 }
 
+interface UnableToUploadFile {
+  notFound: boolean;
+}
+
 type ValidationErrors = string[];
 
 type FirebaseCollection = firebase.firestore.CollectionReference<
