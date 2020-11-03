@@ -9,14 +9,17 @@ import { getFileLink, uploadFile } from '../../firebase/db/storage';
 
 const EditPostPage: React.FC = () => {
   const history = useHistory();
+  const pushHistory = () => {
+    history.push('/posts');
+  };
+
   const { postID } = useParams<PostParams>();
 
-  const [post, setPost] = useState<Post>({
+  const [post, setPost] = useState<PostData>({
     title: '',
     date: new Date(),
     content: '',
     imageUrl: '',
-    postID: postID,
   });
 
   const [imageFile, setImageFile] = useState<File>();
@@ -37,6 +40,7 @@ const EditPostPage: React.FC = () => {
         xhr.onload = () => {
           const file = xhr.response;
           file.name = postID;
+          file.lastModified = new Date();
           setImageFile(file);
         };
         xhr.open('GET', (value as SuccessMessage).url);
@@ -71,9 +75,7 @@ const EditPostPage: React.FC = () => {
         setImageFile={setImageFile}
         buttonMessage={'Guardar cambios'}
         onSubmit={onSubmit}
-        cancelOperation={() => {
-          history.push('/posts');
-        }}
+        cancelOperation={pushHistory}
       />
     </div>
   );

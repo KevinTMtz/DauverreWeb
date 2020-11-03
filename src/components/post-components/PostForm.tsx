@@ -50,7 +50,17 @@ const styledInputImagePreview = css({
   maxHeight: '300px',
 });
 
-const PostForm: React.FC<any> = (props) => {
+interface PostFormProps {
+  post: PostData;
+  setPostState: React.Dispatch<React.SetStateAction<PostData>>;
+  imageFile: File | undefined;
+  setImageFile: React.Dispatch<React.SetStateAction<File | undefined>>;
+  buttonMessage: string;
+  onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+  cancelOperation: () => void;
+}
+
+const PostForm: React.FC<PostFormProps> = (props) => {
   return (
     <form autoComplete="off" onSubmit={props.onSubmit} css={styledForm}>
       <p css={styledP}>Título</p>
@@ -117,10 +127,10 @@ const PostForm: React.FC<any> = (props) => {
           type="file"
           accept="image/*"
           css={styledInputImage}
-          required
+          required={props.imageFile ? false : true}
           onChange={(event) =>
             props.setImageFile(
-              event.target.files ? event.target.files[0] : undefined,
+              event.target.files ? event.target.files[0] : props.imageFile,
             )
           }
         />

@@ -8,9 +8,7 @@ export const getFileLink = async (
   try {
     const fileRef = storageRef.child(path);
 
-    const publicLink = await fileRef
-      .getDownloadURL()
-      .then((value: string) => value);
+    const publicLink = (await fileRef.getDownloadURL()) as string;
 
     return { success: true, url: publicLink };
   } catch (error) {
@@ -30,9 +28,7 @@ export const uploadFile = async (
     const fileRef = storageRef.child(path);
     await fileRef.put(file);
 
-    const publicLink = await fileRef
-      .getDownloadURL()
-      .then((value: string) => value);
+    const publicLink = (await fileRef.getDownloadURL()) as string;
 
     return { success: true, url: publicLink };
   } catch (error) {
