@@ -9,6 +9,9 @@ import { uploadFile } from '../../firebase/db/storage';
 
 const CreatePostPage: React.FC = () => {
   const history = useHistory();
+  const pushHistory = () => {
+    history.push('/posts');
+  };
 
   const [newPostState, setNewPostState] = useState<PostData>({
     title: '',
@@ -53,9 +56,7 @@ const CreatePostPage: React.FC = () => {
         setImageFile={setImageFile}
         buttonMessage={'Crear publicación'}
         onSubmit={onSubmit}
-        cancelOperation={() => {
-          history.push('/posts');
-        }}
+        cancelOperation={pushHistory}
       />
     </div>
   );
