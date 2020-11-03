@@ -11,7 +11,7 @@ const RegisterResidentPage: React.FC = () => {
   const [newResidentState, setNewResidentState] = useState<ResidentData>({
     firstName: '',
     lastName: '',
-    gender: 'M',
+    gender: '',
     isVisible: true,
     birthDate: new Date(),
     telephone: '',
