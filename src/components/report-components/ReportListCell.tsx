@@ -74,35 +74,35 @@ const ReportListCell: React.FC<ReportListCellProps> = ({
       </div>
       <div style={{ width: '40%' }}>
         <div css={stateInfo}>
-          <StateEmoji index={1} height="30px" />
+          <StateEmoji state="alone" height="30px" />
           <h5>¿Se sintió triste?:</h5>
           <h5 style={sad ? { color: 'green' } : { color: 'red' }}>
             {sad ? '✔' : '✖'}
           </h5>
         </div>
         <div css={stateInfo}>
-          <StateEmoji index={2} height="30px" />
+          <StateEmoji state="angry" height="30px" />
           <h5>¿Se sintió enojado?:</h5>
           <h5 style={angry ? { color: 'green' } : { color: 'red' }}>
             {angry ? '✔' : '✖'}
           </h5>
         </div>
         <div css={stateInfo}>
-          <StateEmoji index={3} height="30px" />
+          <StateEmoji state="crying" height="30px" />
           <h5>¿Descansó bien?:</h5>
           <h5 style={rested ? { color: 'green' } : { color: 'red' }}>
             {rested ? '✔' : '✖'}
           </h5>
         </div>
         <div css={stateInfo}>
-          <StateEmoji index={4} height="30px" />
+          <StateEmoji state="food" height="30px" />
           <h5>¿Se alimentó bien?:</h5>
           <h5 style={wellFed ? { color: 'green' } : { color: 'red' }}>
             {wellFed ? '✔' : '✖'}
           </h5>
         </div>
         <div css={stateInfo}>
-          <StateEmoji index={5} height="30px" />
+          <StateEmoji state="sleepy" height="30px" />
           <h5>¿Se sintió solo?:</h5>
           <h5 style={lonely ? { color: 'green' } : { color: 'red' }}>
             {lonely ? '✔' : '✖'}
