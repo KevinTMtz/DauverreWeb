@@ -25,9 +25,26 @@ const styledForm = css({
   fontWeight: 'bold',
 });
 
-const ResidentForm: React.FC<any> = (props) => {
+interface ResidentFormProps {
+  resident: Resident
+  onSubmit: (event: React.FormEvent<HTMLFormElement>) => void
+  cancelOperation: () => void
+  setResidentState: React.Dispatch<React.SetStateAction<Resident>>
+  buttonMessage: string
+}
+
+const ResidentForm: React.FC<ResidentFormProps> = ({
+  resident,
+  onSubmit,
+  cancelOperation,
+  setResidentState,
+  buttonMessage,
+}) => {
   return (
-    <form autoComplete="off" onSubmit={props.onSubmit} css={styledForm}>
+    <form 
+      autoComplete="off"
+      onSubmit={onSubmit}
+      css={styledForm}>
       <TextField 
         variant="outlined"
         margin="normal"
@@ -38,9 +55,12 @@ const ResidentForm: React.FC<any> = (props) => {
         name="firstName"
         autoComplete="firstName"
         autoFocus
-        value={props.resident.firstName}
+        value={resident.firstName}
         onChange={(event) =>
-          props.setResidentState({ ...props.resident, firstName: event.target.value })
+          setResidentState({
+            ...resident,
+            firstName: event.target.value 
+          })
         }
       />
       <TextField 
@@ -53,9 +73,12 @@ const ResidentForm: React.FC<any> = (props) => {
         name="lastName"
         autoComplete="lastName"
         autoFocus
-        value={props.resident.lastName}
+        value={resident.lastName}
         onChange={(event) =>
-          props.setResidentState({ ...props.resident, lastName: event.target.value })
+          setResidentState({
+            ...resident,
+            lastName: event.target.value 
+          })
         }
       />
       <p>Fecha de nacimiento</p>
@@ -68,10 +91,10 @@ const ResidentForm: React.FC<any> = (props) => {
           id="date-picker-inline"
           label="Fecha"
           fullWidth
-          value={props.resident.birthDate}
+          value={resident.birthDate}
           onChange={(event) =>
-            props.setResidentState({
-              ...props.resident,
+            setResidentState({
+              ...resident,
               birthDate: new Date(event!.valueOf()),
             })
           }
@@ -94,7 +117,7 @@ const ResidentForm: React.FC<any> = (props) => {
             label="Masculino"
             value="male"
             // onChange={(event) => 
-            //   props.setResidentState({ ...props.resident, gender: event.target.checked})
+            //   setResidentState({ ...resident, gender: event.target.checked})
             // }
           />
           <FormControlLabel
@@ -118,13 +141,16 @@ const ResidentForm: React.FC<any> = (props) => {
         name="telephone"
         autoComplete="telephone"
         autoFocus
-        value={props.resident.telephone}
+        value={resident.telephone}
         onChange={(event) =>
-          props.setResidentState({ ...props.resident, telephone: event.target.value })
+          setResidentState({
+            ...resident,
+            telephone: event.target.value
+          })
         }
       />
       <Button type="submit" variant="contained" color="primary" fullWidth>
-          {props.buttonMessage}
+          {buttonMessage}
       </Button>
       <Button
         type="submit"
@@ -132,7 +158,7 @@ const ResidentForm: React.FC<any> = (props) => {
         color="secondary"
         fullWidth
         style={{ marginTop: '20px' }}
-        onClick={props.cancelOperation}
+        onClick={cancelOperation}
       >
         Cancelar
       </Button> 

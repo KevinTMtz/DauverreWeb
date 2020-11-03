@@ -1,4 +1,6 @@
 import React from 'react';
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
 import { useHistory } from 'react-router-dom';
 /** @jsx jsx */ import { css, jsx } from '@emotion/core';
 
@@ -59,11 +61,12 @@ const ResidentListCell: React.FC<ResidentListCellProps> = ({
       <div>
         <h5>Sexo: {gender}</h5>
         <h5>Teléfono: {telephone}</h5>
-        <h5>Fecha de nacimiento: {birthDate.toLocaleDateString}</h5>
+        <h5>Fecha de nacimiento: {format(birthDate, 'PPPP', {
+        locale: es })}</h5>
         {isVisible || (
-              <h5>
-                Este residente no se encuentra actualmente en la institución
-              </h5>
+            <h5>
+              Este residente no se encuentra actualmente en la institución
+            </h5>
           )}
         <h5>ID: {residentID}</h5>
       </div>
