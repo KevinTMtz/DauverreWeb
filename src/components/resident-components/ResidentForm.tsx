@@ -26,11 +26,11 @@ const styledForm = css({
 });
 
 interface ResidentFormProps {
-  resident: Resident
-  onSubmit: (event: React.FormEvent<HTMLFormElement>) => void
-  cancelOperation: () => void
-  setResidentState: React.Dispatch<React.SetStateAction<Resident>>
-  buttonMessage: string
+  resident: ResidentData;
+  onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+  cancelOperation: () => void;
+  setResidentState: React.Dispatch<React.SetStateAction<ResidentData>>;
+  buttonMessage: string;
 }
 
 const ResidentForm: React.FC<ResidentFormProps> = ({
@@ -41,11 +41,8 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
   buttonMessage,
 }) => {
   return (
-    <form 
-      autoComplete="off"
-      onSubmit={onSubmit}
-      css={styledForm}>
-      <TextField 
+    <form autoComplete="off" onSubmit={onSubmit} css={styledForm}>
+      <TextField
         variant="outlined"
         margin="normal"
         required
@@ -59,11 +56,11 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
         onChange={(event) =>
           setResidentState({
             ...resident,
-            firstName: event.target.value 
+            firstName: event.target.value,
           })
         }
       />
-      <TextField 
+      <TextField
         variant="outlined"
         margin="normal"
         required
@@ -77,7 +74,7 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
         onChange={(event) =>
           setResidentState({
             ...resident,
-            lastName: event.target.value 
+            lastName: event.target.value,
           })
         }
       />
@@ -106,17 +103,17 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
       <FormControl
         variant="outlined"
         margin="normal"
-        required
+        // required
         fullWidth
         component="fieldset"
-        >
+      >
         <FormLabel component="legend">Sexo</FormLabel>
         <RadioGroup aria-label="gender" name="gender" row>
           <FormControlLabel
             control={<Radio />}
             label="Masculino"
             value="male"
-            // onChange={(event) => 
+            // onChange={(event) =>
             //   setResidentState({ ...resident, gender: event.target.checked})
             // }
           />
@@ -125,14 +122,10 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
             label="Femenino"
             value="female"
           />
-          <FormControlLabel
-            control={<Radio />}
-            label="Otro"
-            value="other"
-          />
+          <FormControlLabel control={<Radio />} label="Otro" value="other" />
         </RadioGroup>
       </FormControl>
-      <TextField 
+      <TextField
         variant="outlined"
         margin="normal"
         fullWidth
@@ -145,12 +138,12 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
         onChange={(event) =>
           setResidentState({
             ...resident,
-            telephone: event.target.value
+            telephone: event.target.value,
           })
         }
       />
       <Button type="submit" variant="contained" color="primary" fullWidth>
-          {buttonMessage}
+        {buttonMessage}
       </Button>
       <Button
         type="submit"
@@ -161,7 +154,7 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
         onClick={cancelOperation}
       >
         Cancelar
-      </Button> 
+      </Button>
     </form>
   );
 };

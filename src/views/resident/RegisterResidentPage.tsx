@@ -1,22 +1,20 @@
 import React, { useState } from 'react';
-import { useParams, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 import PageTitle from '../../components/PageTitle';
-import ResidentForm from '../../components/resident-components/ResidentForm'
-import { createResident } from '../../firebase/db/residents'
+import ResidentForm from '../../components/resident-components/ResidentForm';
+import { createResident } from '../../firebase/db/residents';
 
 const RegisterResidentPage: React.FC = () => {
   const history = useHistory();
-  const { residentID } = useParams<ResidentParams>();
 
-  const [newResidentState, setNewResidentState] = useState<Resident>({
+  const [newResidentState, setNewResidentState] = useState<ResidentData>({
     firstName: '',
     lastName: '',
-    gender: '',
+    gender: 'M',
     isVisible: true,
     birthDate: new Date(),
     telephone: '',
-    residentID: residentID,
   });
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -41,8 +39,8 @@ const RegisterResidentPage: React.FC = () => {
         setResidentState={setNewResidentState}
         buttonMessage={'Registrar'}
       />
-    </div> 
+    </div>
   );
-}
+};
 
 export default RegisterResidentPage;

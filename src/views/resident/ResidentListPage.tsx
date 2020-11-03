@@ -36,12 +36,15 @@ const ResidentListPage: React.FC = () => {
     getResidents().then((resid) => setResidents(resid));
   }, []);
 
-  const deleteSelectedResident = (residentIndex: number, residentID: string) => {
+  const deleteSelectedResident = (
+    residentIndex: number,
+    residentID: string,
+  ) => {
     deleteResident(residentID).then((value) => {
       if ((value as SuccessMessage).success) {
         const newResidents = [...residents];
         newResidents.splice(residentIndex, 1);
-        setResidents(newResidents)
+        setResidents(newResidents);
       }
     });
   };
