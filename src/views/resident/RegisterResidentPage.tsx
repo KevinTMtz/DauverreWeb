@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 
 import PageTitle from '../../components/PageTitle';
 import ResidentForm from '../../components/resident-components/ResidentForm'
@@ -7,14 +7,16 @@ import { createResident } from '../../firebase/db/residents'
 
 const RegisterResidentPage: React.FC = () => {
   const history = useHistory();
+  const { residentID } = useParams<ResidentParams>();
 
-  const [newResidentState, setNewResidentState] = useState<ResidentData>({
+  const [newResidentState, setNewResidentState] = useState<Resident>({
     firstName: '',
     lastName: '',
     gender: '',
     isVisible: true,
     birthDate: new Date(),
     telephone: '',
+    residentID: residentID,
   });
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {

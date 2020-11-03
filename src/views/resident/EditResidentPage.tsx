@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 
 import PageTitle from '../../components/PageTitle';
-import ResidentForm from '../../components/resident-components/ResidentForm'
-import { getResident, updateResident } from '../../firebase/db/residents'
+import ResidentForm from '../../components/resident-components/ResidentForm';
+import { getResident, updateResident } from '../../firebase/db/residents';
 
 
 const EditResidentPage: React.FC = () => {
