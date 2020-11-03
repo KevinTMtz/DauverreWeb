@@ -111,7 +111,7 @@ const PostForm: React.FC<any> = (props) => {
       <p css={styledP}>Imagen</p>
       <label css={styledInputImageLabel}>
         {props.imageFile
-          ? `Cambiar imagen ${props.imageFile.name}`
+          ? `Cambiar imagen: ${props.imageFile.name}`
           : 'Subir imagen'}
         <input
           type="file"
@@ -141,7 +141,7 @@ const PostForm: React.FC<any> = (props) => {
         variant="contained"
         color="secondary"
         fullWidth
-        style={{ marginTop: '20px' }}
+        style={{ margin: '20px 0px 40px 0px' }}
         onClick={props.cancelOperation}
       >
         Cancelar
