@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import PostListCell from '../../components/post-components/PostListCell';
 import PageTitle from '../../components/PageTitle';
 import { getPosts, deletePost } from '../../firebase/db/posts';
-import { deleteFile } from '../../firebase/db/storage';
+import { deleteFile } from '../../firebase/storage';
 
 const addButtonStyle = css({
   width: 'calc(90%)',

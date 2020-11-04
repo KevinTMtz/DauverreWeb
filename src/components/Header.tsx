@@ -1,6 +1,6 @@
+import React from 'react';
 import { useLocation, Link } from 'react-router-dom';
 /** @jsx jsx */ import { css, jsx } from '@emotion/core';
-import React from 'react';
 
 const divStyle = css({
   margin: '0px',
@@ -38,7 +38,7 @@ const Header: React.FC = () => {
 
   return (
     <div css={divStyle}>
-      <p css={pStyle}>Dauverre Web</p>
+      <p css={pStyle}>Dauverre A. C.</p>
       {isInStartPage && (
         <Link to="/login" css={linkStyle}>
           Iniciar sesión

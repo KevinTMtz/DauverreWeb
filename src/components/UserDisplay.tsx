@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 
+/** @jsx jsx */ import { css, jsx } from '@emotion/core';
 import Button from '@material-ui/core/Button';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
@@ -7,8 +8,8 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
-import { functions } from '../firebase/app';
-/** @jsx jsx */ import { css, jsx } from '@emotion/core';
+
+import { resetPasswordFromAccount } from '../firebase/functions';
 
 const divStyle = css({
   padding: '10px',
@@ -33,22 +34,14 @@ interface UserDisplayProps {
 
 const UserDisplay: React.FC<UserDisplayProps> = ({ resident }) => {
   const [open, setOpen] = useState(false);
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
+  const handleClose = () => setOpen(false);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
-  const resID = resident.residentID;
 
   const onSubmit = () => {
-    const resetPasswordResidentFamAcc = functions.httpsCallable(
-      `/api/users/reset/${resID}`,
-    );
     setOpen(true);
-    resetPasswordResidentFamAcc({ uid: resID }).then((value) => {
-      if ((value as any).success) {
+    resetPasswordFromAccount(resident.residentID).then((value) => {
+      if (value.success) {
         setOpen(true);
       }
     });
