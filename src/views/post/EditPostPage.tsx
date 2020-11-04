@@ -5,7 +5,7 @@ import PageTitle from '../../components/PageTitle';
 import PostForm from '../../components/post-components/PostForm';
 
 import { getPost, updatePost } from '../../firebase/db/posts';
-import { getFileLink, uploadFile } from '../../firebase/db/storage';
+import { getFileLink, uploadFile } from '../../firebase/storage';
 
 const EditPostPage: React.FC = () => {
   const history = useHistory();

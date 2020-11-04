@@ -1,4 +1,4 @@
-import { storage } from '../app';
+import { storage } from './app';
 
 const storageRef = storage.ref();
 
