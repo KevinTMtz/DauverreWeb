@@ -1,14 +1,13 @@
-import React from 'react';
-import { useParams } from 'react-router-dom';
-/*import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import { createReport } from '../../firebase/db/reports';*/
+import { createReport } from '../../firebase/db/reports';
 
 import PageTitle from '../PageTitle';
+import ReportForm from './ReportForm';
 
 const CreateReport: React.FC = () => {
   const { residentID } = useParams<ResidentParams>();
-  /*const history = useHistory();
+  const history = useHistory();
   const [newReport, setNewReport] = useState<ReportData>({
     date: new Date(),
     mood: 0,
@@ -25,14 +24,24 @@ const CreateReport: React.FC = () => {
 
     createReport(residentID, newReport).then((value) => {
       if ((value as SuccessMessage).success) {
-        history.push('/residents/:residentID');
+        console.log('Report created');
+        history.push('/residents/' + residentID);
       }
     });
-  };*/
+  };
   return (
     <div>
       <PageTitle message={'Crear reporte'} />
       <h3>Creating report for resident "{residentID}"</h3>
+      <ReportForm
+        report={newReport}
+        onSubmit={onSubmit}
+        cancelOperation={() => {
+          history.push('/residents/' + residentID);
+        }}
+        setReportState={setNewReport}
+        buttonMessage={'Crear reporte'}
+      />
     </div>
   );
 };
