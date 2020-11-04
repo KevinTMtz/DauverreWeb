@@ -6,13 +6,12 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Header from './components/Header';
 import AccessModule from './views/AccessModule';
 import ForgotPasswordPage from './views/ForgotPasswordPage';
-import GlobalReportPage from './views/GlobalReportPage';
 import LoginPage from './views/LoginPage';
 import MenuPage from './views/MenuPage';
 import PostsRouter from './views/post';
 import ResidentsRouter from './views/resident';
 import StartPage from './views/StartPage';
-import WeeklyReportPage from './views/WeeklyReportPage';
+import StatisticsPage from './views/StatisticsPage';
 import './firebase/app';
 
 declare global {
@@ -43,11 +42,8 @@ const App: React.FC = () => (
       <Route path="/accessmodule">
         <AccessModule />
       </Route>
-      <Route path="/globalreport">
-        <GlobalReportPage />
-      </Route>
-      <Route path="/weeklyreport">
-        <WeeklyReportPage />
+      <Route path="/statistics">
+        <StatisticsPage />
       </Route>
       <Route path="/">
         <StartPage />
