@@ -34,17 +34,28 @@ const styledInput = css({
 
 const styledOptions = css({
   display: 'flex',
+  width: '100%',
   flexDirection: 'column',
   alignItems: 'center',
   textAlign: 'center',
   div: {
+    width: '45%',
     display: 'flex',
     alignItems: 'center',
     marginBottom: '10px',
+    justifyContent: 'space-between',
+  },
+  'div div': {
+    display: 'block',
+    width: 'auto',
   },
   legend: {
     display: 'flex',
     alignItems: 'center',
+    marginRight: '20px',
+  },
+  'legend svg': {
+    marginRight: '50px',
   },
 });
 
@@ -67,12 +78,33 @@ const ReportForm: React.FC<ReportFormProps> = ({
   const states: {
     state: StateEmojiType;
     message: string;
+    onChange: (value: boolean) => void;
   }[] = [
-    { state: 'crying', message: '¿Estuvo deprimido?' },
-    { state: 'angry', message: '¿Estuvo enojado?' },
-    { state: 'sleepy', message: '¿Durmió bien?' },
-    { state: 'food', message: '¿Se alimentó bien?' },
-    { state: 'alone', message: 'Se sintió solo?' },
+    {
+      state: 'crying',
+      message: '¿Estuvo deprimido?',
+      onChange: (value) => setReportState({ ...report, sad: value }),
+    },
+    {
+      state: 'angry',
+      message: '¿Estuvo enojado?',
+      onChange: (value) => setReportState({ ...report, angry: value }),
+    },
+    {
+      state: 'sleepy',
+      message: '¿Durmió bien?',
+      onChange: (value) => setReportState({ ...report, rested: value }),
+    },
+    {
+      state: 'food',
+      message: '¿Se alimentó bien?',
+      onChange: (value) => setReportState({ ...report, wellFed: value }),
+    },
+    {
+      state: 'alone',
+      message: 'Se sintió solo?',
+      onChange: (value) => setReportState({ ...report, lonely: value }),
+    },
   ];
   return (
     <form autoComplete="off" onSubmit={onSubmit} css={styledForm}>
@@ -134,7 +166,7 @@ const ReportForm: React.FC<ReportFormProps> = ({
         {states.map((state) => (
           <div key={state.state}>
             <FormLabel component="legend" key={state.state + 'Label'}>
-              {<StateEmoji state={state.state} height="50px" />}
+              {<StateEmoji state={state.state} height="40px" />}
               {state.message}
             </FormLabel>
             <RadioGroup
@@ -150,17 +182,7 @@ const ReportForm: React.FC<ReportFormProps> = ({
                   label={isTrue ? 'Sí' : 'No'}
                   labelPlacement="top"
                   value={'' + isTrue} //Si no es string entonces no aparece la selección
-                  onChange={() => {
-                    state.state === 'crying'
-                      ? setReportState({ ...report, sad: isTrue })
-                      : state.state === 'angry'
-                      ? setReportState({ ...report, angry: isTrue })
-                      : state.state === 'sleepy'
-                      ? setReportState({ ...report, rested: isTrue })
-                      : state.state === 'food'
-                      ? setReportState({ ...report, wellFed: isTrue })
-                      : setReportState({ ...report, lonely: isTrue });
-                  }}
+                  onChange={() => state.onChange(isTrue)}
                 />
               ))}
             </RadioGroup>
