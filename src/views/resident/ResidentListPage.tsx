@@ -3,9 +3,9 @@ import React, { useEffect, useState } from 'react';
 /** @jsx jsx */ import { css, jsx } from '@emotion/core';
 
 import PageTitle from '../../components/PageTitle';
+import ResidentListCell from '../../components/resident-components/ResidentListCell';
 
 import { getResidents, deleteResident } from '../../firebase/db/residents';
-import ResidentListCell from '../../components/resident-components/ResidentListCell';
 
 const addButtonStyle = css({
   width: 'calc(90%)',
@@ -36,16 +36,9 @@ const ResidentListPage: React.FC = () => {
     getResidents().then((resid) => setResidents(resid));
   }, []);
 
-  const deleteSelectedResident = (
-    residentIndex: number,
-    residentID: string,
-  ) => {
-    deleteResident(residentID).then((value) => {
-      if ((value as SuccessMessage).success) {
-        const newResidents = [...residents];
-        newResidents.splice(residentIndex, 1);
-        setResidents(newResidents);
-      }
+  const deleteSelectedResident = (residentID: string) => {
+    deleteResident(residentID).then(() => {
+      setResidents(residents.filter((r) => r.residentID !== residentID));
     });
   };
 
@@ -58,11 +51,11 @@ const ResidentListPage: React.FC = () => {
       >
         Añadir residente
       </button>
-      {residents.map((r, index) => (
+      {residents.map((resident) => (
         <ResidentListCell
-          key={r.residentID}
-          {...r}
-          deleteResident={() => deleteSelectedResident(index, r.residentID)}
+          key={resident.residentID}
+          deleteResident={() => deleteSelectedResident(resident.residentID)}
+          {...resident}
         />
       ))}
     </div>
