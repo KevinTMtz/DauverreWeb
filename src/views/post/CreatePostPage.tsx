@@ -5,7 +5,7 @@ import PageTitle from '../../components/PageTitle';
 import PostForm from '../../components/post-components/PostForm';
 import { db } from '../../firebase/app';
 import { createPost } from '../../firebase/db/posts';
-import { uploadFile } from '../../firebase/db/storage';
+import { uploadFile } from '../../firebase/storage';
 
 const CreatePostPage: React.FC = () => {
   const history = useHistory();
