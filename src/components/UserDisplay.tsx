@@ -50,11 +50,11 @@ const h1Style = css({
     const onSubmit = () => {
       const resetPasswordResidentFamAcc = functions.httpsCallable('resetPasswordResidentFamAcc');
       setOpen(true)
-      /*resetPasswordResidentFamAcc({uid:resID}).then((value) =>{
+      resetPasswordResidentFamAcc({uid:resID}).then((value) =>{
         if ((value as unknown as SuccessMessage).success) {
           setOpen(true);
         }
-      });*/
+      });
     };
     return(
         <div css={divStyle}>
