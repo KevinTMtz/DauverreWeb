@@ -32,7 +32,6 @@ const CreateReport: React.FC = () => {
   return (
     <div>
       <PageTitle message={'Crear reporte'} />
-      <h3>Creating report for resident "{residentID}"</h3>
       <ReportForm
         report={newReport}
         onSubmit={onSubmit}
