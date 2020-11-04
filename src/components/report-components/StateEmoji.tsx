@@ -6,7 +6,7 @@ import { ReactComponent as StateEmojiCrying } from '../../assets/emojis/crying.s
 import { ReactComponent as StateEmojiFood } from '../../assets/emojis/food.svg';
 import { ReactComponent as StateEmojiSleepy } from '../../assets/emojis/sleepy.svg';
 
-type StateEmojiType =
+export type StateEmojiType =
   | 'alone'
   | 'angry'
   | 'crying'

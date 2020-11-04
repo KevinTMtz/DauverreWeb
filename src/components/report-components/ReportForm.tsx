@@ -11,7 +11,7 @@ import Button from '@material-ui/core/Button';
 /** @jsx jsx */ import { css, jsx } from '@emotion/core';
 import MoodEmoji from './MoodEmoji';
 import HealthEmoji from './HealthEmoji';
-import StateEmoji from './StateEmoji';
+import StateEmoji, { StateEmojiType } from './StateEmoji';
 
 const styledForm = css({
   width: '80%',
@@ -64,7 +64,10 @@ const ReportForm: React.FC<ReportFormProps> = ({
   buttonMessage,
 }) => {
   const nums = [1, 2, 3, 4, 5];
-  const states = [
+  const states: {
+    state: StateEmojiType;
+    message: string;
+  }[] = [
     { state: 'crying', message: '¿Estuvo deprimido?' },
     { state: 'angry', message: '¿Estuvo enojado?' },
     { state: 'sleepy', message: '¿Durmió bien?' },
