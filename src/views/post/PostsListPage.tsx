@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react';
 
 import PostListCell from '../../components/post-components/PostListCell';
 import PageTitle from '../../components/PageTitle';
-
 import { getPosts, deletePost } from '../../firebase/db/posts';
 import { deleteFile } from '../../firebase/db/storage';
 
@@ -37,13 +36,10 @@ const PostsListPage: React.FC = () => {
     getPosts().then((ps) => setPosts(ps));
   }, []);
 
-  const deleteSelectedPost = (postIndex: number, postID: string) => {
+  const deleteSelectedPost = (postID: string) => {
     deletePost(postID).then((value) => {
-      if ((value as SuccessMessage).success) {
-        const newPosts = [...posts];
-        newPosts.splice(postIndex, 1);
-        setPosts(newPosts);
-
+      if (value.state === 'success') {
+        setPosts(posts.filter((p) => p.postID !== postID));
         deleteFile(`post_images/${postID}`);
       }
     });
@@ -58,11 +54,11 @@ const PostsListPage: React.FC = () => {
       >
         Añadir publicación
       </button>
-      {posts.map((p, index) => (
+      {posts.map((p) => (
         <PostListCell
           key={p.postID}
           {...p}
-          deletePost={() => deleteSelectedPost(index, p.postID)}
+          deletePost={() => deleteSelectedPost(p.postID)}
         />
       ))}
     </div>

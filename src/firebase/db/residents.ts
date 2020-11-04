@@ -23,24 +23,27 @@ export const getResidents = async (): Promise<Resident[]> => {
 
 export const getResident = async (
   residentID: string,
-): Promise<Resident | NotFoundError> => {
+): Promise<SuccessAndResident | NotFoundState> => {
   const doc = await residentsCollection.doc(residentID).get();
-  if (!doc.exists) return { notFound: true };
+  if (!doc.exists) return { state: 'not found' };
   const data = doc.data() as firestore.DocumentData;
   return {
-    residentID: doc.id,
-    firstName: data.firstName,
-    lastName: data.lastName,
-    gender: data.gender,
-    isVisible: data.isVisible,
-    birthDate: data.birthDate.toDate(),
-    telephone: data.telephone,
+    state: 'success',
+    resident: {
+      residentID: doc.id,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      gender: data.gender,
+      isVisible: data.isVisible,
+      birthDate: data.birthDate.toDate(),
+      telephone: data.telephone,
+    },
   };
 };
 
 export const createResident = async (
   residentData: ResidentData,
-): Promise<SuccessMessage | ValidationErrors> => {
+): Promise<SuccessAndURL | ValidationErrorsState | FirebaseErrorState> => {
   try {
     const validatedResident = (await residentDocSchema.validate(
       residentData,
@@ -55,19 +58,25 @@ export const createResident = async (
       ...validatedResident,
       birthDate,
     });
-    return { success: true, url: `/residents/${doc.id}` };
+    return { state: 'success', url: `/residents/${doc.id}` };
   } catch (error) {
     if (error.name === 'ValidationError') {
-      return error.errors;
+      return {
+        state: 'validation errors',
+        errors: error.errors,
+      };
     }
-    console.error(error);
-    return error;
+    return {
+      state: 'firebase error',
+      code: error.code,
+      message: error.message,
+    };
   }
 };
 
 export const updateResident = async (
   resident: Resident,
-): Promise<SuccessMessage | NotFoundError> => {
+): Promise<SuccessAndURL | ValidationErrorsState | FirebaseErrorState> => {
   try {
     const { residentID } = resident;
     const validatedResident = (await residentDocSchema.validate(
@@ -83,19 +92,22 @@ export const updateResident = async (
       ...validatedResident,
       birthDate,
     });
-    return { success: true, url: `/residents/${residentID}` };
+    return { state: 'success', url: `/residents/${residentID}` };
   } catch (error) {
     if (error.name === 'ValidationError') {
-      return error.errors;
+      return {
+        state: 'validation errors',
+        errors: error.errors,
+      };
     }
-    console.error(error);
-    return error;
+    return {
+      state: 'firebase error',
+      code: error.code,
+      message: error.message,
+    };
   }
 };
 
-export const deleteResident = async (
-  residentID: string,
-): Promise<SuccessMessage | NotFoundError> => {
+export const deleteResident = async (residentID: string): Promise<void> => {
   await residentsCollection.doc(residentID).delete();
-  return { success: true, url: '/residents' };
 };

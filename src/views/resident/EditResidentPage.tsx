@@ -20,10 +20,10 @@ const EditResidentPage: React.FC = () => {
 
   useEffect(() => {
     getResident(residentID).then((value) => {
-      if ((value as NotFoundError).notFound) {
+      if (value.state === 'not found') {
         history.push('/residents');
       } else {
-        setResident(value as Resident);
+        setResident(value.resident);
       }
     });
   }, [residentID, history]);
@@ -31,7 +31,7 @@ const EditResidentPage: React.FC = () => {
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     updateResident({ ...resident, residentID }).then((value) => {
-      if ((value as SuccessMessage).success) {
+      if (value.state === 'success') {
         history.push('/residents');
       }
     });
@@ -43,11 +43,9 @@ const EditResidentPage: React.FC = () => {
       <ResidentForm
         resident={resident}
         onSubmit={onSubmit}
-        cancelOperation={() => {
-          history.push('/residents');
-        }}
+        cancelOperation={() => history.push('/residents')}
         setResidentState={setResident}
-        buttonMessage={'Guardar cambios'}
+        buttonMessage="Guardar cambios"
       />
     </div>
   );

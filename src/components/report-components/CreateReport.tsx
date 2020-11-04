@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import { createReport } from '../../firebase/db/reports';
 
+import { createReport } from '../../firebase/db/reports';
 import PageTitle from '../PageTitle';
 import ReportForm from './ReportForm';
 
@@ -10,8 +10,8 @@ const CreateReport: React.FC = () => {
   const history = useHistory();
   const [newReport, setNewReport] = useState<ReportData>({
     date: new Date(),
-    mood: 0,
-    health: 0,
+    mood: 1,
+    health: 1,
     sad: true,
     angry: true,
     rested: true,
@@ -23,9 +23,8 @@ const CreateReport: React.FC = () => {
     event.preventDefault();
 
     createReport(residentID, newReport).then((value) => {
-      if ((value as SuccessMessage).success) {
-        console.log('Report created');
-        history.push('/residents/' + residentID);
+      if (value.state === 'success') {
+        history.push(`/residents/${residentID}`);
       }
     });
   };
@@ -35,9 +34,7 @@ const CreateReport: React.FC = () => {
       <ReportForm
         report={newReport}
         onSubmit={onSubmit}
-        cancelOperation={() => {
-          history.push('/residents/' + residentID);
-        }}
+        cancelOperation={() => history.push(`/residents/${residentID}`)}
         setReportState={setNewReport}
         buttonMessage={'Crear reporte'}
       />

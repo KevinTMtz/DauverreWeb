@@ -4,52 +4,50 @@ const storageRef = storage.ref();
 
 export const getFileLink = async (
   path: string,
-): Promise<SuccessMessage | NotFoundError> => {
+): Promise<SuccessAndURL | FirebaseErrorState> => {
   try {
     const fileRef = storageRef.child(path);
-
-    const publicLink = (await fileRef.getDownloadURL()) as string;
-
-    return { success: true, url: publicLink };
+    const publicLink: string = await fileRef.getDownloadURL();
+    return { state: 'success', url: publicLink };
   } catch (error) {
-    if (error.code === 'unauthorized') {
-      return error.errors;
-    }
-    console.error(error);
-    return error;
+    return {
+      state: 'firebase error',
+      code: error.code,
+      message: error.message,
+    };
   }
 };
 
 export const uploadFile = async (
   path: string,
   file: File,
-): Promise<SuccessMessage | UnableToUploadFile> => {
+): Promise<SuccessAndURL | FirebaseErrorState> => {
   try {
     const fileRef = storageRef.child(path);
     await fileRef.put(file);
-
-    const publicLink = (await fileRef.getDownloadURL()) as string;
-
-    return { success: true, url: publicLink };
+    const publicLink: string = await fileRef.getDownloadURL();
+    return { state: 'success', url: publicLink };
   } catch (error) {
-    if (error.code === 'unauthorized') {
-      return error.errors;
-    }
-    console.error(error);
-    return error;
+    return {
+      state: 'firebase error',
+      code: error.code,
+      message: error.message,
+    };
   }
 };
 
-export const deleteFile = async (path: string): Promise<SuccessMessage> => {
+export const deleteFile = async (
+  path: string,
+): Promise<SuccessState | FirebaseErrorState> => {
   try {
     const fileRef = storageRef.child(path);
-
-    return fileRef.delete().then((value) => value);
+    await fileRef.delete();
+    return { state: 'success' };
   } catch (error) {
-    if (error.code === 'unauthorized') {
-      return error.errors;
-    }
-    console.error(error);
-    return error;
+    return {
+      state: 'firebase error',
+      code: error.code,
+      message: error.message,
+    };
   }
 };

@@ -9,9 +9,6 @@ import { uploadFile } from '../../firebase/db/storage';
 
 const CreatePostPage: React.FC = () => {
   const history = useHistory();
-  const pushHistory = () => {
-    history.push('/posts');
-  };
 
   const [newPostState, setNewPostState] = useState<PostData>({
     title: '',
@@ -27,23 +24,17 @@ const CreatePostPage: React.FC = () => {
 
     const postID = db.collection('posts').doc().id;
 
-    uploadFile(`post_images/${postID}`, imageFile as File).then(
-      (uploadImageAns) => {
-        if ((uploadImageAns as SuccessMessage).success) {
-          createPost(
-            {
-              ...newPostState,
-              imageUrl: (uploadImageAns as SuccessMessage).url,
-            },
-            postID,
-          ).then((value) => {
-            if ((value as SuccessMessage).success) {
+    uploadFile(`post_images/${postID}`, imageFile as File).then((uploadRes) => {
+      if (uploadRes.state === 'success') {
+        createPost({ ...newPostState, imageUrl: uploadRes.url }, postID).then(
+          (value) => {
+            if (value.state === 'success') {
               history.push('/posts');
             }
-          });
-        }
-      },
-    );
+          },
+        );
+      }
+    });
   };
 
   return (
@@ -56,7 +47,7 @@ const CreatePostPage: React.FC = () => {
         setImageFile={setImageFile}
         buttonMessage={'Crear publicación'}
         onSubmit={onSubmit}
-        cancelOperation={pushHistory}
+        cancelOperation={() => history.push('/posts')}
       />
     </div>
   );
