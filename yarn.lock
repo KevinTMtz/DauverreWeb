@@ -1106,7 +1106,7 @@
   resolved "https://registry.yarnpkg.com/@date-io/core/-/core-1.3.13.tgz#90c71da493f20204b7a972929cc5c482d078b3fa"
   integrity sha512-AlEKV7TxjeK+jxWVKcCFrfYAk8spX9aCyiToFIiLPtfQbsjmRGLIhb5VZgptQcJdHtLXo7+m0DuurwFgUToQuA==
 
-"@date-io/date-fns@^1.3.13":
+"@date-io/date-fns@1.x":
   version "1.3.13"
   resolved "https://registry.yarnpkg.com/@date-io/date-fns/-/date-fns-1.3.13.tgz#7798844041640ab393f7e21a7769a65d672f4735"
   integrity sha512-yXxGzcRUPcogiMj58wVgFjc9qUYrCnnU9eLcyNbsQCmae4jPuZCDoIBR21j8ZURsM7GRtU62VOw5yNd4dDHunA==
@@ -1455,9 +1455,9 @@
     teeny-request "^7.0.0"
 
 "@google-cloud/firestore@^4.0.0":
-  version "4.6.0"
-  resolved "https://registry.yarnpkg.com/@google-cloud/firestore/-/firestore-4.6.0.tgz#38d615c3a408479d9a4924e86eb72afde16d6787"
-  integrity sha512-KqyRc/ATs6y4byfuqL3HWHOjxFiGcQJIGNli9FpfvPAOTCPnG78pABkXJOf1wxDKR5OPQnEMaMD9iQvwPS7h1w==
+  version "4.6.1"
+  resolved "https://registry.yarnpkg.com/@google-cloud/firestore/-/firestore-4.6.1.tgz#3050f80f023528b1ec80b1a955582a796a36d035"
+  integrity sha512-GZ5tBdg05ANAp2+9voMQauH+WF9s2ZjY51MpIqju74j6MH3z31A0Gm+Wukl6FJ30XMUP316tFUUVpTyUyAd8+g==
   dependencies:
     fast-deep-equal "^3.1.1"
     functional-red-black-tree "^1.0.1"
@@ -2062,6 +2062,16 @@
   dependencies:
     "@types/body-parser" "*"
     "@types/express-serve-static-core" "*"
+    "@types/serve-static" "*"
+
+"@types/express@^4.17.8":
+  version "4.17.8"
+  resolved "https://registry.yarnpkg.com/@types/express/-/express-4.17.8.tgz#3df4293293317e61c60137d273a2e96cd8d5f27a"
+  integrity sha512-wLhcKh3PMlyA2cNAB9sjM1BntnhPMiM0JOBwPBqttjHev2428MLEB4AYVN+d8s2iyCVZac+o41Pflm/ZH5vLXQ==
+  dependencies:
+    "@types/body-parser" "*"
+    "@types/express-serve-static-core" "*"
+    "@types/qs" "*"
     "@types/serve-static" "*"
 
 "@types/glob@^7.1.1":

@@ -1,4 +1,4 @@
-/** @jsx jsx */ import { css, jsx } from '@emotion/core';
+/** @jsx jsx */ import { jsx } from '@emotion/core';
 import React, { useEffect, useState } from 'react';
 import UserDisplay from '../components/UserDisplay'
 import PageTitle from '../components/PageTitle';
@@ -14,7 +14,6 @@ const AccessModule: React.FC = () => {
     <div>
       <PageTitle message={'Modulo de acceso'} />
       {residents.map((r) => (
-        //<UserDisplay key={r.residentID} firstName = {r.firstName} lastName={r.lastName} />
         <UserDisplay key={r.residentID} resident = {r}  />
       ))}
     </div>

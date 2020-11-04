@@ -1,5 +1,4 @@
-import React, {useState, MouseEvent} from 'react';
-import Markdown from 'markdown-to-jsx';
+import React, { useState } from 'react';
 
 import Button from '@material-ui/core/Button';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
@@ -17,13 +16,14 @@ import {functions} from '../firebase/app'
 const divStyle = css({
   padding: '10px',
   margin: '20px',
-
+  borderRadius: '10px',
+  border: '2px solid black',
   display:'flex',
   maxWidth: '50vw',
   '@media (max-width: 600px)': {
     maxWidth: '80vw',
   },
-  justifyContent:'space-between'
+  justifyContent:'space-between',
 });
 
 
@@ -33,58 +33,61 @@ const h1Style = css({
 });
 
 
+interface UserDisplayProps {
+  resident: Resident
 
-//const UserDisplay: React.FC <{key: string, firstName: string, lastName: string}>= ({key, firstName, lastName}) => {
-  const UserDisplay: React.FC <{  resident:any}>= ({ resident}) => {
-    const [open, setOpen] = React.useState(false);
+}
+const UserDisplay: React.FC <UserDisplayProps>= ({ resident }) => {
 
-    const handleClose = () => {
-      setOpen(false);
-    };
+  const [open, setOpen] = React.useState(false);
 
-    const theme = useTheme();
-    const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
-    const resID = resident.residentID;
-    console.log(resID);
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const resID = resident.residentID;
 
 
-    const onSubmit = () => {
-      const resetPasswordResidentFamAcc = functions.httpsCallable('resetPasswordResidentFamAcc');
-      setOpen(true)
-      resetPasswordResidentFamAcc({uid:resID}).then((value) =>{
-        if ((value as unknown as SuccessMessage).success) {
-          setOpen(true);
-        }
-      });
-    };
-    return(
-        <div css={divStyle}>
-          
-              <h1 css={h1Style}>
-                  {resident.firstName} {"  "}  {resident.lastName}
-              </h1>
-              <Button type="submit" variant="contained" color="primary" onClick={() => { onSubmit() }}>
+  const onSubmit = () => {
+    const resetPasswordResidentFamAcc = functions.httpsCallable('resetPasswordResidentFamAcc');
+    //const resetPasswordResidentFamAcc = functions.httpsCallable('/api/users/reset/${resID}');
+    setOpen(true)
+    resetPasswordResidentFamAcc({uid:resID}).then((value) =>{
+      if ((value as unknown as SuccessMessage).success) {
+        setOpen(true);
+      }
+    });
+  };
+  return(
+    <div css={divStyle}>
+
+      <h1 css={h1Style}>
+        {resident.firstName} {resident.lastName}
+      </h1>
+      <Button type="submit" variant="contained" color="primary" onClick={() =>  onSubmit() }>
                 Cambiar
-              </Button>
-              <Dialog
-                fullScreen={fullScreen}
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="responsive-dialog-title"
-              >
-                <DialogContent>
-                  <DialogContentText>
+      </Button>
+      <Dialog
+        fullScreen={fullScreen}
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="responsive-dialog-title"
+      >
+        <DialogContent>
+          <DialogContentText>
                     La contraseña fue cambiada correctamente
-                  </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                  <Button autoFocus onClick={handleClose} color="primary">
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button autoFocus onClick={handleClose} color="primary">
                     Okay
-                  </Button>
-                </DialogActions>
-              </Dialog>
-          </div>
-    );
-  }
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>
+  );
+}
 
 export default UserDisplay;
