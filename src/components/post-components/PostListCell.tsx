@@ -58,7 +58,6 @@ const PostListCell: React.FC<PostListCellProps> = ({
   imageUrl,
 }) => {
   const history = useHistory();
-
   return (
     <div css={divStyle}>
       <h1 css={h1Style}>{title}</h1>

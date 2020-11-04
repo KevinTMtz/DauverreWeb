@@ -74,7 +74,7 @@ const ReportForm: React.FC<ReportFormProps> = ({
   setReportState,
   buttonMessage,
 }) => {
-  const nums = [1, 2, 3, 4, 5];
+  const indexes: OneToFiveIdx[] = [1, 2, 3, 4, 5];
   const states: {
     state: StateEmojiType;
     message: string;
@@ -118,14 +118,14 @@ const ReportForm: React.FC<ReportFormProps> = ({
       >
         <FormLabel component="legend">Estado de ánimo general:</FormLabel>
         <RadioGroup aria-label="mood" name="mood" row>
-          {nums.map((num) => (
+          {indexes.map((idx) => (
             <FormControlLabel
               control={<Radio />}
-              key={num}
-              label={<MoodEmoji index={num} height="50px" />}
+              key={idx}
+              label={<MoodEmoji index={idx} height="50px" />}
               labelPlacement="top"
-              value={'' + num} //Si no es string entonces no aparece la selección
-              onChange={() => setReportState({ ...report, mood: num })}
+              value={`${idx}`}
+              onChange={() => setReportState({ ...report, mood: idx })}
             />
           ))}
         </RadioGroup>
@@ -140,14 +140,14 @@ const ReportForm: React.FC<ReportFormProps> = ({
       >
         <FormLabel component="legend">Estado de salud general:</FormLabel>
         <RadioGroup aria-label="health" name="health" row>
-          {nums.map((num) => (
+          {indexes.map((idx) => (
             <FormControlLabel
-              key={num}
+              key={idx}
               control={<Radio />}
-              label={<HealthEmoji index={num} height="50px" />}
+              label={<HealthEmoji index={idx} height="50px" />}
               labelPlacement="top"
-              value={'' + num} //Si no es string entonces no aparece la selección
-              onChange={() => setReportState({ ...report, health: num })}
+              value={`${idx}`}
+              onChange={() => setReportState({ ...report, health: idx })}
             />
           ))}
         </RadioGroup>
@@ -163,26 +163,26 @@ const ReportForm: React.FC<ReportFormProps> = ({
         <FormLabel component="legend" style={{ marginBottom: '10px' }}>
           Esta semana...
         </FormLabel>
-        {states.map((state) => (
-          <div key={state.state}>
-            <FormLabel component="legend" key={state.state + 'Label'}>
-              {<StateEmoji state={state.state} height="40px" />}
-              {state.message}
+        {states.map(({ state, message, onChange }) => (
+          <div key={state}>
+            <FormLabel component="legend" key={`${state}-label`}>
+              <StateEmoji state={state} height="40px" />
+              {message}
             </FormLabel>
             <RadioGroup
-              aria-label={state.state}
-              name={state.state}
+              aria-label={state}
+              name={state}
               row
-              key={state.state + 'Group'}
+              key={`${state}-group`}
             >
               {[true, false].map((isTrue) => (
                 <FormControlLabel
-                  key={state.state + '' + isTrue}
+                  key={`${state}-${isTrue}`}
                   control={<Radio />}
                   label={isTrue ? 'Sí' : 'No'}
                   labelPlacement="top"
-                  value={'' + isTrue} //Si no es string entonces no aparece la selección
-                  onChange={() => state.onChange(isTrue)}
+                  value={`${isTrue}`}
+                  onChange={() => onChange(isTrue)}
                 />
               ))}
             </RadioGroup>

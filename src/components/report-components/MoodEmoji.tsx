@@ -7,7 +7,7 @@ import { ReactComponent as MoodEmoji4 } from '../../assets/emojis/mood/4.svg';
 import { ReactComponent as MoodEmoji5 } from '../../assets/emojis/mood/5.svg';
 
 interface MoodEmojiProps extends SVGProps<SVGSVGElement> {
-  index: number;
+  index: OneToFiveIdx;
 }
 
 const MoodEmoji: React.FC<MoodEmojiProps> = ({ index, ...props }) => {
@@ -22,8 +22,6 @@ const MoodEmoji: React.FC<MoodEmojiProps> = ({ index, ...props }) => {
       return <MoodEmoji4 {...props} />;
     case 5:
       return <MoodEmoji5 {...props} />;
-    default:
-      return <div></div>;
   }
 };
 
