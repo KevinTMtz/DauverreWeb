@@ -130,12 +130,16 @@ const PostForm: React.FC<PostFormProps> = ({
           setImageFile(event.target.files ? event.target.files[0] : imageFile)
         }
       />
-      <img
-        alt="Uploaded file"
-        src={imageFile ? URL.createObjectURL(imageFile) : undefined}
-        style={{ marginTop: imageFile ? '16px' : '0px' }}
-        css={styledInputImagePreview}
-      ></img>
+      {imageFile && (
+        <img
+          alt="No fue posible mostrar la imagen, cargar de nuevo"
+          src={URL.createObjectURL(imageFile)}
+          style={{
+            marginTop: '16px',
+          }}
+          css={styledInputImagePreview}
+        ></img>
+      )}
     </label>
     <Button type="submit" variant="contained" color="primary" fullWidth>
       {buttonMessage}
