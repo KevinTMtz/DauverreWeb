@@ -56,8 +56,8 @@ interface SuccessAndURL extends SuccessState {
   url: string;
 }
 
-interface SuccessAndPost extends SuccessState {
-  post: Post;
+interface SuccessAndPostData extends SuccessState {
+  post: PostData;
 }
 
 interface SuccessAndReport extends SuccessState {

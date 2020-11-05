@@ -51,7 +51,7 @@ const EditPostPage: React.FC = () => {
 
     uploadFile(`post_images/${postID}`, imageFile as File).then((uploadRes) => {
       if (uploadRes.state === 'success') {
-        updatePost({ ...post, postID }).then((value) => {
+        updatePost(post, postID).then((value) => {
           if (value.state === 'success') {
             history.push('/posts');
           }

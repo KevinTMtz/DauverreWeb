@@ -1,4 +1,5 @@
 import { firestore } from 'firebase/app';
+import Post from '../../components/post-components/Post';
 
 import { db } from '../app';
 import { postDocSchema } from './validation';
@@ -21,14 +22,13 @@ export const getPosts = async (): Promise<Post[]> => {
 
 export const getPost = async (
   postID: string,
-): Promise<SuccessAndPost | NotFoundState> => {
+): Promise<SuccessAndPostData | NotFoundState> => {
   const doc = await postsCollection.doc(postID).get();
   if (!doc.exists) return { state: 'not found' };
   const data = doc.data() as firestore.DocumentData;
   return {
     state: 'success',
     post: {
-      postID: doc.id,
       title: data.title,
       date: data.date.toDate(),
       content: data.content.replaceAll('\\n', '\n'),
@@ -64,11 +64,11 @@ export const createPost = async (
 };
 
 export const updatePost = async (
-  post: Post,
+  postData: PostData,
+  postID: string,
 ): Promise<SuccessAndURL | ValidationErrorsState | FirebaseErrorState> => {
   try {
-    const { postID } = post;
-    const validatedPost = (await postDocSchema.validate(post)) as PostData;
+    const validatedPost = (await postDocSchema.validate(postData)) as PostData;
     await postsCollection.doc(postID).update({
       ...validatedPost,
       date: firestore.Timestamp.fromDate(validatedPost.date),
