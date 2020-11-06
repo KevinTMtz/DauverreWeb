@@ -26,10 +26,10 @@ const LoginPage: React.FC = () => {
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     signInWithCredentials(username, password).then((result) => {
-      if ((result as SuccessMessage).success) {
-        history.push((result as SuccessMessage).url);
+      if (result.state === 'success') {
+        history.push(result.url);
       } else {
-        setError((result as any).error);
+        setError(result.error);
       }
     });
   };

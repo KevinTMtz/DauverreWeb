@@ -21,7 +21,7 @@ const RegisterResidentPage: React.FC = () => {
     event.preventDefault();
 
     createResident(newResidentState).then((value) => {
-      if ((value as SuccessMessage).success) {
+      if (value.state === 'success') {
         history.push('/residents');
       }
     });

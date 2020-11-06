@@ -5,13 +5,10 @@ import PageTitle from '../../components/PageTitle';
 import PostForm from '../../components/post-components/PostForm';
 
 import { getPost, updatePost } from '../../firebase/db/posts';
-import { getFileLink, uploadFile } from '../../firebase/db/storage';
+import { getFileLink, uploadFile } from '../../firebase/storage';
 
 const EditPostPage: React.FC = () => {
   const history = useHistory();
-  const pushHistory = () => {
-    history.push('/posts');
-  };
 
   const { postID } = useParams<PostParams>();
 
@@ -26,15 +23,15 @@ const EditPostPage: React.FC = () => {
 
   useEffect(() => {
     getPost(postID).then((value) => {
-      if ((value as NotFoundError).notFound) {
+      if (value.state === 'not found') {
         history.push('/posts');
       } else {
-        setPost(value as Post);
+        setPost(value.post);
       }
     });
 
     getFileLink(`post_images/${postID}`).then((value) => {
-      if ((value as SuccessMessage).success) {
+      if (value.state === 'success') {
         const xhr = new XMLHttpRequest();
         xhr.responseType = 'blob';
         xhr.onload = () => {
@@ -43,7 +40,7 @@ const EditPostPage: React.FC = () => {
           file.lastModified = new Date();
           setImageFile(file);
         };
-        xhr.open('GET', (value as SuccessMessage).url);
+        xhr.open('GET', value.url);
         xhr.send();
       }
     });
@@ -52,17 +49,15 @@ const EditPostPage: React.FC = () => {
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    uploadFile(`post_images/${postID}`, imageFile as File).then(
-      (uploadImageAns) => {
-        if ((uploadImageAns as SuccessMessage).success) {
-          updatePost({ ...post, postID }).then((value) => {
-            if ((value as SuccessMessage).success) {
-              history.push('/posts');
-            }
-          });
-        }
-      },
-    );
+    uploadFile(`post_images/${postID}`, imageFile as File).then((uploadRes) => {
+      if (uploadRes.state === 'success') {
+        updatePost(post, postID).then((value) => {
+          if (value.state === 'success') {
+            history.push('/posts');
+          }
+        });
+      }
+    });
   };
 
   return (
@@ -75,7 +70,7 @@ const EditPostPage: React.FC = () => {
         setImageFile={setImageFile}
         buttonMessage={'Guardar cambios'}
         onSubmit={onSubmit}
-        cancelOperation={pushHistory}
+        cancelOperation={() => history.push('/posts')}
       />
     </div>
   );

@@ -32,10 +32,12 @@ interface ResidentData {
 
 type Resident = ResidentData & ResidentParams;
 
+type OneToFiveIdx = 1 | 2 | 3 | 4 | 5;
+
 interface ReportData {
   date: Date;
-  mood: number;
-  health: number;
+  mood: OneToFiveIdx;
+  health: OneToFiveIdx;
   sad: boolean;
   angry: boolean;
   rested: boolean;
@@ -46,20 +48,49 @@ interface ReportData {
 
 type Report = ReportData & ReportParams;
 
-interface SuccessMessage {
-  success: boolean;
+interface SuccessState {
+  state: 'success';
+}
+
+interface SuccessAndURL extends SuccessState {
   url: string;
 }
 
-interface NotFoundError {
-  notFound: boolean;
+interface SuccessAndPostData extends SuccessState {
+  post: PostData;
 }
 
-interface UnableToUploadFile {
-  notUploaded: boolean;
+interface SuccessAndReport extends SuccessState {
+  report: Report;
 }
 
-type ValidationErrors = string[];
+interface SuccessAndResident extends SuccessState {
+  resident: Resident;
+}
+
+interface NotFoundState {
+  state: 'not found';
+}
+
+interface UnableToUploadFileState {
+  state: 'not uploaded';
+}
+
+interface AuthenticationError {
+  state: 'auth error';
+  error: string;
+}
+
+interface ValidationErrorsState {
+  state: 'validation errors';
+  errors: string[];
+}
+
+interface FirebaseErrorState {
+  state: 'firebase error';
+  code: string;
+  message: string;
+}
 
 type FirebaseCollection = firebase.firestore.CollectionReference<
   firebase.firestore.DocumentData

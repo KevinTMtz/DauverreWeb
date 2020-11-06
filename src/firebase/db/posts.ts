@@ -1,4 +1,5 @@
 import { firestore } from 'firebase/app';
+import Post from '../../components/post-components/Post';
 
 import { db } from '../app';
 import { postDocSchema } from './validation';
@@ -21,60 +22,74 @@ export const getPosts = async (): Promise<Post[]> => {
 
 export const getPost = async (
   postID: string,
-): Promise<Post | NotFoundError> => {
+): Promise<SuccessAndPostData | NotFoundState> => {
   const doc = await postsCollection.doc(postID).get();
-  if (!doc.exists) return { notFound: true };
+  if (!doc.exists) return { state: 'not found' };
   const data = doc.data() as firestore.DocumentData;
   return {
-    postID: doc.id,
-    title: data.title,
-    date: data.date.toDate(),
-    content: data.content.replaceAll('\\n', '\n'),
-    imageUrl: data.imageUrl,
+    state: 'success',
+    post: {
+      title: data.title,
+      date: data.date.toDate(),
+      content: data.content.replaceAll('\\n', '\n'),
+      imageUrl: data.imageUrl,
+    },
   };
 };
 
 export const createPost = async (
   postData: PostData,
   postID: string,
-): Promise<SuccessMessage | ValidationErrors> => {
+): Promise<SuccessAndURL | ValidationErrorsState | FirebaseErrorState> => {
   try {
     const validatedPost = (await postDocSchema.validate(postData)) as PostData;
     await postsCollection.doc(postID).set({
       ...validatedPost,
       date: firestore.Timestamp.fromDate(validatedPost.date),
     });
-    return { success: true, url: `/posts/${postID}` };
+    return { state: 'success', url: `/posts/${postID}` };
   } catch (error) {
     if (error.name === 'ValidationError') {
-      return error.errors;
+      return {
+        state: 'validation errors',
+        errors: error.errors,
+      };
     }
-    console.error(error);
-    return error;
+    return {
+      state: 'firebase error',
+      code: error.code,
+      message: error.message,
+    };
   }
 };
 
 export const updatePost = async (
-  post: Post,
-): Promise<SuccessMessage | NotFoundError> => {
+  postData: PostData,
+  postID: string,
+): Promise<SuccessAndURL | ValidationErrorsState | FirebaseErrorState> => {
   try {
-    const { postID } = post;
-    const validatedPost = (await postDocSchema.validate(post)) as PostData;
+    const validatedPost = (await postDocSchema.validate(postData)) as PostData;
     await postsCollection.doc(postID).update({
       ...validatedPost,
       date: firestore.Timestamp.fromDate(validatedPost.date),
     });
-    return { success: true, url: `/posts/${postID}` };
+    return { state: 'success', url: `/posts/${postID}` };
   } catch (error) {
     if (error.name === 'ValidationError') {
-      return error.errors;
+      return {
+        state: 'validation errors',
+        errors: error.errors,
+      };
     }
-    console.error(error);
-    return error;
+    return {
+      state: 'firebase error',
+      code: error.code,
+      message: error.message,
+    };
   }
 };
 
-export const deletePost = async (postID: string): Promise<SuccessMessage> => {
+export const deletePost = async (postID: string): Promise<SuccessAndURL> => {
   await postsCollection.doc(postID).delete();
-  return { success: true, url: '/posts' };
+  return { state: 'success', url: '/posts' };
 };

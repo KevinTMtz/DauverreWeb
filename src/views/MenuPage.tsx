@@ -47,7 +47,7 @@ const MenuPage: React.FC = () => {
     { name: 'Publicaciones', linkPathname: '/posts' },
     { name: 'Residentes', linkPathname: '/residents' },
     { name: 'Módulo de acceso', linkPathname: '/accessmodule' },
-    { name: 'Reporte de la página', linkPathname: '/webpagereport' },
+    { name: 'Estadísticas', linkPathname: '/statistics' },
   ];
 
   return (

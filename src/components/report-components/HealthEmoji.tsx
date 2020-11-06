@@ -7,7 +7,7 @@ import { ReactComponent as HealthEmoji4 } from '../../assets/emojis/health/4.svg
 import { ReactComponent as HealthEmoji5 } from '../../assets/emojis/health/5.svg';
 
 interface HealthEmojiProps extends SVGProps<SVGSVGElement> {
-  index: number;
+  index: OneToFiveIdx;
 }
 
 const HealthEmoji: React.FC<HealthEmojiProps> = ({ index, ...props }) => {
@@ -22,8 +22,6 @@ const HealthEmoji: React.FC<HealthEmojiProps> = ({ index, ...props }) => {
       return <HealthEmoji4 {...props} />;
     case 5:
       return <HealthEmoji5 {...props} />;
-    default:
-      return <div></div>;
   }
 };
 
