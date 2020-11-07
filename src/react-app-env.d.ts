@@ -36,10 +36,10 @@ type OneToFiveIdx = 1 | 2 | 3 | 4 | 5;
 
 type OneToThreeIdx = 1 | 2 | 3;
 
-interface CustomaAxisTickProps {
+interface CustomAxisTickProps {
   x: number;
   y: number;
-  payload: any;
+  payload: activePayload;
 }
 
 interface ReportData {

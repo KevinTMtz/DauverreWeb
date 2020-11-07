@@ -2,7 +2,7 @@ import React from 'react';
 
 import OperationEmoji from '../statistics-components/OperationEmoji';
 
-const RenderCustomAxisTickPostsOrResidents: React.FC<CustomaAxisTickProps> = ({
+const RenderCustomAxisTickPostsOrResidents: React.FC<CustomAxisTickProps> = ({
   x,
   y,
   payload,
