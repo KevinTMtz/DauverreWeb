@@ -3,6 +3,9 @@ import React from 'react';
 import {
   BarChart,
   Bar,
+  PieChart,
+  Pie,
+  Cell,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -15,6 +18,13 @@ import PageTitle from '../components/PageTitle';
 import Divisor from '../components/Divisor';
 import HealthEmoji from '../components/report-components/HealthEmoji';
 import MoodEmoji from '../components/report-components/MoodEmoji';
+import OperationEmoji from '../components/statistics-components/OperationEmoji';
+
+import SleepyIcon from '../assets/emojis/sleepy.svg';
+import AngryIcon from '../assets/emojis/angry.svg';
+import CryingIcon from '../assets/emojis/crying.svg';
+import FoodIcon from '../assets/emojis/food.svg';
+import AloneIcon from '../assets/emojis/alone.svg';
 
 const styledReportDiv = css({
   textAlign: 'center',
@@ -34,9 +44,33 @@ const chartGeneralStyle = css({
 
 const pStyled = css({
   fontWeight: 'bold',
+  marginBottom: '5px',
 });
 
-const renderCustomAxisTickHealth: React.FC<any> = ({ x, y, payload }) => {
+interface CustomaAxisTickProps {
+  x: number;
+  y: number;
+  payload: any;
+}
+
+interface CustomBarLabelProps {
+  x: number;
+  y: number;
+  width: number;
+  value: any;
+}
+
+interface IconAndNumberProps {
+  value: number;
+  total: number;
+  imagePath: string;
+}
+
+const RenderCustomAxisTickHealth: React.FC<CustomaAxisTickProps> = ({
+  x,
+  y,
+  payload,
+}) => {
   let path = 1;
   switch (payload.value) {
     case 'Saludable':
@@ -67,7 +101,11 @@ const renderCustomAxisTickHealth: React.FC<any> = ({ x, y, payload }) => {
   );
 };
 
-const renderCustomAxisTickMood: React.FC<any> = ({ x, y, payload }) => {
+const RenderCustomAxisTickMood: React.FC<CustomaAxisTickProps> = ({
+  x,
+  y,
+  payload,
+}) => {
   let path = 1;
   switch (payload.value) {
     case 'Muy felíz':
@@ -98,7 +136,42 @@ const renderCustomAxisTickMood: React.FC<any> = ({ x, y, payload }) => {
   );
 };
 
-const renderCustomBarLabel: React.FC<any> = ({ x, y, width, value }) => {
+const RenderCustomAxisTickPostsOrResidents: React.FC<CustomaAxisTickProps> = ({
+  x,
+  y,
+  payload,
+}) => {
+  let path = 1;
+  switch (payload.value) {
+    case 'Altas':
+      path = 1;
+      break;
+    case 'Actualizaciones':
+    case 'Desactivaciones':
+      path = 2;
+      break;
+    case 'Bajas':
+      path = 3;
+      break;
+  }
+
+  return (
+    <OperationEmoji
+      index={path as OneToThreeIdx}
+      x={x - 15}
+      y={y + 5}
+      width={30}
+      height={30}
+    />
+  );
+};
+
+const RenderCustomBarLabel: React.FC<CustomBarLabelProps> = ({
+  x,
+  y,
+  width,
+  value,
+}) => {
   return (
     <text x={x + width / 2} y={y} fill="#000" textAnchor="middle" dy={-6}>
       {value}
@@ -106,7 +179,30 @@ const renderCustomBarLabel: React.FC<any> = ({ x, y, width, value }) => {
   );
 };
 
-// ENE / FEB/ MAR / ABR / MAY / JUN / JUL / AGO / SET (o SEP) / OCT / NOV / DIC
+const IconAndNumber: React.FC<IconAndNumberProps> = ({
+  value,
+  total,
+  imagePath,
+}) => {
+  const styledDiv = css({
+    display: 'flex',
+    justifyContent: 'center',
+    color: '#8884d8',
+  });
+
+  return (
+    <div css={styledDiv}>
+      <img
+        src={imagePath}
+        alt={`From: ${imagePath}`}
+        style={{ width: '50px', height: 'auto', marginRight: '32px' }}
+      />
+      <p
+        style={{ fontSize: '25px', fontWeight: 'bold' }}
+      >{`${value} de ${total}`}</p>
+    </div>
+  );
+};
 
 const StatisticsPage: React.FC = () => {
   const dataResidentes = [
@@ -145,12 +241,30 @@ const StatisticsPage: React.FC = () => {
   ];
 
   const dataHealth = [
-    { name: 'Saludable', residentes: 3 },
-    { name: 'Poco enfermo', residentes: 1 },
-    { name: 'Enfermo', residentes: 4 },
-    { name: 'Muy enfermo', residentes: 4 },
-    { name: 'Peligro', residentes: 2 },
+    { name: 'Saludable', residentes: 4 },
+    { name: 'Poco enfermo', residentes: 3 },
+    { name: 'Enfermo', residentes: 3 },
+    { name: 'Muy enfermo', residentes: 2 },
+    { name: 'Peligro', residentes: 1 },
   ];
+
+  const dataPostsAdministration = [
+    { name: 'Altas', total: 4 },
+    { name: 'Actualizaciones', total: 6 },
+    { name: 'Bajas', total: 2 },
+  ];
+
+  const dataResidentsAdministration = [
+    { name: 'Altas', total: 3 },
+    { name: 'Desactivaciones', total: 2 },
+    { name: 'Bajas', total: 1 },
+  ];
+
+  const dataCountReportsGenerated = [
+    { name: 'Generados', value: 10 },
+    { name: 'No generados', value: 6 },
+  ];
+  const colorsCountReportsGenerated = ['#77B255', '#EA596E'];
 
   return (
     <div>
@@ -179,7 +293,7 @@ const StatisticsPage: React.FC = () => {
                 dataKey="residentes"
                 stroke="#8884d8"
                 fill="#8884d8"
-                label={renderCustomBarLabel}
+                label={RenderCustomBarLabel}
               />
             </BarChart>
           </ResponsiveContainer>
@@ -204,7 +318,7 @@ const StatisticsPage: React.FC = () => {
                 dataKey="reportes"
                 stroke="#8884d8"
                 fill="#8884d8"
-                label={renderCustomBarLabel}
+                label={RenderCustomBarLabel}
               />
             </BarChart>
           </ResponsiveContainer>
@@ -224,7 +338,7 @@ const StatisticsPage: React.FC = () => {
                 dataKey="publicaciones"
                 stroke="#8884d8"
                 fill="#8884d8"
-                label={renderCustomBarLabel}
+                label={RenderCustomBarLabel}
               />
             </BarChart>
           </ResponsiveContainer>
@@ -236,25 +350,88 @@ const StatisticsPage: React.FC = () => {
       <div css={styledReportDiv}>
         <PageTitle message={'Semanales'} />
         <h2>Publicaciones de la página</h2>
-        <p css={pStyled}>Total de publicaciones añadidas esta semana</p>
-        <p css={pStyled}>Total de publicaciones eliminadas esta semana</p>
-        <p css={pStyled}>Total de publicaciones editadas esta semana</p>
+        <p css={pStyled}>Altas, actualizaciones y bajas</p>
+        <div css={chartGeneralStyle}>
+          <ResponsiveContainer>
+            <BarChart
+              data={dataPostsAdministration}
+              margin={{
+                top: 20,
+                bottom: 20,
+              }}
+            >
+              <CartesianGrid strokeDasharray="10 10" />
+              <XAxis
+                dataKey="name"
+                tick={RenderCustomAxisTickPostsOrResidents}
+              />
+              <YAxis dataKey="total" />
+              <Tooltip />
+              <Bar
+                dataKey="total"
+                fill="#8884d8"
+                label={RenderCustomBarLabel}
+              />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
 
         <h2>Residentes</h2>
-        <p css={pStyled}>Total de residentes dados de alta esta semana</p>
-        <p css={pStyled}>Total de residentes desactivados esta semana</p>
-        <p css={pStyled}>Total de residentes dados de baja esta semana</p>
+        <p css={pStyled}>Altas, desactivaciones y bajas</p>
+        <div css={chartGeneralStyle}>
+          <ResponsiveContainer>
+            <BarChart
+              data={dataResidentsAdministration}
+              margin={{
+                top: 20,
+                bottom: 20,
+              }}
+            >
+              <CartesianGrid strokeDasharray="10 10" />
+              <XAxis
+                dataKey="name"
+                tick={RenderCustomAxisTickPostsOrResidents}
+              />
+              <YAxis dataKey="total" />
+              <Tooltip />
+              <Bar
+                dataKey="total"
+                fill="#8884d8"
+                label={RenderCustomBarLabel}
+              />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
 
         <h2>Reportes de estado anímico</h2>
         <p css={pStyled}>
-          Cantidad de reportes de estado anímico y de salud generados esta
-          semana
+          Cantidad de residentes a los que se les generó reporte de estado y a
+          los que no
         </p>
-        <p css={pStyled}>
-          Cantidad de residentes a los que no se les generó reporte de estado
-          anímico y de salud esta semana
-        </p>
-
+        <div css={chartGeneralStyle}>
+          <ResponsiveContainer>
+            <PieChart>
+              <Pie
+                isAnimationActive={true}
+                data={dataCountReportsGenerated}
+                dataKey="value"
+                fill="#8884d8"
+                label
+              >
+                {colorsCountReportsGenerated.map((entry, index) => (
+                  <Cell
+                    fill={
+                      colorsCountReportsGenerated[
+                        index % dataCountReportsGenerated.length
+                      ]
+                    }
+                  />
+                ))}
+              </Pie>
+              <Tooltip />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
         <h3>Respecto al estado anímico de los residentes</h3>
         <p css={pStyled}>Residentes por estado de ánimo</p>
         <div css={chartGeneralStyle}>
@@ -267,18 +444,17 @@ const StatisticsPage: React.FC = () => {
               }}
             >
               <CartesianGrid strokeDasharray="10 10" />
-              <XAxis dataKey="name" tick={renderCustomAxisTickMood} />
+              <XAxis dataKey="name" tick={RenderCustomAxisTickMood} />
               <YAxis dataKey="residentes" />
               <Tooltip />
               <Bar
                 dataKey="residentes"
                 fill="#8884d8"
-                label={renderCustomBarLabel}
+                label={RenderCustomBarLabel}
               />
             </BarChart>
           </ResponsiveContainer>
         </div>
-
         <h3>Respecto al estado de salud de los residentes</h3>
         <p css={pStyled}>Residentes por estado de salud</p>
         <div css={chartGeneralStyle}>
@@ -291,34 +467,38 @@ const StatisticsPage: React.FC = () => {
               }}
             >
               <CartesianGrid strokeDasharray="10 10" />
-              <XAxis dataKey="name" tick={renderCustomAxisTickHealth} />
+              <XAxis dataKey="name" tick={RenderCustomAxisTickHealth} />
               <YAxis dataKey="residentes" />
               <Tooltip />
               <Bar
                 dataKey="residentes"
                 fill="#8884d8"
-                label={renderCustomBarLabel}
+                label={RenderCustomBarLabel}
               />
             </BarChart>
           </ResponsiveContainer>
         </div>
-
         <h3>Respecto a las situaciones especiales de los reportes</h3>
         <p css={pStyled}>
-          Cantidad de residentes que estuvieron deprimidas en la semana
+          Cantidad de residentes que estuvieron deprimidos en la semana
         </p>
+        <IconAndNumber imagePath={CryingIcon} value={5} total={20} />
         <p css={pStyled}>
           Cantidad de residentes que estuvieron enojados en la semana
         </p>
+        <IconAndNumber imagePath={AngryIcon} value={5} total={20} />
         <p css={pStyled}>
           Cantidad de residentes que durmieron bien en la semana
         </p>
+        <IconAndNumber imagePath={SleepyIcon} value={5} total={20} />
         <p css={pStyled}>
           Cantidad de residentes que se alimentaron bien en la semana
         </p>
+        <IconAndNumber imagePath={FoodIcon} value={5} total={20} />
         <p css={pStyled}>
           Cantidad de residentes que se sintieron solos en la semana
         </p>
+        <IconAndNumber imagePath={AloneIcon} value={5} total={20} />
       </div>
     </div>
   );
