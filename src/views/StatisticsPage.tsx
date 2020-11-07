@@ -16,9 +16,11 @@ import {
 
 import PageTitle from '../components/PageTitle';
 import Divisor from '../components/Divisor';
-import HealthEmoji from '../components/report-components/HealthEmoji';
-import MoodEmoji from '../components/report-components/MoodEmoji';
-import OperationEmoji from '../components/statistics-components/OperationEmoji';
+import RenderCustomAxisTickMood from '../components/statistics-components/RenderCustomAxisTickMood';
+import RenderCustomAxisTickHealth from '../components/statistics-components/RenderCustomAxisTickHealth';
+import RenderCustomAxisTickPostsOrResidents from '../components/statistics-components/RenderCustomAxisTickPostsOrResidents';
+import RenderCustomBarLabel from '../components/statistics-components/RenderCustomBarLabel';
+import IconAndData from '../components/statistics-components/IconAndData';
 
 import SleepyIcon from '../assets/emojis/sleepy.svg';
 import AngryIcon from '../assets/emojis/angry.svg';
@@ -46,163 +48,6 @@ const pStyled = css({
   fontWeight: 'bold',
   marginBottom: '5px',
 });
-
-interface CustomaAxisTickProps {
-  x: number;
-  y: number;
-  payload: any;
-}
-
-interface CustomBarLabelProps {
-  x: number;
-  y: number;
-  width: number;
-  value: any;
-}
-
-interface IconAndNumberProps {
-  value: number;
-  total: number;
-  imagePath: string;
-}
-
-const RenderCustomAxisTickHealth: React.FC<CustomaAxisTickProps> = ({
-  x,
-  y,
-  payload,
-}) => {
-  let path = 1;
-  switch (payload.value) {
-    case 'Saludable':
-      path = 1;
-      break;
-    case 'Poco enfermo':
-      path = 2;
-      break;
-    case 'Enfermo':
-      path = 3;
-      break;
-    case 'Muy enfermo':
-      path = 4;
-      break;
-    case 'Peligro':
-      path = 5;
-      break;
-  }
-
-  return (
-    <HealthEmoji
-      index={path as OneToFiveIdx}
-      x={x - 15}
-      y={y + 5}
-      width={30}
-      height={30}
-    />
-  );
-};
-
-const RenderCustomAxisTickMood: React.FC<CustomaAxisTickProps> = ({
-  x,
-  y,
-  payload,
-}) => {
-  let path = 1;
-  switch (payload.value) {
-    case 'Muy felíz':
-      path = 1;
-      break;
-    case 'Felíz':
-      path = 2;
-      break;
-    case 'Neutro':
-      path = 3;
-      break;
-    case 'Triste':
-      path = 4;
-      break;
-    case 'Muy triste':
-      path = 5;
-      break;
-  }
-
-  return (
-    <MoodEmoji
-      index={path as OneToFiveIdx}
-      x={x - 15}
-      y={y + 5}
-      width={30}
-      height={30}
-    />
-  );
-};
-
-const RenderCustomAxisTickPostsOrResidents: React.FC<CustomaAxisTickProps> = ({
-  x,
-  y,
-  payload,
-}) => {
-  let path = 1;
-  switch (payload.value) {
-    case 'Altas':
-      path = 1;
-      break;
-    case 'Actualizaciones':
-    case 'Desactivaciones':
-      path = 2;
-      break;
-    case 'Bajas':
-      path = 3;
-      break;
-  }
-
-  return (
-    <OperationEmoji
-      index={path as OneToThreeIdx}
-      x={x - 15}
-      y={y + 5}
-      width={30}
-      height={30}
-    />
-  );
-};
-
-const RenderCustomBarLabel: React.FC<CustomBarLabelProps> = ({
-  x,
-  y,
-  width,
-  value,
-}) => {
-  return (
-    <text x={x + width / 2} y={y} fill="#000" textAnchor="middle" dy={-6}>
-      {value}
-    </text>
-  );
-};
-
-const IconAndNumber: React.FC<IconAndNumberProps> = ({
-  value,
-  total,
-  imagePath,
-}) => {
-  const styledDiv = css({
-    display: 'flex',
-    justifyContent: 'center',
-    color: '#8884d8',
-  });
-
-  return (
-    <div css={styledDiv}>
-      <img
-        src={imagePath}
-        alt={`From: ${imagePath}`}
-        style={{ width: '50px', height: 'auto', marginRight: '32px' }}
-      />
-      <p
-        style={{ fontSize: '25px', fontWeight: 'bold' }}
-      >{`${value} de ${total}`}</p>
-    </div>
-  );
-};
 
 const StatisticsPage: React.FC = () => {
   const dataResidentes = [
@@ -482,23 +327,23 @@ const StatisticsPage: React.FC = () => {
         <p css={pStyled}>
           Cantidad de residentes que estuvieron deprimidos en la semana
         </p>
-        <IconAndNumber imagePath={CryingIcon} value={5} total={20} />
+        <IconAndData imagePath={CryingIcon} value={5} total={20} />
         <p css={pStyled}>
           Cantidad de residentes que estuvieron enojados en la semana
         </p>
-        <IconAndNumber imagePath={AngryIcon} value={5} total={20} />
+        <IconAndData imagePath={AngryIcon} value={5} total={20} />
         <p css={pStyled}>
           Cantidad de residentes que durmieron bien en la semana
         </p>
-        <IconAndNumber imagePath={SleepyIcon} value={5} total={20} />
+        <IconAndData imagePath={SleepyIcon} value={5} total={20} />
         <p css={pStyled}>
           Cantidad de residentes que se alimentaron bien en la semana
         </p>
-        <IconAndNumber imagePath={FoodIcon} value={5} total={20} />
+        <IconAndData imagePath={FoodIcon} value={5} total={20} />
         <p css={pStyled}>
           Cantidad de residentes que se sintieron solos en la semana
         </p>
-        <IconAndNumber imagePath={AloneIcon} value={5} total={20} />
+        <IconAndData imagePath={AloneIcon} value={5} total={20} />
       </div>
     </div>
   );
