@@ -2,7 +2,7 @@ import React from 'react';
 
 import HealthEmoji from '../report-components/HealthEmoji';
 
-const RenderCustomAxisTickHealth: React.FC<CustomaAxisTickProps> = ({
+const RenderCustomAxisTickHealth: React.FC<CustomAxisTickProps> = ({
   x,
   y,
   payload,

@@ -4,7 +4,7 @@ interface CustomBarLabelProps {
   x: number;
   y: number;
   width: number;
-  value: any;
+  value: string;
 }
 
 const RenderCustomBarLabel: React.FC<CustomBarLabelProps> = ({
@@ -12,12 +12,10 @@ const RenderCustomBarLabel: React.FC<CustomBarLabelProps> = ({
   y,
   width,
   value,
-}) => {
-  return (
-    <text x={x + width / 2} y={y} fill="#000" textAnchor="middle" dy={-6}>
-      {value}
-    </text>
-  );
-};
+}) => (
+  <text x={x + width / 2} y={y} fill="#000" textAnchor="middle" dy={-6}>
+    {value}
+  </text>
+);
 
 export default RenderCustomBarLabel;

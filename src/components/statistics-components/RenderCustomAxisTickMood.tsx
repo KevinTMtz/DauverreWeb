@@ -2,7 +2,7 @@ import React from 'react';
 
 import MoodEmoji from '../report-components/MoodEmoji';
 
-const RenderCustomAxisTickMood: React.FC<CustomaAxisTickProps> = ({
+const RenderCustomAxisTickMood: React.FC<CustomAxisTickProps> = ({
   x,
   y,
   payload,
