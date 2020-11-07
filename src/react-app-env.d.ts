@@ -36,6 +36,12 @@ type OneToFiveIdx = 1 | 2 | 3 | 4 | 5;
 
 type OneToThreeIdx = 1 | 2 | 3;
 
+interface CustomaAxisTickProps {
+  x: number;
+  y: number;
+  payload: any;
+}
+
 interface ReportData {
   date: Date;
   mood: OneToFiveIdx;
