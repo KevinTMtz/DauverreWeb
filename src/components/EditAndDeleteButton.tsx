@@ -6,7 +6,7 @@ const buttonStyle = css({
   height: '35px',
   borderRadius: '10px',
   fontSize: '18px',
-  border: '2px solid #0984e3',
+  border: 'none',
   color: 'white',
   transitionDuration: '0.3s',
   ':hover': {
