@@ -22,12 +22,6 @@ import RenderCustomAxisTickPostsOrResidents from '../components/statistics-compo
 import RenderCustomBarLabel from '../components/statistics-components/RenderCustomBarLabel';
 import IconAndData from '../components/statistics-components/IconAndData';
 
-import SleepyIcon from '../assets/emojis/sleepy.svg';
-import AngryIcon from '../assets/emojis/angry.svg';
-import CryingIcon from '../assets/emojis/crying.svg';
-import FoodIcon from '../assets/emojis/food.svg';
-import AloneIcon from '../assets/emojis/alone.svg';
-
 const styledReportDiv = css({
   textAlign: 'center',
   width: '85%',
@@ -265,6 +259,7 @@ const StatisticsPage: React.FC = () => {
               >
                 {colorsCountReportsGenerated.map((entry, index) => (
                   <Cell
+                    key={entry}
                     fill={
                       colorsCountReportsGenerated[
                         index % dataCountReportsGenerated.length
@@ -327,23 +322,23 @@ const StatisticsPage: React.FC = () => {
         <p css={pStyled}>
           Cantidad de residentes que estuvieron deprimidos en la semana
         </p>
-        <IconAndData imagePath={CryingIcon} value={5} total={20} />
+        <IconAndData state={'crying'} value={5} total={20} />
         <p css={pStyled}>
           Cantidad de residentes que estuvieron enojados en la semana
         </p>
-        <IconAndData imagePath={AngryIcon} value={5} total={20} />
+        <IconAndData state={'angry'} value={5} total={20} />
         <p css={pStyled}>
           Cantidad de residentes que durmieron bien en la semana
         </p>
-        <IconAndData imagePath={SleepyIcon} value={5} total={20} />
+        <IconAndData state={'sleepy'} value={5} total={20} />
         <p css={pStyled}>
           Cantidad de residentes que se alimentaron bien en la semana
         </p>
-        <IconAndData imagePath={FoodIcon} value={5} total={20} />
+        <IconAndData state={'food'} value={5} total={20} />
         <p css={pStyled}>
           Cantidad de residentes que se sintieron solos en la semana
         </p>
-        <IconAndData imagePath={AloneIcon} value={5} total={20} />
+        <IconAndData state={'alone'} value={5} total={20} />
       </div>
     </div>
   );
