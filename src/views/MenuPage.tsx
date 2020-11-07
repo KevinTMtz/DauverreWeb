@@ -4,6 +4,11 @@ import React from 'react';
 
 import PageTitle from '../components/PageTitle';
 
+import EmojiSenior from '../assets/emojis/senior.svg';
+import EmojiUser from '../assets/emojis/user.svg';
+import EmojiStats from '../assets/emojis/stats.svg';
+import EmojiPost from '../assets/emojis/post.svg';
+
 const styledMainDiv = css({
   width: '100%',
   display: 'flex',
@@ -18,57 +23,74 @@ const styledCellContainer = css({
   alignItems: 'center',
 });
 
-const styledCell = css({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  border: '2px solid #74b9ff',
-  width: 'calc(90% - 32px)',
-  padding: '0px 16px',
-  margin: '10px 0px',
-  borderRadius: '10px',
-});
-
 const styledLink = css({
   textDecoration: 'inherit',
   color: 'inherit',
   backgroundColor: '#74b9ff',
   borderRadius: '10px',
-  fontSize: '18px',
-  padding: '5px 10px',
+  fontSize: '16px',
   transitionDuration: '0.3s',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  margin: '10px 0px',
+  padding: '10px 20px',
+  width: 'calc(70% - 40px)',
   ':hover': {
-    transform: 'scale(1.05)',
+    transform: 'scale(1.015)',
+  },
+  '@media (max-width: 600px)': {
+    fontSize: '14px',
+    width: 'calc(90% - 40px)',
+  },
+});
+
+const styledIcon = css({
+  width: '75px',
+  marginLeft: '16px',
+  '@media (max-width: 600px)': {
+    width: '50px',
   },
 });
 
 const MenuPage: React.FC = () => {
   const options = [
-    { name: 'Publicaciones', linkPathname: '/posts' },
-    { name: 'Residentes', linkPathname: '/residents' },
-    { name: 'Módulo de acceso', linkPathname: '/accessmodule' },
-    { name: 'Estadísticas', linkPathname: '/statistics' },
+    { name: 'Publicaciones', toPath: '/posts', image: EmojiPost },
+    { name: 'Residentes', toPath: '/residents', image: EmojiSenior },
+    {
+      name: 'Módulo de acceso',
+      toPath: '/accessmodule',
+      image: EmojiUser,
+    },
+    { name: 'Estadísticas', toPath: '/statistics', image: EmojiStats },
   ];
 
   return (
     <div css={styledMainDiv}>
       <PageTitle message={'Menú'} />
       <div css={styledCellContainer}>
-        {options.map((module) => (
-          <div key={module.name} css={styledCell}>
+        {options.map((module, index) => (
+          <Link
+            key={`${module.name}: ${index}`}
+            to={module.toPath}
+            css={styledLink}
+          >
             <h2>{module.name}</h2>
-            <Link to={module.linkPathname} css={styledLink}>
-              Ingresar
-            </Link>
-          </div>
+            <img alt={`${module.name}`} src={module.image} css={styledIcon} />
+          </Link>
         ))}
       </div>
       <Link
         to="/"
         css={styledLink}
-        style={{ backgroundColor: '#e74c3c', margin: '16px 0px' }}
+        style={{
+          backgroundColor: '#e74c3c',
+          margin: '40px 0px',
+        }}
       >
-        Cerrar sesión
+        <h2 style={{ margin: '0px', textAlign: 'center', width: '100%' }}>
+          Cerrar sesión
+        </h2>
       </Link>
     </div>
   );
