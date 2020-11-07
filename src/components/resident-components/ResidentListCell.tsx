@@ -4,6 +4,8 @@ import { es } from 'date-fns/locale';
 import { useHistory } from 'react-router-dom';
 /** @jsx jsx */ import { css, jsx } from '@emotion/core';
 
+import EditAndDeleteButton, { BGColor } from '../EditAndDeleteButton';
+
 const divStyle = css({
   display: 'flex',
   flexDirection: 'column',
@@ -27,19 +29,6 @@ const buttonsDiv = css({
   marginTop: '20px',
 });
 
-const editAndDeleteButton = css({
-  width: '48%',
-  height: '35px',
-  borderRadius: '10px',
-  fontSize: '18px',
-  border: '2px solid #0984e3',
-  color: 'white',
-  transitionDuration: '0.3s',
-  ':hover': {
-    transform: 'scale(1.01)',
-  },
-});
-
 interface ResidentListCellProps extends Resident {
   deleteResident: () => void;
 }
@@ -58,38 +47,29 @@ const ResidentListCell: React.FC<ResidentListCellProps> = ({
   return (
     <div css={divStyle}>
       <h1 css={h1Style}>
-        {firstName} {lastName}{' '}
+        {firstName} {lastName}
       </h1>
       <div>
         <h5>Sexo: {gender}</h5>
-        <h5>Teléfono: {telephone}</h5>
+        <h5>Teléfono del familiar: {telephone}</h5>
         <h5>
-          Fecha de nacimiento:{' '}
-          {format(birthDate, 'PPPP', {
-            locale: es,
-          })}
+          Fecha de nacimiento: {format(birthDate, 'PPPP', { locale: es })}
         </h5>
         {isVisible || (
           <h5>Este residente no se encuentra actualmente en la institución</h5>
         )}
         <h5>ID: {residentID}</h5>
       </div>
-
       <div css={buttonsDiv}>
-        <button
-          css={editAndDeleteButton}
-          style={{ backgroundColor: '#d63031' }}
-          onClick={deleteResident}
-        >
+        <EditAndDeleteButton color={BGColor.Delete} onClick={deleteResident}>
           Borrar
-        </button>
-        <button
-          css={editAndDeleteButton}
-          style={{ backgroundColor: '#00b894' }}
+        </EditAndDeleteButton>
+        <EditAndDeleteButton
+          color={BGColor.Edit}
           onClick={() => history.push(`/residents/${residentID}/edit`)}
         >
           Editar
-        </button>
+        </EditAndDeleteButton>
       </div>
     </div>
   );
