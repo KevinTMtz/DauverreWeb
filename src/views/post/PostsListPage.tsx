@@ -8,8 +8,8 @@ import { getPosts, deletePost } from '../../firebase/db/posts';
 import { deleteFile } from '../../firebase/storage';
 
 const addButtonStyle = css({
-  width: 'calc(90%)',
-  border: '2px solid #0984e3',
+  width: '70%',
+  border: 'none',
   borderRadius: '10px',
   height: '40px',
   backgroundColor: '#74b9ff',
@@ -19,12 +19,16 @@ const addButtonStyle = css({
   ':hover': {
     transform: 'scale(1.01)',
   },
+  '@media (max-width: 600px)': {
+    width: '90%',
+  },
 });
 
 const divStyle = css({
   display: 'flex',
   alignItems: 'center',
   flexDirection: 'column',
+  marginBottom: '16px',
 });
 
 const PostsListPage: React.FC = () => {

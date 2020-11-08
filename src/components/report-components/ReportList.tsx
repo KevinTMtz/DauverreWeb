@@ -7,8 +7,8 @@ import { getReports } from '../../firebase/db/reports';
 import ReportListCell from './ReportListCell';
 
 const addButtonStyle = css({
-  width: 'calc(90%)',
-  border: '2px solid #0984e3',
+  width: '70%',
+  border: 'none',
   borderRadius: '10px',
   height: '40px',
   backgroundColor: '#74b9ff',
@@ -17,6 +17,17 @@ const addButtonStyle = css({
   transitionDuration: '0.3s',
   ':hover': {
     transform: 'scale(1.01)',
+  },
+  '@media (max-width: 600px)': {
+    width: '90%',
+  },
+});
+
+const reportsDiv = css({
+  width: '70%',
+  transitionDuration: '0.3s',
+  '@media (max-width: 600px)': {
+    width: '90%',
   },
 });
 
@@ -32,7 +43,12 @@ const ReportsList: React.FC = () => {
   }, [residentID]);
   return (
     <div
-      style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        flexDirection: 'column',
+        width: '100%',
+      }}
     >
       <button
         css={addButtonStyle}
@@ -54,7 +70,7 @@ const ReportsList: React.FC = () => {
       ) : reports.length === 0 ? (
         <h1 style={{ textAlign: 'center' }}>No hay reportes</h1>
       ) : (
-        <div>
+        <div css={reportsDiv}>
           <h1 style={{ textAlign: 'center' }}>Últimos reportes</h1>
           {reports.map((r) => (
             <ReportListCell key={r.reportID} {...r} />
