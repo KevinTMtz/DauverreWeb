@@ -38,7 +38,7 @@ const Header: React.FC = () => {
 
   return (
     <div css={divStyle}>
-      <p css={pStyle}>Dauverre A. C.</p>
+      <p css={pStyle}>Dauverre A.C.</p>
       {isInStartPage && (
         <Link to="/login" css={linkStyle}>
           Iniciar sesión
