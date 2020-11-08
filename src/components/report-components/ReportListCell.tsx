@@ -9,13 +9,10 @@ import StateEmoji from './StateEmoji';
 
 const cellStyle = css({
   padding: '16px',
-  margin: '10px auto',
+  margin: '10px 0',
   borderRadius: '10px',
   boxShadow: '0 4px 12px 0 rgba(0,0,0,0.2)',
-  width: 'calc(90% - 32px)',
-  '@media (max-width: 600px)': {
-    width: 'calc(90% - 32px)',
-  },
+  width: 'calc(100% - 32px)',
 });
 
 const info = css({
@@ -30,9 +27,9 @@ const healthInfo = css({
   flexDirection: 'column',
   alignItems: 'center',
   margin: '20px 0',
-  padding: '15px 30px',
+  padding: '10px',
   borderRadius: '10px',
-  border: '1px solid black',
+  border: '1px solid #ccc',
   h5: {
     margin: '5px 0 15px 0',
   },
@@ -73,7 +70,7 @@ const ReportListCell: React.FC<ReportListCellProps> = ({
           <HealthEmoji index={health} height="50px" />
         </div>
       </div>
-      <div style={{ width: '40%' }}>
+      <div style={{ width: '50%', maxWidth: '212px' }}>
         <div css={stateInfo}>
           <StateEmoji state="alone" height="30px" />
           <h5>¿Se sintió triste?:</h5>

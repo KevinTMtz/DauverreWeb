@@ -29,7 +29,7 @@ const CreateReport: React.FC = () => {
     });
   };
   return (
-    <div>
+    <div style={{ marginBottom: '32px' }}>
       <PageTitle message={'Crear reporte'} />
       <ReportForm
         report={newReport}

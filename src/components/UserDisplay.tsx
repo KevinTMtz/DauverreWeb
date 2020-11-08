@@ -12,20 +12,25 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import { resetPasswordFromAccount } from '../firebase/functions';
 
 const divStyle = css({
-  padding: '10px',
-  margin: '20px',
+  padding: '10px 20px',
+  margin: '20px auto',
   borderRadius: '10px',
-  border: '2px solid black',
   display: 'flex',
-  maxWidth: '50vw',
+  backgroundColor: '#74b9ff',
+  maxWidth: 'calc(70% - 40px)',
   '@media (max-width: 600px)': {
-    maxWidth: '80vw',
+    maxWidth: 'calc(90% - 40px)',
   },
   justifyContent: 'space-between',
 });
 
 const h1Style = css({
-  margin: '5px 0px',
+  margin: 'auto 0px',
+  fontSize: '20px',
+  '@media (max-width: 600px)': {
+    fontSize: '18px',
+    width: 'calc(90% - 40px)',
+  },
 });
 
 interface UserDisplayProps {
@@ -57,7 +62,7 @@ const UserDisplay: React.FC<UserDisplayProps> = ({ resident }) => {
         color="primary"
         onClick={() => onSubmit()}
       >
-        Cambiar
+        Reiniciar constraseña
       </Button>
       <Dialog
         fullScreen={fullScreen}

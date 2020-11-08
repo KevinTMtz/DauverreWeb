@@ -14,13 +14,17 @@ import HealthEmoji from './HealthEmoji';
 import StateEmoji, { StateEmojiType } from './StateEmoji';
 
 const styledForm = css({
-  width: '80%',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  width: '70%',
   margin: 'auto',
+  fontSize: '18px',
+  fontWeight: 'bold',
+  transitionDuration: '0.3s',
   '@media (max-width: 600px)': {
     width: '90%',
   },
-  fontSize: '18px',
-  fontWeight: 'bold',
 });
 
 const styledInput = css({
@@ -34,28 +38,35 @@ const styledInput = css({
 
 const styledOptions = css({
   display: 'flex',
-  width: '100%',
+  maxWidth: '378px',
   flexDirection: 'column',
   alignItems: 'center',
   textAlign: 'center',
   div: {
-    width: '45%',
+    width: '100%',
     display: 'flex',
     alignItems: 'center',
     marginBottom: '10px',
     justifyContent: 'space-between',
   },
-  'div div': {
-    display: 'block',
+  '.groupBinaryOptions': {
     width: 'auto',
+    minWidth: '104px',
+    maxWidth: '104px',
+    height: '100%',
+    marginBottom: '0px',
   },
-  legend: {
+  'div div label': {
+    margin: '0px 0px 0px 10px',
+  },
+  '.legendDiv': {
     display: 'flex',
-    alignItems: 'center',
+    flexDirection: 'row',
     marginRight: '20px',
+    fontSize: '16px',
   },
-  'legend svg': {
-    marginRight: '50px',
+  '.legendDiv svg': {
+    marginRight: '16px',
   },
 });
 
@@ -102,7 +113,7 @@ const ReportForm: React.FC<ReportFormProps> = ({
     },
     {
       state: 'alone',
-      message: 'Se sintió solo?',
+      message: '¿Se sintió solo?',
       onChange: (value) => setReportState({ ...report, lonely: value }),
     },
   ];
@@ -117,7 +128,15 @@ const ReportForm: React.FC<ReportFormProps> = ({
         css={styledInput}
       >
         <FormLabel component="legend">Estado de ánimo general:</FormLabel>
-        <RadioGroup aria-label="mood" name="mood" row>
+        <RadioGroup
+          aria-label="mood"
+          name="mood"
+          row
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+          }}
+        >
           {indexes.map((idx) => (
             <FormControlLabel
               control={<Radio />}
@@ -139,7 +158,12 @@ const ReportForm: React.FC<ReportFormProps> = ({
         css={styledInput}
       >
         <FormLabel component="legend">Estado de salud general:</FormLabel>
-        <RadioGroup aria-label="health" name="health" row>
+        <RadioGroup
+          aria-label="health"
+          name="health"
+          row
+          style={{ display: 'flex', justifyContent: 'center' }}
+        >
           {indexes.map((idx) => (
             <FormControlLabel
               key={idx}
@@ -165,15 +189,15 @@ const ReportForm: React.FC<ReportFormProps> = ({
         </FormLabel>
         {states.map(({ state, message, onChange }) => (
           <div key={state}>
-            <FormLabel component="legend" key={`${state}-label`}>
+            <div className="legendDiv">
               <StateEmoji state={state} height="40px" />
-              {message}
-            </FormLabel>
+              <p>{message}</p>
+            </div>
             <RadioGroup
+              className="groupBinaryOptions"
+              row
               aria-label={state}
               name={state}
-              row
-              key={`${state}-group`}
             >
               {[true, false].map((isTrue) => (
                 <FormControlLabel
@@ -206,7 +230,13 @@ const ReportForm: React.FC<ReportFormProps> = ({
           })
         }
       />
-      <Button type="submit" variant="contained" color="primary" fullWidth>
+      <Button
+        type="submit"
+        variant="contained"
+        color="primary"
+        fullWidth
+        style={{ marginTop: '32px' }}
+      >
         {buttonMessage}
       </Button>
       <Button

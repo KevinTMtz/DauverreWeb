@@ -16,13 +16,14 @@ import {
 /** @jsx jsx */ import { css, jsx } from '@emotion/core';
 
 const styledForm = css({
-  width: '80%',
+  width: '70%',
   margin: 'auto',
+  fontSize: '18px',
+  fontWeight: 'bold',
+  transitionDuration: '0.3s',
   '@media (max-width: 600px)': {
     width: '90%',
   },
-  fontSize: '18px',
-  fontWeight: 'bold',
 });
 
 interface ResidentFormProps {
@@ -145,7 +146,13 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
         })
       }
     />
-    <Button type="submit" variant="contained" color="primary" fullWidth>
+    <Button
+      type="submit"
+      variant="contained"
+      color="primary"
+      fullWidth
+      style={{ marginTop: '32px' }}
+    >
       {buttonMessage}
     </Button>
     <Button
