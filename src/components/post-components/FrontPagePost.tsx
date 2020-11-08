@@ -24,7 +24,13 @@ const imgStyle = css({
   margin: '20px auto',
 });
 
-const Post: React.FC<Post> = ({ title, imageUrl, content }) => (
+interface FrontPagePostProps extends Post {}
+
+const FrontPagePost: React.FC<FrontPagePostProps> = ({
+  title,
+  imageUrl,
+  content,
+}) => (
   <div css={divStyle}>
     <h1 css={h1Style}>{title}</h1>
     <img src={imageUrl} alt={`Imagen de ${title}`} css={imgStyle}></img>
@@ -32,4 +38,4 @@ const Post: React.FC<Post> = ({ title, imageUrl, content }) => (
   </div>
 );
 
-export default Post;
+export default FrontPagePost;
