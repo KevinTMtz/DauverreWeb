@@ -10,13 +10,14 @@ import {
 /** @jsx jsx */ import { css, jsx } from '@emotion/core';
 
 const styledForm = css({
-  width: '80%',
+  width: '70%',
   margin: 'auto',
+  fontSize: '18px',
+  fontWeight: 'bold',
+  transitionDuration: '0.3s',
   '@media (max-width: 600px)': {
     width: '90%',
   },
-  fontSize: '18px',
-  fontWeight: 'bold',
 });
 
 const styledP = css({
@@ -31,7 +32,6 @@ const styledInputImage = css({
 });
 
 const styledInputImageLabel = css({
-  border: '1px solid #ccc',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
@@ -39,6 +39,7 @@ const styledInputImageLabel = css({
   cursor: 'pointer',
   width: 'calc(100% - 34px)',
   marginBottom: '50px',
+  border: '1px solid #ccc',
   borderRadius: '4px',
   ':hover': {
     border: '1px solid black',

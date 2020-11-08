@@ -50,6 +50,7 @@ const postContainerStyle = css({
   display: 'flex',
   flexWrap: 'wrap',
   justifyContent: 'space-around',
+  marginBottom: '16px',
 });
 
 const StartPage: React.FC = () => {
@@ -73,7 +74,7 @@ const StartPage: React.FC = () => {
         <div css={dauverreInfoImg} />
       </div>
       <Divisor />
-      <PageTitle message={'Publicaciones'} />
+      <PageTitle message={'Conoce nuestras actividades'} />
       <div className="postContainer" css={postContainerStyle}>
         {posts.map((p) => (
           <Post key={p.postID} {...p} />

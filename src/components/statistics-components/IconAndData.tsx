@@ -19,10 +19,10 @@ const IconAndData: React.FC<IconAndDataProps> = ({ value, total, state }) => (
   <div css={styledDiv}>
     <StateEmoji
       state={state as StateEmojiType}
-      style={{ width: '50px', height: '50px', margin: 'auto 32px' }}
+      style={{ width: '40px', height: '40px', margin: 'auto 32px auto 0px' }}
     />
     <p
-      style={{ fontSize: '25px', fontWeight: 'bold' }}
+      style={{ fontSize: '25px', fontWeight: 'bold', margin: '10px 0px' }}
     >{`${value} de ${total}`}</p>
   </div>
 );

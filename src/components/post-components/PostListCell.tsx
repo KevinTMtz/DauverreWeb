@@ -12,7 +12,8 @@ const divStyle = css({
   margin: '10px 0px',
   borderRadius: '10px',
   boxShadow: '0 4px 12px 0 rgba(0,0,0,0.2)',
-  width: 'calc(90% - 32px)',
+  width: 'calc(70% - 32px)',
+  transitionDuration: '0.3s',
   '@media (max-width: 600px)': {
     width: 'calc(90% - 32px)',
   },
