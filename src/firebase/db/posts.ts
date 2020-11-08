@@ -1,5 +1,4 @@
 import { firestore } from 'firebase/app';
-import Post from '../../components/post-components/Post';
 
 import { db } from '../app';
 import { postDocSchema } from './validation';

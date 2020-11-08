@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Markdown from 'markdown-to-jsx';
 /** @jsx jsx */ import { css, jsx } from '@emotion/core';
 
-import Post from '../components/post-components/Post';
+import FrontPagePost from '../components/post-components/FrontPagePost';
 import Divisor from '../components/Divisor';
 import PageTitle from '../components/PageTitle';
 
@@ -104,7 +104,7 @@ const StartPage: React.FC = () => {
       <PageTitle message={'Conoce nuestras actividades'} />
       <div className="postContainer" css={postContainerStyle}>
         {posts.map((p) => (
-          <Post key={p.postID} {...p} />
+          <FrontPagePost key={p.postID} {...p} />
         ))}
       </div>
     </div>
