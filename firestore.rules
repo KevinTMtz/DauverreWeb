@@ -10,27 +10,42 @@ service cloud.firestore {
       allow read: if request.auth.token.admin == true;
     }
 
+    match /posts/{postID} {
+      allow read: true;
+      allow write: if request.auth != null
+        && request.auth.token.admin == true
+        && request.resource.data.keys().hasOnly(['content', 'date', 'imageURL', 'title'])
+        && request.resource.data.content is string
+        && request.resource.data.date is timestamp
+        && request.resource.data.imageURL is string
+        && request.resource.data.title is string;
+    }
+
     match /residents/{residentID} {
-      allow read: if request.auth.uid == residentID;
-      allow write: if request.auth.token.admin == true
-          && request.resource.data.keys().hasAll(['birthDate', 'firstName', 'gender', 'isActive', 'lastName', 'telephone'])
-          && request.resource.data.birthDate is timestamp
-          && request.resource.data.firstName is string
-          && request.resource.data.gender is string
-          && request.resource.data.isActive is bool
-          && request.resource.data.lastName is string
-          && request.resource.data.telephone is string
-          && request.resource.data.telephone.matches('^\\d{10}$');
+      allow read: if request.auth.token.psy == true || request.auth.uid == residentID;
+      allow create, update: if request.auth != null
+        && request.auth.token.admin == true
+        && request.resource.data.keys().hasOnly(['birthDate', 'firstName', 'gender', 'isActive', 'lastName', 'telephone'])
+        && request.resource.data.birthDate is timestamp
+        && request.resource.data.firstName is string
+        && request.resource.data.gender is string
+        && request.resource.data.isActive is bool
+        && request.resource.data.lastName is string
+        && request.resource.data.accountID is string;
 
       match /reports/{reportID} {
-        allow write: if (request.auth.token.admin == true || request.auth.token.psy == true)
-          && request.resource.data.keys().hasAll(['comments', 'date', 'feltLonely', 'health', 'mood', 'wasAngry', 'wasDepressed', 'wellFed', 'wellRested'])
+        allow read: if request.auth != null
+          && (request.auth.token.psy == true || request.auth.uid == residentID);
+        allow create: if request.auth != null
+          && (request.auth.token.admin == true || request.auth.token.psy == true)
+          && request.resource.data.keys().hasOnly(['comments', 'date', 'feltLonely', 'health', 'isActive', 'mood', 'wasAngry', 'wasDepressed', 'wellFed', 'wellRested'])
           && request.resource.data.comments is string
           && request.resource.data.date is timestamp
           && request.resource.data.feltLonely is bool
           && request.resource.data.health is int
           && request.resource.data.health >= 1
           && request.resource.data.health <= 5
+          && request.resource.data.isActive is bool
           && request.resource.data.mood is int
           && request.resource.data.mood >= 1
           && request.resource.data.mood <= 5
@@ -38,6 +53,11 @@ service cloud.firestore {
           && request.resource.data.wasDepressed is bool
           && request.resource.data.wellFed is bool
           && request.resource.data.wellRested is bool;
+        allow update: if request.auth != null
+          && (request.auth.token.admin == true || request.auth.token.psy == true)
+          && request.resource.data.keys()
+          && request.resource.data.keys().hasOnly(['isActive'])
+          && request.resource.data.isActive is bool;
       }
     }
   }
