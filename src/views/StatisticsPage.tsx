@@ -138,7 +138,6 @@ const StatisticsPage: React.FC = () => {
       data: dataPostsAdministration,
       dataKeyX: 'name',
       dataKeyY: 'total',
-      customLabel: RenderCustomAxisTickPostsOrResidents,
     },
     {
       message1: 'Residentes',
@@ -146,8 +145,10 @@ const StatisticsPage: React.FC = () => {
       data: dataResidentsAdministration,
       dataKeyX: 'name',
       dataKeyY: 'total',
-      customLabel: RenderCustomAxisTickPostsOrResidents,
     },
+  ];
+
+  const forRenderingHealthAndMood = [
     {
       message1: 'Estado anímico de los residentes',
       message2: 'Residentes por estado de ánimo',
@@ -197,40 +198,75 @@ const StatisticsPage: React.FC = () => {
 
       <PageTitle message={'Generales'} />
       <div css={styledReportDiv}>
-        {forRenderingGeneralCharts.map((value) => (
-          <div>
-            <p css={pStyled}>{value.message}</p>
-            <div css={chartGeneralStyle}>
-              <ResponsiveContainer>
-                <BarChart
-                  data={value.data}
-                  margin={{
-                    top: 20,
-                  }}
-                >
-                  <CartesianGrid strokeDasharray="10 10" />
-                  <XAxis dataKey={value.dataKeyX} />
-                  <YAxis yAxisId="left" />
-                  <Tooltip />
-                  <Legend />
-                  <Bar
-                    yAxisId="left"
-                    dataKey={value.dataKeyBar}
-                    stroke="#8884d8"
-                    fill="#8884d8"
-                    label={RenderCustomBarLabel}
-                  />
-                </BarChart>
-              </ResponsiveContainer>
+        {forRenderingGeneralCharts.map(
+          ({ message, data, dataKeyX, dataKeyBar }) => (
+            <div>
+              <p css={pStyled}>{message}</p>
+              <div css={chartGeneralStyle}>
+                <ResponsiveContainer>
+                  <BarChart
+                    data={data}
+                    margin={{
+                      top: 20,
+                    }}
+                  >
+                    <CartesianGrid strokeDasharray="10 10" />
+                    <XAxis dataKey={dataKeyX} />
+                    <YAxis yAxisId="left" />
+                    <Tooltip />
+                    <Legend />
+                    <Bar
+                      yAxisId="left"
+                      dataKey={dataKeyBar}
+                      stroke="#8884d8"
+                      fill="#8884d8"
+                      label={RenderCustomBarLabel}
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
             </div>
-          </div>
-        ))}
+          ),
+        )}
       </div>
 
       <Divisor />
 
       <div css={styledReportDiv}>
         <PageTitle message={'Semanales'} />
+
+        {forRenderingPostAndResidentsCharts.map(
+          ({ message1, message2, data, dataKeyX, dataKeyY }) => (
+            <div>
+              <h2>{message1}</h2>
+              <p css={pStyled}>{message2}</p>
+              <div css={chartGeneralStyle}>
+                <ResponsiveContainer>
+                  <BarChart
+                    data={data}
+                    margin={{
+                      top: 20,
+                      bottom: 20,
+                    }}
+                  >
+                    <CartesianGrid strokeDasharray="10 10" />
+                    <XAxis
+                      dataKey={dataKeyX}
+                      tick={RenderCustomAxisTickPostsOrResidents}
+                    />
+                    <YAxis dataKey={dataKeyY} />
+                    <Tooltip />
+                    <Bar
+                      dataKey={dataKeyY}
+                      fill="#8884d8"
+                      label={RenderCustomBarLabel}
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+          ),
+        )}
 
         <h2>Reportes de estado anímico</h2>
         <p css={pStyled}>
@@ -262,40 +298,42 @@ const StatisticsPage: React.FC = () => {
           </ResponsiveContainer>
         </div>
 
-        {forRenderingPostAndResidentsCharts.map((value) => (
-          <div>
-            <h2>{value.message1}</h2>
-            <p css={pStyled}>{value.message2}</p>
-            <div css={chartGeneralStyle}>
-              <ResponsiveContainer>
-                <BarChart
-                  data={value.data}
-                  margin={{
-                    top: 20,
-                    bottom: 20,
-                  }}
-                >
-                  <CartesianGrid strokeDasharray="10 10" />
-                  <XAxis dataKey={value.dataKeyX} tick={value.customLabel} />
-                  <YAxis dataKey={value.dataKeyY} />
-                  <Tooltip />
-                  <Bar
-                    dataKey={value.dataKeyY}
-                    fill="#8884d8"
-                    label={RenderCustomBarLabel}
-                  />
-                </BarChart>
-              </ResponsiveContainer>
+        {forRenderingHealthAndMood.map(
+          ({ message1, message2, data, dataKeyX, dataKeyY, customLabel }) => (
+            <div>
+              <h2>{message1}</h2>
+              <p css={pStyled}>{message2}</p>
+              <div css={chartGeneralStyle}>
+                <ResponsiveContainer>
+                  <BarChart
+                    data={data}
+                    margin={{
+                      top: 20,
+                      bottom: 20,
+                    }}
+                  >
+                    <CartesianGrid strokeDasharray="10 10" />
+                    <XAxis dataKey={dataKeyX} tick={customLabel} />
+                    <YAxis dataKey={dataKeyY} />
+                    <Tooltip />
+                    <Bar
+                      dataKey={dataKeyY}
+                      fill="#8884d8"
+                      label={RenderCustomBarLabel}
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
             </div>
-          </div>
-        ))}
+          ),
+        )}
 
         <h3>Respecto a las situaciones especiales de los reportes</h3>
-        {forRenderingStates.map((value, index) => (
+        {forRenderingStates.map(({ message, state }, index) => (
           <div>
-            <p css={pStyled}>{value.message}</p>
+            <p css={pStyled}>{message}</p>
             <IconAndData
-              state={value.state}
+              state={state}
               value={dataCountSpecialCases.countByCase[index]}
               total={dataCountSpecialCases.total}
             />
