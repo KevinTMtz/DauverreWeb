@@ -1,10 +1,10 @@
 import * as admin from 'firebase-admin';
 import { https } from 'firebase-functions';
 
-import { residentsColl } from '../firestore';
+import * as assert from '../assert';
+import { getResidentsColl } from '../firestore';
 import { FirestoreResident } from '../types';
 import {
-  // assertIsAdmin,
   dateToPass,
   jsDateToTimestamp,
   phoneToMail,
@@ -13,7 +13,7 @@ import {
 } from '../util';
 
 const updateResident = async (data: any, context: https.CallableContext) => {
-  // assertIsAdmin(context);
+  // assert.isAdmin(context);
   const { resident, loginMethod, shouldUpdatePassword } = data;
   if (
     typeof resident.residentID === 'undefined' ||
@@ -26,24 +26,27 @@ const updateResident = async (data: any, context: https.CallableContext) => {
       'No se pasaron los argumentos "resident", "loginMethod" y "shouldUpdatePassword" correctamente',
     );
 
-  const oldResidentDoc = await residentsColl.doc(resident.residentID).get();
+  const oldResidentDoc = await getResidentsColl()
+    .doc(resident.residentID)
+    .get();
   if (!oldResidentDoc.exists)
     throw new https.HttpsError(
       'not-found',
       `No se encontró un residente con el id ${resident.residentID}`,
     );
   const oldResident = oldResidentDoc.data() as FirestoreResident;
-  await admin.auth().getUser(resident.accountID); // Throws error if acc doesn't exist
+  await assert.accountExists(resident.accountID);
   const newBirthDate = jsDateToTimestamp(resident.birthDate);
 
   let accountID = oldResident.accountID;
   const email = phoneToMail(loginMethod.telephone);
   const password = dateToPass(resident.birthDate);
   if (loginMethod.loginMethodIdx === 0) {
+    await assert.emailIsAvailable(email);
     const updateTo = shouldUpdatePassword ? { email, password } : { email };
     await admin.auth().updateUser(accountID, updateTo);
   } else if (oldResident.accountID !== resident.accountID) {
-    const otherResidentsWithSameAcc = await residentsColl
+    const otherResidentsWithSameAcc = await getResidentsColl()
       .where('accountID', '==', accountID)
       .get();
     if (otherResidentsWithSameAcc.docs.length === 1)
@@ -57,7 +60,7 @@ const updateResident = async (data: any, context: https.CallableContext) => {
   ) {
     await admin.auth().updateUser(accountID, { password });
   }
-  await residentsColl.doc(resident.residentID).update({
+  await getResidentsColl().doc(resident.residentID).update({
     firstName: resident.firstName,
     lastName: resident.lastName,
     gender: resident.gender,
