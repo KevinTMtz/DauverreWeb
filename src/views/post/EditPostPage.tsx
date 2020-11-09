@@ -77,7 +77,7 @@ const EditPostPage: React.FC = () => {
         buttonMessage={'Guardar cambios'}
         onSubmit={onSubmit}
         cancelOperation={() => history.push('/posts')}
-        isEditing={true}
+        isEditing
         dialogAction={'actualizada'}
       />
     </div>

@@ -83,9 +83,7 @@ const PostListCell: React.FC<PostListCellProps> = ({
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">
-          {'Borrar publicación'}
-        </DialogTitle>
+        <DialogTitle id="alert-dialog-title">Borrar publicación</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             {`¿Estás seguro que quieres borrar la publicación: ${title}?`}
