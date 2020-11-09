@@ -1,7 +1,8 @@
 import * as admin from 'firebase-admin';
 import { https } from 'firebase-functions';
 
-import { residentsColl } from '../firestore';
+// import * as assert from '../assert';
+import { getResidentsColl } from '../firestore';
 import { joinStringsAsList } from '../util';
 
 interface AccountWithResidents {
@@ -20,7 +21,7 @@ const listResFamAccounts = async (
   _: any,
   context: https.CallableContext,
 ): Promise<AccountListing[]> => {
-  // assertIsAdmin(context);
+  // assert.isAdmin(context);
   const { users } = await admin.auth().listUsers();
   const accounts = users
     .filter(
@@ -31,7 +32,7 @@ const listResFamAccounts = async (
       telephone: u.email?.split('@example.com')[0] || '',
       residents: [],
     }));
-  const { docs } = await residentsColl.get();
+  const { docs } = await getResidentsColl().get();
   docs.forEach((doc) => {
     const { firstName, lastName, accountID } = doc.data();
     const residentName = `${firstName} ${lastName}`;

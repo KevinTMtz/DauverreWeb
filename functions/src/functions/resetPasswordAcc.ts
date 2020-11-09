@@ -1,14 +1,15 @@
 import * as admin from 'firebase-admin';
 import { https } from 'firebase-functions';
 
-import { residentsColl } from '../firestore';
+import * as assert from '../assert';
+import { getResidentsColl } from '../firestore';
 import { FirestoreResident } from '../types';
 import { dateToPass } from '../util';
 
 const resetPasswordAcc = async (data: any, context: https.CallableContext) => {
-  // assertIsAdmin(context);
+  // assert.isAdmin(context);
   const { accountID, residentID } = data;
-  const residentDoc = await residentsColl.doc(residentID).get();
+  const residentDoc = await getResidentsColl().doc(residentID).get();
   if (!residentDoc.exists)
     throw new https.HttpsError(
       'not-found',
@@ -23,6 +24,7 @@ const resetPasswordAcc = async (data: any, context: https.CallableContext) => {
       'invalid-argument',
       `El id de la cuenta del residente (${resAccountID}) no coincide con el id de la cuenta (${accountID})`,
     );
+  await assert.accountExists(accountID);
   await admin.auth().updateUser(accountID, {
     password: dateToPass(birthDate.toDate()),
   });
