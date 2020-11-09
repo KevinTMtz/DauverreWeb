@@ -46,14 +46,20 @@ const EditPostPage: React.FC = () => {
     });
   }, [postID, history]);
 
-  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = (
+    event: React.FormEvent<HTMLFormElement>,
+    callDialog: () => void,
+    openBackdrop: () => void,
+  ) => {
     event.preventDefault();
+
+    openBackdrop();
 
     uploadFile(`post_images/${postID}`, imageFile as File).then((uploadRes) => {
       if (uploadRes.state === 'success') {
         updatePost(post, postID).then((value) => {
           if (value.state === 'success') {
-            history.push('/posts');
+            callDialog();
           }
         });
       }
@@ -72,6 +78,7 @@ const EditPostPage: React.FC = () => {
         onSubmit={onSubmit}
         cancelOperation={() => history.push('/posts')}
         isEditing={true}
+        dialogAction={'actualizada'}
       />
     </div>
   );
