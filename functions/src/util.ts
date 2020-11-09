@@ -1,5 +1,4 @@
 import * as admin from 'firebase-admin';
-import { https } from 'firebase-functions';
 import * as yup from 'yup';
 
 import { CreateResidentData, ResidentFamLoginMethod } from './types';
@@ -16,14 +15,6 @@ export const dateToPass = (date: Date): string => {
     .filter((part) => part.type !== 'literal')
     .map((part) => part.value)
     .join('');
-};
-
-export const assertIsAdmin = (context: https.CallableContext) => {
-  if (context.auth === undefined || context.auth.token.admin !== true)
-    throw new https.HttpsError(
-      'permission-denied',
-      'Llamada sin la autorización necesaria',
-    );
 };
 
 export const jsDateToTimestamp = (date: Date) =>
