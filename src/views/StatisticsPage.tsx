@@ -105,147 +105,136 @@ const StatisticsPage: React.FC = () => {
   ];
   const colorsCountReportsGenerated = ['#77B255', '#EA596E'];
 
+  const dataCountSpecialCases = {
+    total: 20,
+    countByCase: [5, 4, 11, 19, 2],
+  };
+
+  const forRenderingGeneralCharts = [
+    {
+      message: 'Total de residentes activos',
+      data: dataResidentes,
+      dataKeyX: 'name',
+      dataKeyBar: 'residentes',
+    },
+    {
+      message: 'Total de reportes de estado generados',
+      data: dataReportes,
+      dataKeyX: 'name',
+      dataKeyBar: 'reportes',
+    },
+    {
+      message: 'Total de publicaciones activas',
+      data: dataPublicaciones,
+      dataKeyX: 'name',
+      dataKeyBar: 'publicaciones',
+    },
+  ];
+
+  const forRenderingPostAndResidentsCharts = [
+    {
+      message1: 'Publicaciones de la página',
+      message2: 'Altas, actualizaciones y bajas',
+      data: dataPostsAdministration,
+      dataKeyX: 'name',
+      dataKeyY: 'total',
+      customLabel: RenderCustomAxisTickPostsOrResidents,
+    },
+    {
+      message1: 'Residentes',
+      message2: 'Altas, desactivaciones y bajas',
+      data: dataResidentsAdministration,
+      dataKeyX: 'name',
+      dataKeyY: 'total',
+      customLabel: RenderCustomAxisTickPostsOrResidents,
+    },
+    {
+      message1: 'Estado anímico de los residentes',
+      message2: 'Residentes por estado de ánimo',
+      data: dataMood,
+      dataKeyX: 'name',
+      dataKeyY: 'residentes',
+      customLabel: RenderCustomAxisTickMood,
+    },
+    {
+      message1: 'Estado de salud de los residentes',
+      message2: 'Residentes por estado de salud',
+      data: dataHealth,
+      dataKeyX: 'name',
+      dataKeyY: 'residentes',
+      customLabel: RenderCustomAxisTickHealth,
+    },
+  ];
+
+  const forRenderingStates = [
+    {
+      message: 'Residentes que estuvieron deprimidos en la semana',
+      state: 'crying',
+    },
+    {
+      message: 'Residentes que estuvieron enojados en la semana',
+      state: 'angry',
+    },
+    {
+      message: 'Residentes que durmieron bien en la semana',
+      state: 'sleepy',
+    },
+    {
+      message: 'Residentes que se alimentaron bien en la semana',
+      state: 'food',
+    },
+    {
+      message: 'Residentes que se sintieron solos en la semana',
+      state: 'alone',
+    },
+  ];
+
   return (
     <div>
       <PageTitle message={'Estadísticas'} />
 
       <Divisor />
 
+      <PageTitle message={'Generales'} />
       <div css={styledReportDiv}>
-        <PageTitle message={'Generales'} />
-        <p css={pStyled}>Total de residentes activos</p>
-        <div css={chartGeneralStyle}>
-          <ResponsiveContainer>
-            <BarChart
-              data={dataResidentes}
-              margin={{
-                top: 20,
-              }}
-            >
-              <CartesianGrid strokeDasharray="10 10" />
-              <XAxis dataKey="name" />
-              <YAxis yAxisId="left" />
-              <Tooltip />
-              <Legend />
-              <Bar
-                yAxisId="left"
-                dataKey="residentes"
-                stroke="#8884d8"
-                fill="#8884d8"
-                label={RenderCustomBarLabel}
-              />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-
-        <p css={pStyled}>Total de reportes de estado generados</p>
-        <div css={chartGeneralStyle}>
-          <ResponsiveContainer>
-            <BarChart
-              data={dataReportes}
-              margin={{
-                top: 20,
-              }}
-            >
-              <CartesianGrid strokeDasharray="10 10" />
-              <XAxis dataKey="name" />
-              <YAxis yAxisId="left" />
-              <Tooltip />
-              <Legend />
-              <Bar
-                yAxisId="left"
-                dataKey="reportes"
-                stroke="#8884d8"
-                fill="#8884d8"
-                label={RenderCustomBarLabel}
-              />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-
-        <p css={pStyled}>Total de publicaciones activas</p>
-        <div css={chartGeneralStyle}>
-          <ResponsiveContainer>
-            <BarChart data={dataPublicaciones}>
-              <CartesianGrid strokeDasharray="10 10" />
-              <XAxis dataKey="name" />
-              <YAxis yAxisId="left" />
-              <Tooltip />
-              <Legend />
-              <Bar
-                yAxisId="left"
-                dataKey="publicaciones"
-                stroke="#8884d8"
-                fill="#8884d8"
-                label={RenderCustomBarLabel}
-              />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
+        {forRenderingGeneralCharts.map((value) => (
+          <div>
+            <p css={pStyled}>{value.message}</p>
+            <div css={chartGeneralStyle}>
+              <ResponsiveContainer>
+                <BarChart
+                  data={value.data}
+                  margin={{
+                    top: 20,
+                  }}
+                >
+                  <CartesianGrid strokeDasharray="10 10" />
+                  <XAxis dataKey={value.dataKeyX} />
+                  <YAxis yAxisId="left" />
+                  <Tooltip />
+                  <Legend />
+                  <Bar
+                    yAxisId="left"
+                    dataKey={value.dataKeyBar}
+                    stroke="#8884d8"
+                    fill="#8884d8"
+                    label={RenderCustomBarLabel}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        ))}
       </div>
 
       <Divisor />
 
       <div css={styledReportDiv}>
         <PageTitle message={'Semanales'} />
-        <h2>Publicaciones de la página</h2>
-        <p css={pStyled}>Altas, actualizaciones y bajas</p>
-        <div css={chartGeneralStyle}>
-          <ResponsiveContainer>
-            <BarChart
-              data={dataPostsAdministration}
-              margin={{
-                top: 20,
-                bottom: 20,
-              }}
-            >
-              <CartesianGrid strokeDasharray="10 10" />
-              <XAxis
-                dataKey="name"
-                tick={RenderCustomAxisTickPostsOrResidents}
-              />
-              <YAxis dataKey="total" />
-              <Tooltip />
-              <Bar
-                dataKey="total"
-                fill="#8884d8"
-                label={RenderCustomBarLabel}
-              />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-
-        <h2>Residentes</h2>
-        <p css={pStyled}>Altas, desactivaciones y bajas</p>
-        <div css={chartGeneralStyle}>
-          <ResponsiveContainer>
-            <BarChart
-              data={dataResidentsAdministration}
-              margin={{
-                top: 20,
-                bottom: 20,
-              }}
-            >
-              <CartesianGrid strokeDasharray="10 10" />
-              <XAxis
-                dataKey="name"
-                tick={RenderCustomAxisTickPostsOrResidents}
-              />
-              <YAxis dataKey="total" />
-              <Tooltip />
-              <Bar
-                dataKey="total"
-                fill="#8884d8"
-                label={RenderCustomBarLabel}
-              />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
 
         <h2>Reportes de estado anímico</h2>
         <p css={pStyled}>
-          Cantidad de residentes a los que se les generó reporte de estado y a
-          los que no
+          Residentes a los que se les generó reporte de estado y a los que no
         </p>
         <div css={chartGeneralStyle}>
           <ResponsiveContainer>
@@ -272,73 +261,46 @@ const StatisticsPage: React.FC = () => {
             </PieChart>
           </ResponsiveContainer>
         </div>
-        <h3>Respecto al estado anímico de los residentes</h3>
-        <p css={pStyled}>Residentes por estado de ánimo</p>
-        <div css={chartGeneralStyle}>
-          <ResponsiveContainer>
-            <BarChart
-              data={dataMood}
-              margin={{
-                top: 20,
-                bottom: 20,
-              }}
-            >
-              <CartesianGrid strokeDasharray="10 10" />
-              <XAxis dataKey="name" tick={RenderCustomAxisTickMood} />
-              <YAxis dataKey="residentes" />
-              <Tooltip />
-              <Bar
-                dataKey="residentes"
-                fill="#8884d8"
-                label={RenderCustomBarLabel}
-              />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-        <h3>Respecto al estado de salud de los residentes</h3>
-        <p css={pStyled}>Residentes por estado de salud</p>
-        <div css={chartGeneralStyle}>
-          <ResponsiveContainer>
-            <BarChart
-              data={dataHealth}
-              margin={{
-                top: 20,
-                bottom: 20,
-              }}
-            >
-              <CartesianGrid strokeDasharray="10 10" />
-              <XAxis dataKey="name" tick={RenderCustomAxisTickHealth} />
-              <YAxis dataKey="residentes" />
-              <Tooltip />
-              <Bar
-                dataKey="residentes"
-                fill="#8884d8"
-                label={RenderCustomBarLabel}
-              />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
+
+        {forRenderingPostAndResidentsCharts.map((value) => (
+          <div>
+            <h2>{value.message1}</h2>
+            <p css={pStyled}>{value.message2}</p>
+            <div css={chartGeneralStyle}>
+              <ResponsiveContainer>
+                <BarChart
+                  data={value.data}
+                  margin={{
+                    top: 20,
+                    bottom: 20,
+                  }}
+                >
+                  <CartesianGrid strokeDasharray="10 10" />
+                  <XAxis dataKey={value.dataKeyX} tick={value.customLabel} />
+                  <YAxis dataKey={value.dataKeyY} />
+                  <Tooltip />
+                  <Bar
+                    dataKey={value.dataKeyY}
+                    fill="#8884d8"
+                    label={RenderCustomBarLabel}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        ))}
+
         <h3>Respecto a las situaciones especiales de los reportes</h3>
-        <p css={pStyled}>
-          Cantidad de residentes que estuvieron deprimidos en la semana
-        </p>
-        <IconAndData state={'crying'} value={5} total={20} />
-        <p css={pStyled}>
-          Cantidad de residentes que estuvieron enojados en la semana
-        </p>
-        <IconAndData state={'angry'} value={5} total={20} />
-        <p css={pStyled}>
-          Cantidad de residentes que durmieron bien en la semana
-        </p>
-        <IconAndData state={'sleepy'} value={5} total={20} />
-        <p css={pStyled}>
-          Cantidad de residentes que se alimentaron bien en la semana
-        </p>
-        <IconAndData state={'food'} value={5} total={20} />
-        <p css={pStyled}>
-          Cantidad de residentes que se sintieron solos en la semana
-        </p>
-        <IconAndData state={'alone'} value={5} total={20} />
+        {forRenderingStates.map((value, index) => (
+          <div>
+            <p css={pStyled}>{value.message}</p>
+            <IconAndData
+              state={value.state}
+              value={dataCountSpecialCases.countByCase[index]}
+              total={dataCountSpecialCases.total}
+            />
+          </div>
+        ))}
       </div>
     </div>
   );
