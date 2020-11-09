@@ -48,6 +48,7 @@ const CreatePostPage: React.FC = () => {
         buttonMessage={'Crear publicación'}
         onSubmit={onSubmit}
         cancelOperation={() => history.push('/posts')}
+        isEditing={false}
       />
     </div>
   );

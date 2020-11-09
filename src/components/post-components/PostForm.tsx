@@ -7,6 +7,7 @@ import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from '@material-ui/pickers';
+import CircularProgress from '@material-ui/core/CircularProgress';
 /** @jsx jsx */ import { css, jsx } from '@emotion/core';
 
 const styledForm = css({
@@ -37,6 +38,7 @@ const styledInputImageLabel = css({
   alignItems: 'center',
   padding: '16px 16px',
   cursor: 'pointer',
+  textAlign: 'center',
   width: 'calc(100% - 34px)',
   marginBottom: '50px',
   border: '1px solid #ccc',
@@ -49,6 +51,10 @@ const styledInputImageLabel = css({
 const styledInputImagePreview = css({
   maxWidth: '50%',
   maxHeight: '300px',
+  marginTop: '16px',
+  '@media (max-width: 600px)': {
+    maxWidth: '90%',
+  },
 });
 
 interface PostFormProps {
@@ -59,6 +65,7 @@ interface PostFormProps {
   buttonMessage: string;
   onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
   cancelOperation: () => void;
+  isEditing: boolean;
 }
 
 const PostForm: React.FC<PostFormProps> = ({
@@ -69,6 +76,7 @@ const PostForm: React.FC<PostFormProps> = ({
   post,
   setImageFile,
   setPostState,
+  isEditing,
 }) => (
   <form autoComplete="off" onSubmit={onSubmit} css={styledForm}>
     <p css={styledP}>Título</p>
@@ -120,28 +128,40 @@ const PostForm: React.FC<PostFormProps> = ({
       }
     />
     <p css={styledP}>Imagen</p>
-    <label css={styledInputImageLabel}>
-      {imageFile ? `Cambiar imagen: ${imageFile.name}` : 'Subir imagen'}
-      <input
-        type="file"
-        accept="image/*"
-        css={styledInputImage}
-        required={imageFile ? false : true}
-        onChange={(event) =>
-          setImageFile(event.target.files ? event.target.files[0] : imageFile)
-        }
-      />
-      {imageFile && (
-        <img
-          alt="No fue posible mostrar la imagen, cargar de nuevo"
-          src={URL.createObjectURL(imageFile)}
-          style={{
-            marginTop: '16px',
-          }}
-          css={styledInputImagePreview}
-        ></img>
-      )}
-    </label>
+    {typeof imageFile === 'undefined' && isEditing ? (
+      <label css={styledInputImageLabel}>
+        <div style={{ display: 'flex', alignContent: 'center' }}>
+          <CircularProgress
+            style={{
+              width: '75px',
+              height: '75px',
+              margin: '25px',
+              color: '#74b9ff',
+            }}
+          />
+        </div>
+      </label>
+    ) : (
+      <label css={styledInputImageLabel}>
+        {imageFile ? `Cambiar imagen: ${imageFile.name}` : 'Subir imagen'}
+        <input
+          type="file"
+          accept="image/*"
+          css={styledInputImage}
+          required={imageFile ? false : true}
+          onChange={(event) =>
+            setImageFile(event.target.files ? event.target.files[0] : imageFile)
+          }
+        />
+        {imageFile && (
+          <img
+            alt="No fue posible mostrar la imagen, cargar de nuevo"
+            src={URL.createObjectURL(imageFile)}
+            css={styledInputImagePreview}
+          ></img>
+        )}
+      </label>
+    )}
     <Button type="submit" variant="contained" color="primary" fullWidth>
       {buttonMessage}
     </Button>
