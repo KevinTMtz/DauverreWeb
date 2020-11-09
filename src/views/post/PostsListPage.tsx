@@ -1,5 +1,6 @@
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
+import CircularProgress from '@material-ui/core/CircularProgress';
 /** @jsx jsx */ import { css, jsx } from '@emotion/core';
 
 import PostListCell from '../../components/post-components/PostListCell';
@@ -35,14 +36,14 @@ const PostsListPage: React.FC = () => {
   const match = useRouteMatch();
   const history = useHistory();
 
-  const [posts, setPosts] = useState<Post[]>([]);
+  const [posts, setPosts] = useState<Post[]>();
   useEffect(() => {
     getPosts().then((ps) => setPosts(ps));
   }, []);
 
   const deleteSelectedPost = (postID: string) => {
     deletePost(postID).then((value) => {
-      if (value.state === 'success') {
+      if (value.state === 'success' && typeof posts !== 'undefined') {
         setPosts(posts.filter((p) => p.postID !== postID));
         deleteFile(`post_images/${postID}`);
       }
@@ -58,13 +59,28 @@ const PostsListPage: React.FC = () => {
       >
         Añadir publicación
       </button>
-      {posts.map((p) => (
-        <PostListCell
-          key={p.postID}
-          {...p}
-          deletePost={() => deleteSelectedPost(p.postID)}
-        />
-      ))}
+      {typeof posts === 'undefined' ? (
+        <div style={{ display: 'flex', alignContent: 'center' }}>
+          <CircularProgress
+            style={{
+              width: '100px',
+              height: '100px',
+              margin: ' 20vh auto',
+              color: '#74b9ff',
+            }}
+          />
+        </div>
+      ) : posts.length === 0 ? (
+        <h1 style={{ textAlign: 'center' }}>No hay publicaciones existentes</h1>
+      ) : (
+        posts.map((p) => (
+          <PostListCell
+            key={p.postID}
+            {...p}
+            deletePost={() => deleteSelectedPost(p.postID)}
+          />
+        ))
+      )}
     </div>
   );
 };
