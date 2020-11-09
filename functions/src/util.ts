@@ -1,3 +1,9 @@
+import * as admin from 'firebase-admin';
+import { https } from 'firebase-functions';
+import * as yup from 'yup';
+
+import { CreateResidentData, ResidentFamLoginMethod } from './types';
+
 export const phoneToMail = (phone: string): string => `${phone}@example.com`;
 
 export const dateToPass = (date: Date): string => {
@@ -10,4 +16,48 @@ export const dateToPass = (date: Date): string => {
     .filter((part) => part.type !== 'literal')
     .map((part) => part.value)
     .join('');
+};
+
+export const assertIsAdmin = (context: https.CallableContext) => {
+  if (context.auth === undefined || context.auth.token.admin !== true)
+    throw new https.HttpsError(
+      'permission-denied',
+      'Llamada sin la autorización necesaria',
+    );
+};
+
+export const jsDateToTimestamp = (date: Date) =>
+  admin.firestore.Timestamp.fromDate(date);
+
+export const joinStringsAsList = (list: string[]): string => {
+  let name = list.pop() || '';
+  if (list.length >= 1) {
+    name = `${list.pop()} y ${name}`;
+  }
+  while (list.length !== 0) {
+    name = `${list.pop()}, ${name}`;
+  }
+  return name;
+};
+
+export const validateResidentData = async (
+  resident: CreateResidentData,
+): Promise<boolean> => {
+  resident.birthDate.setHours(12, 1);
+  const residentDocSchema = yup.object().shape({
+    firstName: yup.string().required(),
+    lastName: yup.string().required(),
+    birthDate: yup.date().required(),
+    gender: yup.string().required(),
+    isVisible: yup.boolean().default(true),
+  });
+  return residentDocSchema.isValid(resident);
+};
+
+export const validateLoginMethod = (
+  loginMethod: ResidentFamLoginMethod,
+): boolean => {
+  if (loginMethod.loginMethodIdx === 0)
+    return /^\d{10}$/.test(loginMethod.telephone);
+  return loginMethod.loginMethodIdx === 1;
 };

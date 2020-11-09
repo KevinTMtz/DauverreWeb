@@ -10,7 +10,3 @@ typings/
 
 # Node.js dependency directory
 node_modules/
-
-# Firebase logs
-firestore-debug.log
-ui-debug.log
