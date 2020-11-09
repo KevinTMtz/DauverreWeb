@@ -1,32 +1,16 @@
-import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import * as express from 'express';
-import * as cors from 'cors';
-import { json } from 'body-parser';
+import * as functions from 'firebase-functions';
 
-import {
-  createResidentFamiliarAccount,
-  deleteResidentFamiliarAccount,
-  resetPasswordResidentFamAcc,
-} from './functions';
-import { isAuthenticatedAsAdmin, logging } from './middleware';
+import createAdmin from './functions/createAdmin';
+import createResident from './functions/createResident';
+import listResFamAccounts from './functions/listResFamAccounts';
+import resetPasswordAcc from './functions/resetPasswordAcc';
+import updateResident from './functions/updateResident';
 
 admin.initializeApp();
 
-const app = express();
-app.use(json());
-app.use(cors({ origin: true }));
-app.use(logging);
-app.use(isAuthenticatedAsAdmin);
-
-app.use('/users/reset/:uid', resetPasswordResidentFamAcc);
-
-export const api = functions.https.onRequest(app);
-
-export const createResidentFamiliarAccountF = functions.firestore
-  .document('residents/{residentID}')
-  .onCreate(createResidentFamiliarAccount);
-
-export const deleteResidentFamiliarAccountF = functions.firestore
-  .document('residents/{residentID}')
-  .onDelete(deleteResidentFamiliarAccount);
+export const createAdminF = functions.https.onCall(createAdmin);
+export const createResidenF = functions.https.onCall(createResident);
+export const listResFamAccountsF = functions.https.onCall(listResFamAccounts);
+export const resetPasswordAccF = functions.https.onCall(resetPasswordAcc);
+export const updateResidentF = functions.https.onCall(updateResident);
