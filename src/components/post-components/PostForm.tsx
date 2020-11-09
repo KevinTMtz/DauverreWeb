@@ -212,8 +212,8 @@ const PostForm: React.FC<PostFormProps> = ({
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
-        disableBackdropClick={true}
-        disableEscapeKeyDown={true}
+        disableBackdropClick
+        disableEscapeKeyDown
       >
         <DialogTitle id="alert-dialog-title">Acción terminada</DialogTitle>
         <DialogContent>
@@ -222,7 +222,7 @@ const PostForm: React.FC<PostFormProps> = ({
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Seguir editando</Button>
+          {isEditing && <Button onClick={handleClose}>Seguir editando</Button>}
           <Button onClick={cancelOperation} color="primary">
             Finalizar
           </Button>
