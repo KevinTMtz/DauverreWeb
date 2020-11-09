@@ -1,6 +1,10 @@
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogTitle from '@material-ui/core/DialogTitle';
 /** @jsx jsx */ import { css, jsx } from '@emotion/core';
 
 import PostListCell from '../../components/post-components/PostListCell';
@@ -41,11 +45,16 @@ const PostsListPage: React.FC = () => {
     getPosts().then((ps) => setPosts(ps));
   }, []);
 
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   const deleteSelectedPost = (postID: string) => {
     deletePost(postID).then((value) => {
       if (value.state === 'success' && typeof posts !== 'undefined') {
         setPosts(posts.filter((p) => p.postID !== postID));
         deleteFile(`post_images/${postID}`);
+        handleOpen();
       }
     });
   };
@@ -77,10 +86,28 @@ const PostsListPage: React.FC = () => {
           <PostListCell
             key={p.postID}
             {...p}
-            deletePost={() => deleteSelectedPost(p.postID)}
+            deletePost={() => {
+              deleteSelectedPost(p.postID);
+            }}
           />
         ))
       )}
+
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {'La publicación fue borrada exitosamente'}
+        </DialogTitle>
+        <DialogActions>
+          <Button onClick={handleClose} color="secondary">
+            Aceptar
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };
