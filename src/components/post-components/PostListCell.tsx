@@ -24,8 +24,9 @@ const h1Style = css({
 });
 
 const imgStyle = css({
-  width: '150px',
-  height: '150px',
+  width: 'auto',
+  maxWidth: '100%',
+  height: '250px',
   objectFit: 'cover',
   margin: '20px auto',
 });
