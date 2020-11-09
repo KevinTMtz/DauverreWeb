@@ -86,9 +86,7 @@ const PostsListPage: React.FC = () => {
           <PostListCell
             key={p.postID}
             {...p}
-            deletePost={() => {
-              deleteSelectedPost(p.postID);
-            }}
+            deletePost={() => deleteSelectedPost(p.postID)}
           />
         ))
       )}
@@ -100,7 +98,7 @@ const PostsListPage: React.FC = () => {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          {'La publicación fue borrada exitosamente'}
+          La publicación fue borrada exitosamente
         </DialogTitle>
         <DialogActions>
           <Button onClick={handleClose} color="secondary">
