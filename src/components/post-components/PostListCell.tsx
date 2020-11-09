@@ -1,6 +1,12 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import Markdown from 'markdown-to-jsx';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 /** @jsx jsx */ import { css, jsx } from '@emotion/core';
 
 import EditAndDeleteButton, { BGColor } from '../EditAndDeleteButton';
@@ -49,13 +55,18 @@ const PostListCell: React.FC<PostListCellProps> = ({
   imageUrl,
 }) => {
   const history = useHistory();
+
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   return (
     <div css={divStyle}>
       <h1 css={h1Style}>{title}</h1>
       <img src={imageUrl} alt={`Imagen de ${title}`} css={imgStyle}></img>
       <Markdown>{content}</Markdown>
       <div css={buttonsDiv}>
-        <EditAndDeleteButton color={BGColor.Delete} onClick={deletePost}>
+        <EditAndDeleteButton color={BGColor.Delete} onClick={handleOpen}>
           Borrar
         </EditAndDeleteButton>
         <EditAndDeleteButton
@@ -65,6 +76,30 @@ const PostListCell: React.FC<PostListCellProps> = ({
           Editar
         </EditAndDeleteButton>
       </div>
+
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {'Borrar publicación'}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            {`¿Estás seguro que quieres borrar la publicación: ${title}?`}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Cancelar
+          </Button>
+          <Button onClick={deletePost} color="secondary">
+            Aceptar
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };
