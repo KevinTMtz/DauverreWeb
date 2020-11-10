@@ -9,8 +9,6 @@ import PageTitle from '../components/PageTitle';
 import { getPosts } from '../firebase/db/posts';
 
 const mainImgStyle = css({
-  backgroundImage:
-    'url(https://lh3.ggpht.com/p/AF1QipPXaAOJnSq-IcfJMTqeYZFWv-yuAPaTZrYwY3Hu=s1536)',
   backgroundPosition: '50%',
   backgroundSize: 'cover',
   width: '100%',
@@ -19,7 +17,7 @@ const mainImgStyle = css({
 
 const dauverreInfo = css({
   display: 'flex',
-  '@media (max-width: 550px)': {
+  '@media (max-width: 600px)': {
     flexDirection: 'column',
   },
 });
@@ -29,7 +27,7 @@ const dauverreInfoImg = css({
   backgroundSize: 'cover',
   width: '50%',
   height: 'auto',
-  '@media (max-width: 550px)': {
+  '@media (max-width: 600px)': {
     height: '40vh',
     width: '100%',
   },
@@ -41,7 +39,7 @@ const dauverreInfoSubContainer = css({
   minHeight: '25vh',
   display: 'flex',
   flexDirection: 'column',
-  '@media (max-width: 550px)': {
+  '@media (max-width: 600px)': {
     width: 'calc(100% - 64px)',
   },
 });
@@ -51,6 +49,28 @@ const postContainerStyle = css({
   flexWrap: 'wrap',
   justifyContent: 'space-around',
   marginBottom: '16px',
+});
+
+const founderInfo = css({
+  padding: '48px',
+  display: 'flex',
+  flexDirection: 'column',
+  color: 'white',
+  width: 'auto',
+});
+
+const founderImg = css({
+  display: 'block',
+  objectFit: 'cover',
+  height: '350px',
+  width: 'auto',
+  margin: '32px 0px 32px 48px',
+  border: '10px solid white',
+  '@media (max-width: 600px)': {
+    height: 'auto',
+    width: 'calc(100% - 118px)',
+    margin: '32px 48px 0px 48px',
+  },
 });
 
 const StartPage: React.FC = () => {
@@ -63,14 +83,28 @@ const StartPage: React.FC = () => {
   const objectText =
     '## Nuestro propósito es atender integralmente a personas de sesenta y cinco años o más que, por sus carencias socioeconómicas o por problemas de invalidez, se vean impedidas para satisfacer sus requerimientos básicos de subsistencia y desarrollo; proporcionándoles casa, alimentación, vestido, atención médica, atención psicológica, talleres y servicios funerarios.';
 
-  const [posts, setPosts] = useState<Post[]>([]);
+  const founderText =
+    '# La señora María Luisa Dauverre fundó nuestra institución hace más de 100 años.';
+
+  const contactText =
+    '### Teléfono: 55 5573 2376\n### Email: dauverreweb@gmail.com\n### Dirección: Triunfo de La Libertad 6, Tlalpan Centro II, Tlalpan, 14000 Ciudad de México, CDMX';
+
+  const [posts, setPosts] = useState<Post[]>();
   useEffect(() => {
-    getPosts().then((ps) => setPosts(ps));
+    getPosts().then((ps) =>
+      setPosts(ps.sort((a, b) => (a.date > b.date ? -1 : 1))),
+    );
   }, []);
 
   return (
     <div>
-      <div css={mainImgStyle} />
+      <div
+        css={mainImgStyle}
+        style={{
+          backgroundImage:
+            'url(https://firebasestorage.googleapis.com/v0/b/dauverre-ac.appspot.com/o/start_page_images%2Fmain.jpg?alt=media&token=dcf08cd0-03f4-4f44-bc03-08d8dc0bdb1d)',
+        }}
+      />
       <Divisor />
       <div css={dauverreInfo}>
         <div css={dauverreInfoSubContainer}>
@@ -83,7 +117,7 @@ const StartPage: React.FC = () => {
           css={dauverreInfoImg}
           style={{
             backgroundImage:
-              'url(https://scontent-qro1-1.xx.fbcdn.net/v/t1.0-9/78873991_589158318486755_3836700633478463488_n.jpg?_nc_cat=107&ccb=2&_nc_sid=8bfeb9&_nc_ohc=sTWvmvC5QZoAX-BVlm7&_nc_ht=scontent-qro1-1.xx&oh=90a20b13b644fb4323bf96fb6898574c&oe=5FBB2145)',
+              'url(https://firebasestorage.googleapis.com/v0/b/dauverre-ac.appspot.com/o/start_page_images%2Fteam.jpg?alt=media&token=6337e549-b1b5-40d4-b2af-195138d5faee)',
           }}
         />
       </div>
@@ -93,20 +127,53 @@ const StartPage: React.FC = () => {
           css={dauverreInfoImg}
           style={{
             backgroundImage:
-              'url(https://lh5.googleusercontent.com/p/AF1QipP3Ll5USMkZfqPJRnKbH1BSFK1XGk5x2r1La6vF=s1016-k-no)',
+              'url(https://firebasestorage.googleapis.com/v0/b/dauverre-ac.appspot.com/o/start_page_images%2Fcorridors.jpg?alt=media&token=1c335e96-32f0-4d37-ac41-5fda53193f74)',
           }}
         />
         <div css={dauverreInfoSubContainer}>
           <Markdown style={{ margin: 'auto 0px' }}>{objectText}</Markdown>
         </div>
       </div>
+      {typeof posts !== 'undefined' && posts.length !== 0 && (
+        <div>
+          <Divisor />
+          <PageTitle message={'Conoce nuestras actividades'} />
+          <div className="postContainer" css={postContainerStyle}>
+            {posts.map((p) => (
+              <FrontPagePost key={p.postID} {...p} />
+            ))}
+          </div>
+        </div>
+      )}
+
       <Divisor />
-      <PageTitle message={'Conoce nuestras actividades'} />
-      <div className="postContainer" css={postContainerStyle}>
-        {posts.map((p) => (
-          <FrontPagePost key={p.postID} {...p} />
-        ))}
+      <div css={dauverreInfo} style={{ backgroundColor: '#74b9ff' }}>
+        <img
+          alt="Founder portrait"
+          src={
+            'https://firebasestorage.googleapis.com/v0/b/dauverre-ac.appspot.com/o/start_page_images%2Ffounder.jpg?alt=media&token=99f4a1d5-8465-4b45-8434-e27dcb438977'
+          }
+          css={founderImg}
+        />
+        <div css={founderInfo}>
+          <Markdown style={{ margin: 'auto 0px' }}>{founderText}</Markdown>
+        </div>
       </div>
+      <Divisor />
+      <div css={dauverreInfo}>
+        <div css={dauverreInfoSubContainer}>
+          <PageTitle message={'Contáctanos'} />
+          <Markdown>{contactText}</Markdown>
+        </div>
+        <div
+          css={dauverreInfoImg}
+          style={{
+            backgroundImage:
+              'url(https://firebasestorage.googleapis.com/v0/b/dauverre-ac.appspot.com/o/start_page_images%2FinfoPlate.jpg?alt=media&token=99862663-7d3d-49e7-b387-68b601cf4b52)',
+          }}
+        />
+      </div>
+      <Divisor />
     </div>
   );
 };
