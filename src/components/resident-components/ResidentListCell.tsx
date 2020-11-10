@@ -41,7 +41,6 @@ const ResidentListCell: React.FC<ResidentListCellProps> = ({
   gender,
   isVisible,
   birthDate,
-  telephone,
   deleteResident,
 }) => {
   const history = useHistory();
@@ -52,7 +51,7 @@ const ResidentListCell: React.FC<ResidentListCellProps> = ({
       </h1>
       <div>
         <h5>Sexo: {gender}</h5>
-        <h5>Teléfono del familiar: {telephone}</h5>
+        {/* <h5>Teléfono del familiar: {telephone}</h5> */}
         <h5>
           Fecha de nacimiento: {format(birthDate, 'PPPP', { locale: es })}
         </h5>

@@ -10,7 +10,7 @@ import updateResident from './functions/updateResident';
 admin.initializeApp();
 
 export const createAdminF = functions.https.onCall(createAdmin);
-export const createResidenF = functions.https.onCall(createResident);
+export const createResidentF = functions.https.onCall(createResident);
 export const listResFamAccountsF = functions.https.onCall(listResFamAccounts);
 export const resetPasswordAccF = functions.https.onCall(resetPasswordAcc);
 export const updateResidentF = functions.https.onCall(updateResident);

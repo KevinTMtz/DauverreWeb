@@ -1,7 +1,7 @@
 import { firestore } from 'firebase/app';
 
 import { db } from '../app';
-import { postDocSchema } from './validation';
+import { postDocSchema } from '../validation';
 
 const postsCollection = db.collection('posts');
 

@@ -38,7 +38,7 @@ const LoginPage: React.FC = () => {
       <PageTitle message={'Iniciar sesión'} />
       <CenteredLoginForm noValidate onSubmit={onSubmit}>
         {error && (
-          <FormHelperText error={true} css={styledErrorMsg}>
+          <FormHelperText error css={styledErrorMsg}>
             {error}
           </FormHelperText>
         )}
