@@ -7,7 +7,6 @@ import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from '@material-ui/pickers';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -15,6 +14,8 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Backdrop from '@material-ui/core/Backdrop';
 /** @jsx jsx */ import { css, jsx } from '@emotion/core';
+
+import CircularProgressIndicator from '../CircularProgressIndicator';
 
 const styledForm = css({
   width: '70%',
@@ -160,14 +161,7 @@ const PostForm: React.FC<PostFormProps> = ({
       {typeof imageFile === 'undefined' && isEditing ? (
         <label css={styledInputImageLabel}>
           <div style={{ display: 'flex', alignContent: 'center' }}>
-            <CircularProgress
-              style={{
-                width: '75px',
-                height: '75px',
-                margin: '25px',
-                color: '#74b9ff',
-              }}
-            />
+            <CircularProgressIndicator />
           </div>
         </label>
       ) : (
@@ -230,14 +224,7 @@ const PostForm: React.FC<PostFormProps> = ({
       </Dialog>
 
       <Backdrop style={{ zIndex: 1000 }} open={openBackdrop}>
-        <CircularProgress
-          style={{
-            width: '75px',
-            height: '75px',
-            margin: '25px',
-            color: '#74b9ff',
-          }}
-        />
+        <CircularProgressIndicator />
       </Backdrop>
     </form>
   );

@@ -45,8 +45,8 @@ const UserDisplay: React.FC<UserDisplayProps> = ({ resident }) => {
 
   const onSubmit = () => {
     setOpen(true);
-    resetPasswordFromAccount(resident.residentID).then((value) => {
-      if (value.success) {
+    resetPasswordFromAccount(resident.residentID, '').then((resp) => {
+      if (resp.state === 'success') {
         setOpen(true);
       }
     });

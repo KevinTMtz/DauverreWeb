@@ -1,6 +1,7 @@
 import * as admin from 'firebase-admin';
 import * as yup from 'yup';
 
+import { getResidentsColl } from './firestore';
 import { CreateResidentData, ResidentFamLoginMethod } from './types';
 
 export const phoneToMail = (phone: string): string => `${phone}@example.com`;
@@ -34,6 +35,9 @@ export const joinStringsAsList = (list: string[]): string => {
 export const validateResidentData = async (
   resident: CreateResidentData,
 ): Promise<boolean> => {
+  resident.birthDate = new Date(
+    JSON.parse((resident.birthDate as unknown) as string),
+  );
   resident.birthDate.setHours(12, 1);
   const residentDocSchema = yup.object().shape({
     firstName: yup.string().required(),
@@ -51,4 +55,13 @@ export const validateLoginMethod = (
   if (loginMethod.loginMethodIdx === 0)
     return /^\d{10}$/.test(loginMethod.telephone);
   return loginMethod.loginMethodIdx === 1;
+};
+
+export const accountHasMultipleResidents = async (
+  accountID: string,
+): Promise<boolean> => {
+  const otherResidentsWithSameAcc = await getResidentsColl()
+    .where('accountID', '==', accountID)
+    .get();
+  return otherResidentsWithSameAcc.docs.length > 1;
 };

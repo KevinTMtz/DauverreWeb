@@ -3,8 +3,13 @@ import { https } from 'firebase-functions';
 
 import * as assert from '../assert';
 import { getResidentsColl } from '../firestore';
-import { FirestoreResident } from '../types';
 import {
+  FirestoreResident,
+  ResidentFamLoginMethod,
+  UpdateResidentData,
+} from '../types';
+import {
+  accountHasMultipleResidents,
   dateToPass,
   jsDateToTimestamp,
   phoneToMail,
@@ -14,9 +19,12 @@ import {
 
 const updateResident = async (data: any, context: https.CallableContext) => {
   // assert.isAdmin(context);
-  const { resident, loginMethod, shouldUpdatePassword } = data;
+  const { resident: r, loginMethod: l, shouldUpdatePassword } = data;
+  const loginMethod = l as ResidentFamLoginMethod;
+  const resident = r as UpdateResidentData;
+  const { residentID } = resident;
   if (
-    typeof resident.residentID === 'undefined' ||
+    typeof residentID === 'undefined' ||
     typeof shouldUpdatePassword !== 'boolean' ||
     !(await validateResidentData(resident)) ||
     !validateLoginMethod(loginMethod)
@@ -26,48 +34,52 @@ const updateResident = async (data: any, context: https.CallableContext) => {
       'No se pasaron los argumentos "resident", "loginMethod" y "shouldUpdatePassword" correctamente',
     );
 
-  const oldResidentDoc = await getResidentsColl()
-    .doc(resident.residentID)
-    .get();
+  const oldResidentDoc = await getResidentsColl().doc(residentID).get();
   if (!oldResidentDoc.exists)
     throw new https.HttpsError(
       'not-found',
-      `No se encontró un residente con el id ${resident.residentID}`,
+      `No se encontró un residente con el id ${residentID}`,
     );
   const oldResident = oldResidentDoc.data() as FirestoreResident;
-  await assert.accountExists(resident.accountID);
-  const newBirthDate = jsDateToTimestamp(resident.birthDate);
+  const oldAccountID = oldResident.accountID;
 
-  let accountID = oldResident.accountID;
-  const email = phoneToMail(loginMethod.telephone);
+  let accountID: string;
   const password = dateToPass(resident.birthDate);
   if (loginMethod.loginMethodIdx === 0) {
-    await assert.emailIsAvailable(email);
-    const updateTo = shouldUpdatePassword ? { email, password } : { email };
-    await admin.auth().updateUser(accountID, updateTo);
-  } else if (oldResident.accountID !== resident.accountID) {
-    const otherResidentsWithSameAcc = await getResidentsColl()
-      .where('accountID', '==', accountID)
-      .get();
-    if (otherResidentsWithSameAcc.docs.length === 1)
-      await admin.auth().deleteUser(accountID);
-    accountID = resident.accountID;
+    const email = phoneToMail(loginMethod.telephone);
+    await Promise.all([
+      assert.accountExists(oldAccountID),
+      assert.emailIsAvailable(email),
+    ]);
+    if (await accountHasMultipleResidents(oldAccountID)) {
+      const user = await admin.auth().createUser({ email, password });
+      accountID = user.uid;
+    } else {
+      const updateTo = shouldUpdatePassword ? { email, password } : { email };
+      await admin.auth().updateUser(oldAccountID, updateTo);
+      accountID = oldAccountID;
+    }
+  } else {
+    accountID = loginMethod.accountID;
+    await assert.accountExists(accountID);
+    if (oldAccountID !== accountID) {
+      await assert.accountExists(oldAccountID);
+      if (!(await accountHasMultipleResidents(oldAccountID)))
+        await admin.auth().deleteUser(oldAccountID);
+    }
     if (shouldUpdatePassword)
       await admin.auth().updateUser(accountID, { password });
-  } else if (
-    !oldResident.birthDate.isEqual(newBirthDate) &&
-    shouldUpdatePassword
-  ) {
-    await admin.auth().updateUser(accountID, { password });
   }
-  await getResidentsColl().doc(resident.residentID).update({
-    firstName: resident.firstName,
-    lastName: resident.lastName,
-    gender: resident.gender,
-    isVisible: resident.isVisible,
-    birthDate: newBirthDate,
-    accountID,
-  });
+  await getResidentsColl()
+    .doc(residentID)
+    .update({
+      firstName: resident.firstName,
+      lastName: resident.lastName,
+      gender: resident.gender,
+      isVisible: resident.isVisible,
+      birthDate: jsDateToTimestamp(resident.birthDate),
+      accountID,
+    });
 };
 
 export default updateResident;
