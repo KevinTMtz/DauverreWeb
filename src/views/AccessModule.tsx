@@ -11,7 +11,7 @@ const AccessModule: React.FC = () => {
   }, []);
   return (
     <div>
-      <PageTitle message={'Modulo de acceso'} />
+      <PageTitle message={'Módulo de acceso'} />
       {residents.map((r) => (
         <UserDisplay key={r.residentID} resident={r} />
       ))}

@@ -34,6 +34,14 @@ type Resident = ResidentData & ResidentParams;
 
 type OneToFiveIdx = 1 | 2 | 3 | 4 | 5;
 
+type OneToThreeIdx = 1 | 2 | 3;
+
+interface CustomAxisTickProps {
+  x: number;
+  y: number;
+  payload: activePayload;
+}
+
 interface ReportData {
   date: Date;
   mood: OneToFiveIdx;

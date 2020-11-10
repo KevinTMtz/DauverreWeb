@@ -19,8 +19,14 @@ const CreatePostPage: React.FC = () => {
 
   const [imageFile, setImageFile] = useState<File>();
 
-  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = (
+    event: React.FormEvent<HTMLFormElement>,
+    callDialog: () => void,
+    openBackdrop: () => void,
+  ) => {
     event.preventDefault();
+
+    openBackdrop();
 
     const postID = db.collection('posts').doc().id;
 
@@ -29,7 +35,7 @@ const CreatePostPage: React.FC = () => {
         createPost({ ...newPostState, imageUrl: uploadRes.url }, postID).then(
           (value) => {
             if (value.state === 'success') {
-              history.push('/posts');
+              callDialog();
             }
           },
         );
@@ -48,6 +54,8 @@ const CreatePostPage: React.FC = () => {
         buttonMessage={'Crear publicación'}
         onSubmit={onSubmit}
         cancelOperation={() => history.push('/posts')}
+        isEditing={false}
+        dialogAction={'creada'}
       />
     </div>
   );
