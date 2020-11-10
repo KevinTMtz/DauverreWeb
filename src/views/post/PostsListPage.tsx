@@ -42,7 +42,9 @@ const PostsListPage: React.FC = () => {
 
   const [posts, setPosts] = useState<Post[]>();
   useEffect(() => {
-    getPosts().then((ps) => setPosts(ps));
+    getPosts().then((ps) =>
+      setPosts(ps.sort((a, b) => (a.date > b.date ? -1 : 1))),
+    );
   }, []);
 
   const [open, setOpen] = React.useState(false);
