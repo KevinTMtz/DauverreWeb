@@ -1,7 +1,6 @@
 import { firestore } from 'firebase/app';
 
 import { db } from '../app';
-import { residentDocSchema } from './validation';
 
 const residentsCollection = db.collection('residents');
 
@@ -16,7 +15,7 @@ export const getResidents = async (): Promise<Resident[]> => {
       gender: data.gender,
       isVisible: data.isVisible,
       birthDate: data.birthDate.toDate(),
-      telephone: data.telephone,
+      accountID: data.accountID,
     };
   });
 };
@@ -36,76 +35,12 @@ export const getResident = async (
       gender: data.gender,
       isVisible: data.isVisible,
       birthDate: data.birthDate.toDate(),
-      telephone: data.telephone,
+    },
+    account: {
+      loginMethodIdx: 1,
+      accountID: data.accountID,
     },
   };
-};
-
-export const createResident = async (
-  residentData: ResidentData,
-): Promise<SuccessAndURL | ValidationErrorsState | FirebaseErrorState> => {
-  try {
-    const validatedResident = (await residentDocSchema.validate(
-      residentData,
-    )) as ResidentData;
-    validatedResident.birthDate.setHours(12, 1);
-    validatedResident.telephone = validatedResident.telephone
-      .split('')
-      .filter((ch) => /\d/.test(ch))
-      .join('');
-    const birthDate = firestore.Timestamp.fromDate(validatedResident.birthDate);
-    const doc = await residentsCollection.add({
-      ...validatedResident,
-      birthDate,
-    });
-    return { state: 'success', url: `/residents/${doc.id}` };
-  } catch (error) {
-    if (error.name === 'ValidationError') {
-      return {
-        state: 'validation errors',
-        errors: error.errors,
-      };
-    }
-    return {
-      state: 'firebase error',
-      code: error.code,
-      message: error.message,
-    };
-  }
-};
-
-export const updateResident = async (
-  resident: Resident,
-): Promise<SuccessAndURL | ValidationErrorsState | FirebaseErrorState> => {
-  try {
-    const { residentID } = resident;
-    const validatedResident = (await residentDocSchema.validate(
-      resident,
-    )) as ResidentData;
-    validatedResident.birthDate.setHours(12, 1);
-    validatedResident.telephone = validatedResident.telephone
-      .split('')
-      .filter((ch) => /\d/.test(ch))
-      .join('');
-    const birthDate = firestore.Timestamp.fromDate(validatedResident.birthDate);
-    await residentsCollection.doc(residentID).update({
-      ...validatedResident,
-      birthDate,
-    });
-    return { state: 'success', url: `/residents/${residentID}` };
-  } catch (error) {
-    if (error.name === 'ValidationError') {
-      return {
-        state: 'validation errors',
-        errors: error.errors,
-      };
-    }
-    return {
-      state: 'firebase error',
-      code: error.code,
-      message: error.message,
-    };
-  }
 };
 
 export const deleteResident = async (residentID: string): Promise<void> => {

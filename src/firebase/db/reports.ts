@@ -1,7 +1,7 @@
 import { firestore } from 'firebase/app';
 
 import { db } from '../app';
-import { reportDocSchema } from './validation';
+import { reportDocSchema } from '../validation';
 
 const reportsCollection = (residentID: string) =>
   db.collection(`residents/${residentID}/reports`);

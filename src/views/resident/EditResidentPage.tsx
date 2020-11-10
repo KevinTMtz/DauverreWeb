@@ -3,7 +3,8 @@ import { useParams, useHistory } from 'react-router-dom';
 
 import PageTitle from '../../components/PageTitle';
 import ResidentForm from '../../components/resident-components/ResidentForm';
-import { getResident, updateResident } from '../../firebase/db/residents';
+import { getResident } from '../../firebase/db/residents';
+import { updateResident } from '../../firebase/functions';
 
 const EditResidentPage: React.FC = () => {
   const history = useHistory();
@@ -15,8 +16,12 @@ const EditResidentPage: React.FC = () => {
     gender: '',
     isVisible: true,
     birthDate: new Date(),
+  });
+  const [loginMethod, setLoginMethod] = useState<ResidentFamLoginMethod>({
+    loginMethodIdx: 0,
     telephone: '',
   });
+  const [formState, setFormState] = useState<FormState>({ state: 'waiting' });
 
   useEffect(() => {
     getResident(residentID).then((value) => {
@@ -24,16 +29,32 @@ const EditResidentPage: React.FC = () => {
         history.push('/residents');
       } else {
         setResident(value.resident);
+        setLoginMethod({
+          loginMethodIdx: 1,
+          accountID: value.account.accountID,
+        });
       }
     });
   }, [residentID, history]);
 
-  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    updateResident({ ...resident, residentID }).then((value) => {
-      if (value.state === 'success') {
-        history.push('/residents');
-      }
+  const submit = (shouldUpdatePassword: boolean) => {
+    setFormState({ state: 'loading' });
+    updateResident(resident, loginMethod, shouldUpdatePassword).then((res) => {
+      if (res.state === 'success')
+        setFormState({
+          state: 'correct',
+          message: 'El residente se ha actualizado con éxito',
+        });
+      else if (res.state === 'firebase error')
+        setFormState({
+          state: 'server error',
+          message: 'El servidor tiene problemas con tu solicitud',
+        });
+      else
+        setFormState({
+          state: 'server error',
+          message: res.errors.join('\n'),
+        });
     });
   };
 
@@ -42,9 +63,13 @@ const EditResidentPage: React.FC = () => {
       <PageTitle message={'Editar residente'} />
       <ResidentForm
         resident={resident}
-        onSubmit={onSubmit}
-        cancelOperation={() => history.push('/residents')}
         setResidentState={setResident}
+        loginMethod={loginMethod}
+        setLoginMethod={setLoginMethod}
+        formState={formState}
+        setFormState={setFormState}
+        submit={submit}
+        exit={() => history.push('/residents')}
         buttonMessage="Guardar cambios"
       />
     </div>
