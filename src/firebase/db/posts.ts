@@ -1,6 +1,7 @@
 import { firestore } from 'firebase/app';
 
 import { db } from '../app';
+import { statsCollection, increment } from './stats';
 import { postDocSchema } from '../validation';
 
 const postsCollection = db.collection('posts');
@@ -46,6 +47,9 @@ export const createPost = async (
       ...validatedPost,
       date: firestore.Timestamp.fromDate(validatedPost.date),
     });
+    await statsCollection
+      .doc('postsOperationsCount')
+      .update({ registrations: increment });
     return { state: 'success', url: `/posts/${postID}` };
   } catch (error) {
     if (error.name === 'ValidationError') {
@@ -72,6 +76,9 @@ export const updatePost = async (
       ...validatedPost,
       date: firestore.Timestamp.fromDate(validatedPost.date),
     });
+    await statsCollection
+      .doc('postsOperationsCount')
+      .update({ updates: increment });
     return { state: 'success', url: `/posts/${postID}` };
   } catch (error) {
     if (error.name === 'ValidationError') {
@@ -90,5 +97,8 @@ export const updatePost = async (
 
 export const deletePost = async (postID: string): Promise<SuccessAndURL> => {
   await postsCollection.doc(postID).delete();
+  await statsCollection
+    .doc('postsOperationsCount')
+    .update({ deletions: increment });
   return { state: 'success', url: '/posts' };
 };

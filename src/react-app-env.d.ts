@@ -103,6 +103,10 @@ interface SuccessAndAccountListings extends SuccessState {
   accounts: AccountListing[];
 }
 
+interface SuccessAndStats extends SuccessState {
+  statsCollection: DocumentData[];
+}
+
 interface NotFoundState {
   state: 'not found';
   message?: string;
