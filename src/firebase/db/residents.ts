@@ -1,7 +1,7 @@
 import { firestore } from 'firebase/app';
 
 import { db } from '../app';
-import { statsCollection, increment } from './stats';
+import { statsCollection, increment, decrement } from './stats';
 
 const residentsCollection = db.collection('residents');
 
@@ -49,4 +49,7 @@ export const deleteResident = async (residentID: string): Promise<void> => {
   await statsCollection
     .doc('residentsOperationsCount')
     .update({ deletions: increment });
+  await statsCollection
+    .doc('generalCount')
+    .update({ totalResidents: decrement });
 };
