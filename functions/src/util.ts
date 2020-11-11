@@ -38,11 +38,14 @@ export const validateResidentData = async (
   return residentDocSchema.isValid(resident);
 };
 
+export const telephoneIsValid = (telephone: string): boolean =>
+  /^\d{10}$/.test(telephone);
+
 export const validateLoginMethod = (
   loginMethod: ResidentFamLoginMethod,
 ): boolean => {
   if (loginMethod.loginMethodIdx === 0)
-    return /^\d{10}$/.test(loginMethod.telephone);
+    return telephoneIsValid(loginMethod.telephone);
   return loginMethod.loginMethodIdx === 1;
 };
 

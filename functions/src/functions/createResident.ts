@@ -14,17 +14,16 @@ import {
 
 const createResident = async (data: any, context: https.CallableContext) => {
   // assert.isAdmin(context);
-  const { resident: r, loginMethod: l, shouldUpdatePassword } = data;
+  const { resident: r, loginMethod: l } = data;
   const loginMethod = l as ResidentFamLoginMethod;
   const resident = r as CreateResidentData;
   if (
-    typeof shouldUpdatePassword !== 'boolean' ||
     !(await validateResidentData(resident)) ||
     !validateLoginMethod(loginMethod)
   )
     throw new https.HttpsError(
       'invalid-argument',
-      'No se pasaron los argumentos "resident", "loginMethod" y "shouldUpdatePassword" correctamente',
+      'No se enviaron los argumentos correctos',
     );
 
   let accountID: string;
@@ -37,8 +36,6 @@ const createResident = async (data: any, context: https.CallableContext) => {
   } else {
     accountID = loginMethod.accountID;
     await assert.accountExists(accountID);
-    if (shouldUpdatePassword)
-      await admin.auth().updateUser(accountID, { password });
   }
   const doc = await getResidentsColl().add({
     firstName: resident.firstName,
