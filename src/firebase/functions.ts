@@ -42,6 +42,9 @@ export const createResident = async (
     await statsCollection
       .doc('residentsOperationsCount')
       .update({ registrations: increment });
+    await statsCollection
+      .doc('generalCount')
+      .update({ totalResidents: increment });
     return { state: 'success', url: `/residents/${data.residentID}` };
   } catch (err) {
     switch (err.code) {
