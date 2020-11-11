@@ -1,4 +1,5 @@
 import { functions } from './app';
+import { statsCollection, increment } from './db/stats';
 
 export const resetPasswordFromAccount = async (
   accountID: string,
@@ -38,6 +39,9 @@ export const createResident = async (
       resident: { ...resident, birthDate: JSON.stringify(resident.birthDate) },
       loginMethod,
     });
+    await statsCollection
+      .doc('residentsOperationsCount')
+      .update({ registrations: increment });
     return { state: 'success', url: `/residents/${data.residentID}` };
   } catch (err) {
     switch (err.code) {
@@ -65,6 +69,9 @@ export const updateResident = async (
       resident: { ...resident, birthDate: JSON.stringify(resident.birthDate) },
       loginMethod,
     });
+    await statsCollection
+      .doc('residentsOperationsCount')
+      .update({ updates: increment });
     return { state: 'success' };
   } catch (err) {
     switch (err.code) {
