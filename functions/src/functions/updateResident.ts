@@ -6,7 +6,7 @@ import { getResidentsColl } from '../firestore';
 import {
   FirestoreResident,
   ResidentFamLoginMethod,
-  UpdateResidentData,
+  CreateResidentData,
 } from '../types';
 import {
   accountHasMultipleResidents,
@@ -17,6 +17,10 @@ import {
   validateResidentData,
 } from '../util';
 
+export interface UpdateResidentData extends CreateResidentData {
+  residentID: string;
+}
+
 const updateResident = async (data: any, context: https.CallableContext) => {
   // assert.isAdmin(context);
   const { resident: r, loginMethod: l, shouldUpdatePassword } = data;
@@ -24,7 +28,7 @@ const updateResident = async (data: any, context: https.CallableContext) => {
   const resident = r as UpdateResidentData;
   const { residentID } = resident;
   if (
-    typeof residentID === 'undefined' ||
+    typeof residentID !== 'string' ||
     typeof shouldUpdatePassword !== 'boolean' ||
     !(await validateResidentData(resident)) ||
     !validateLoginMethod(loginMethod)

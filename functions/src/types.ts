@@ -16,10 +16,6 @@ export interface CreateResidentData extends BasicResident {
   birthDate: Date;
 }
 
-export interface UpdateResidentData extends CreateResidentData {
-  residentID: string;
-}
-
 export interface ResidentFamNewAccount {
   loginMethodIdx: 0;
   telephone: string;

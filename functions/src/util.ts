@@ -21,17 +21,6 @@ export const dateToPass = (date: Date): string => {
 export const jsDateToTimestamp = (date: Date) =>
   admin.firestore.Timestamp.fromDate(date);
 
-export const joinStringsAsList = (list: string[]): string => {
-  let name = list.pop() || '';
-  if (list.length >= 1) {
-    name = `${list.pop()} y ${name}`;
-  }
-  while (list.length !== 0) {
-    name = `${list.pop()}, ${name}`;
-  }
-  return name;
-};
-
 export const validateResidentData = async (
   resident: CreateResidentData,
 ): Promise<boolean> => {

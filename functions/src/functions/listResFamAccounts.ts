@@ -3,18 +3,14 @@ import { https } from 'firebase-functions';
 
 // import * as assert from '../assert';
 import { getResidentsColl } from '../firestore';
-import { joinStringsAsList } from '../util';
-
-interface AccountWithResidents {
-  accountID: string;
-  telephone: string;
-  residents: string[];
-}
 
 interface AccountListing {
   accountID: string;
   telephone: string;
-  name: string;
+  residents: {
+    residentID: string;
+    name: string;
+  }[];
 }
 
 const listResFamAccounts = async (
@@ -27,26 +23,20 @@ const listResFamAccounts = async (
     .filter(
       (u) => u.email !== undefined && /^\d{10}@example\.com$/.test(u.email),
     )
-    .map<AccountWithResidents>((u) => ({
+    .map<AccountListing>((u) => ({
       accountID: u.uid,
       telephone: u.email?.split('@example.com')[0] || '',
       residents: [],
     }));
   const { docs } = await getResidentsColl().get();
   docs.forEach((doc) => {
-    const { firstName, lastName, accountID } = doc.data();
-    const residentName = `${firstName} ${lastName}`;
+    const { accountID, firstName, lastName } = doc.data();
+    const name = `${firstName} ${lastName}`;
     accounts
       .find((a) => a.accountID === accountID)
-      ?.residents.push(residentName);
+      ?.residents.push({ residentID: doc.id, name });
   });
-  return accounts.map(({ accountID, telephone, residents }) => {
-    return {
-      accountID,
-      telephone,
-      name: joinStringsAsList(residents) || 'Sin residentes',
-    };
-  });
+  return accounts;
 };
 
 export default listResFamAccounts;
