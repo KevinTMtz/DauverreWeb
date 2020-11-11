@@ -23,19 +23,18 @@ export interface UpdateResidentData extends CreateResidentData {
 
 const updateResident = async (data: any, context: https.CallableContext) => {
   // assert.isAdmin(context);
-  const { resident: r, loginMethod: l, shouldUpdatePassword } = data;
+  const { resident: r, loginMethod: l } = data;
   const loginMethod = l as ResidentFamLoginMethod;
   const resident = r as UpdateResidentData;
   const { residentID } = resident;
   if (
     typeof residentID !== 'string' ||
-    typeof shouldUpdatePassword !== 'boolean' ||
     !(await validateResidentData(resident)) ||
     !validateLoginMethod(loginMethod)
   )
     throw new https.HttpsError(
       'invalid-argument',
-      'No se pasaron los argumentos "resident", "loginMethod" y "shouldUpdatePassword" correctamente',
+      'No se enviaron los argumentos correctos',
     );
 
   const oldResidentDoc = await getResidentsColl().doc(residentID).get();
@@ -59,8 +58,7 @@ const updateResident = async (data: any, context: https.CallableContext) => {
       const user = await admin.auth().createUser({ email, password });
       accountID = user.uid;
     } else {
-      const updateTo = shouldUpdatePassword ? { email, password } : { email };
-      await admin.auth().updateUser(oldAccountID, updateTo);
+      await admin.auth().updateUser(oldAccountID, { email });
       accountID = oldAccountID;
     }
   } else {
@@ -71,8 +69,6 @@ const updateResident = async (data: any, context: https.CallableContext) => {
       if (!(await accountHasMultipleResidents(oldAccountID)))
         await admin.auth().deleteUser(oldAccountID);
     }
-    if (shouldUpdatePassword)
-      await admin.auth().updateUser(accountID, { password });
   }
   await getResidentsColl()
     .doc(residentID)
