@@ -11,7 +11,7 @@ import Button from '@material-ui/core/Button';
 /** @jsx jsx */ import { css, jsx } from '@emotion/core';
 import MoodEmoji from './MoodEmoji';
 import HealthEmoji from './HealthEmoji';
-import StateEmoji, { StateEmojiType } from './StateEmoji';
+import SVGEmoji, { SVGEmojiType } from '../SVGEmoji';
 
 const styledForm = css({
   display: 'flex',
@@ -87,7 +87,7 @@ const ReportForm: React.FC<ReportFormProps> = ({
 }) => {
   const indexes: OneToFiveIdx[] = [1, 2, 3, 4, 5];
   const states: {
-    state: StateEmojiType;
+    state: SVGEmojiType;
     message: string;
     onChange: (value: boolean) => void;
   }[] = [
@@ -190,7 +190,7 @@ const ReportForm: React.FC<ReportFormProps> = ({
         {states.map(({ state, message, onChange }) => (
           <div key={state}>
             <div className="legendDiv">
-              <StateEmoji state={state} height="40px" />
+              <SVGEmoji state={state} height="40px" />
               <p>{message}</p>
             </div>
             <RadioGroup

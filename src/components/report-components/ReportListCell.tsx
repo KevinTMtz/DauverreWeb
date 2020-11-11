@@ -5,7 +5,7 @@ import { es } from 'date-fns/locale';
 
 import HealthEmoji from './HealthEmoji';
 import MoodEmoji from './MoodEmoji';
-import StateEmoji from './StateEmoji';
+import SVGEmoji from '../SVGEmoji';
 
 const cellStyle = css({
   padding: '16px',
@@ -72,35 +72,35 @@ const ReportListCell: React.FC<ReportListCellProps> = ({
       </div>
       <div style={{ width: '50%', maxWidth: '212px' }}>
         <div css={stateInfo}>
-          <StateEmoji state="alone" height="30px" />
+          <SVGEmoji state="alone" height="30px" />
           <h5>¿Se sintió triste?:</h5>
           <h5 style={sad ? { color: 'green' } : { color: 'red' }}>
             {sad ? '✔' : '✖'}
           </h5>
         </div>
         <div css={stateInfo}>
-          <StateEmoji state="angry" height="30px" />
+          <SVGEmoji state="angry" height="30px" />
           <h5>¿Se sintió enojado?:</h5>
           <h5 style={angry ? { color: 'green' } : { color: 'red' }}>
             {angry ? '✔' : '✖'}
           </h5>
         </div>
         <div css={stateInfo}>
-          <StateEmoji state="crying" height="30px" />
+          <SVGEmoji state="crying" height="30px" />
           <h5>¿Descansó bien?:</h5>
           <h5 style={rested ? { color: 'green' } : { color: 'red' }}>
             {rested ? '✔' : '✖'}
           </h5>
         </div>
         <div css={stateInfo}>
-          <StateEmoji state="food" height="30px" />
+          <SVGEmoji state="food" height="30px" />
           <h5>¿Se alimentó bien?:</h5>
           <h5 style={wellFed ? { color: 'green' } : { color: 'red' }}>
             {wellFed ? '✔' : '✖'}
           </h5>
         </div>
         <div css={stateInfo}>
-          <StateEmoji state="sleepy" height="30px" />
+          <SVGEmoji state="sleepy" height="30px" />
           <h5>¿Se sintió solo?:</h5>
           <h5 style={lonely ? { color: 'green' } : { color: 'red' }}>
             {lonely ? '✔' : '✖'}
