@@ -5,6 +5,7 @@ import PageTitle from '../../components/PageTitle';
 import ResidentForm from '../../components/resident-components/ResidentForm';
 import { getResident } from '../../firebase/db/residents';
 import { updateResident } from '../../firebase/functions';
+import cleanPhone from '../../utils/cleanPhone';
 
 const EditResidentPage: React.FC = () => {
   const history = useHistory();
@@ -21,7 +22,7 @@ const EditResidentPage: React.FC = () => {
     loginMethodIdx: 0,
     telephone: '',
   });
-  const [formState, setFormState] = useState<FormState>({ state: 'waiting' });
+  const [formState, setFormState] = useState<FormState>({ state: 'closed' });
 
   useEffect(() => {
     getResident(residentID).then((value) => {
@@ -37,9 +38,11 @@ const EditResidentPage: React.FC = () => {
     });
   }, [residentID, history]);
 
-  const submit = (shouldUpdatePassword: boolean) => {
+  const submit = () => {
     setFormState({ state: 'loading' });
-    updateResident(resident, loginMethod, shouldUpdatePassword).then((res) => {
+    if (loginMethod.loginMethodIdx === 0)
+      loginMethod.telephone = cleanPhone(loginMethod.telephone);
+    updateResident(resident, loginMethod).then((res) => {
       if (res.state === 'success')
         setFormState({
           state: 'correct',

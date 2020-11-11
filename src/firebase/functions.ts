@@ -9,12 +9,7 @@ export const resetPasswordFromAccount = async (
     await cloudFun({ accountID, residentID });
     return { state: 'success' };
   } catch (err) {
-    switch (err.code) {
-      case 'not-found':
-        return { state: 'not found', message: err.message };
-      default:
-        return { state: 'firebase error', ...err } as FirebaseErrorState;
-    }
+    return { state: 'firebase error', ...err } as FirebaseErrorState;
   }
 };
 
@@ -36,15 +31,12 @@ export const listAccounts = async (): Promise<
 export const createResident = async (
   resident: ResidentData,
   loginMethod: ResidentFamLoginMethod,
-  shouldUpdatePassword: boolean,
 ): Promise<SuccessAndURL | ValidationErrorsState | FirebaseErrorState> => {
   const cloudFun = functions.httpsCallable('createResidentF');
-  console.log({ resident, loginMethod, shouldUpdatePassword });
   try {
     const { data } = await cloudFun({
       resident: { ...resident, birthDate: JSON.stringify(resident.birthDate) },
       loginMethod,
-      shouldUpdatePassword,
     });
     return { state: 'success', url: `/residents/${data.residentID}` };
   } catch (err) {
@@ -66,18 +58,15 @@ export const createResident = async (
 export const updateResident = async (
   resident: ResidentData,
   loginMethod: ResidentFamLoginMethod,
-  shouldUpdatePassword: boolean,
 ): Promise<SuccessState | ValidationErrorsState | FirebaseErrorState> => {
   const cloudFun = functions.httpsCallable('updateResidentF');
   try {
     await cloudFun({
       resident: { ...resident, birthDate: JSON.stringify(resident.birthDate) },
       loginMethod,
-      shouldUpdatePassword,
     });
     return { state: 'success' };
   } catch (err) {
-    console.log(err);
     switch (err.code) {
       case 'invalid-argument':
         return {
@@ -87,6 +76,27 @@ export const updateResident = async (
       case 'already-exists':
       case 'failed-precondition':
         return { state: 'validation errors', errors: [err.message] };
+      default:
+        return { state: 'firebase error', ...err } as FirebaseErrorState;
+    }
+  }
+};
+
+export const changeTelephone = async (
+  accountID: string,
+  telephone: string,
+): Promise<SuccessState | ValidationErrorsState | FirebaseErrorState> => {
+  const cloudFun = functions.httpsCallable('changeTelephoneF');
+  try {
+    await cloudFun({ accountID, telephone });
+    return { state: 'success' };
+  } catch (err) {
+    switch (err.code) {
+      case 'already-exists':
+        return {
+          state: 'validation errors',
+          errors: ['Ya existe una cuenta con ese correo'],
+        };
       default:
         return { state: 'firebase error', ...err } as FirebaseErrorState;
     }

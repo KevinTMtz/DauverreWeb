@@ -47,7 +47,7 @@ interface ResidentFormProps {
   setLoginMethod: React.Dispatch<React.SetStateAction<ResidentFamLoginMethod>>;
   formState: FormState;
   setFormState: React.Dispatch<React.SetStateAction<FormState>>;
-  submit: (shouldUpdatePassword: boolean) => void;
+  submit: () => void;
   exit: () => void;
   buttonMessage: string;
 }
@@ -64,20 +64,19 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
   buttonMessage,
 }) => {
   const [accountListings, setAccountListings] = useState<AccountListing[]>([]);
-  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
 
   useEffect(() => {
     listAccounts().then((res) => {
       if (res.state === 'success') setAccountListings(res.accounts);
     });
   }, []);
+
   return (
     <form
       autoComplete="off"
       onSubmit={(event) => {
         event.preventDefault();
-        setFormState({ state: 'waiting' });
-        setDialogOpen(true);
+        submit();
       }}
       css={styledForm}
     >
@@ -241,30 +240,11 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
       >
         Cancelar
       </Button>
-      <Dialog disableBackdropClick disableEscapeKeyDown open={dialogOpen}>
-        {formState.state === 'waiting' && (
-          <React.Fragment>
-            <DialogTitle>
-              ¿Quiere sobreescribir la contraseña de la cuenta a la que va a
-              asignar el residente con su cumpleaños?
-            </DialogTitle>
-            <DialogActions>
-              <Button
-                autoFocus
-                onClick={() => setDialogOpen(false)}
-                color="primary"
-              >
-                Cancelar
-              </Button>
-              <Button onClick={() => submit(false)} color="primary">
-                Dejar contraseña como está
-              </Button>
-              <Button onClick={() => submit(true)} color="primary">
-                Sobreescribir
-              </Button>
-            </DialogActions>
-          </React.Fragment>
-        )}
+      <Dialog
+        disableBackdropClick
+        disableEscapeKeyDown
+        open={formState.state !== 'closed'}
+      >
         {formState.state === 'loading' && (
           <DialogContent>
             <CircularProgressIndicator />
@@ -285,7 +265,10 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
             <DialogTitle>Error</DialogTitle>
             <DialogContent>{formState.message}</DialogContent>
             <DialogActions>
-              <Button onClick={() => setDialogOpen(false)} color="primary">
+              <Button
+                onClick={() => setFormState({ state: 'closed' })}
+                color="primary"
+              >
                 Ok
               </Button>
             </DialogActions>
