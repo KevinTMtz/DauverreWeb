@@ -1,20 +1,29 @@
 import React, { useEffect, useState } from 'react';
 
-import UserDisplay from '../components/UserDisplay';
+import CircularProgressIndicator from '../components/CircularProgressIndicator';
 import PageTitle from '../components/PageTitle';
-import { getResidents } from '../firebase/db/residents';
+import UserDisplay from '../components/UserDisplay';
+import { listAccounts } from '../firebase/functions';
 
 const AccessModule: React.FC = () => {
-  const [residents, setResidents] = useState<Resident[]>([]);
+  const [accountListings, setAccountListings] = useState<AccountListing[]>();
   useEffect(() => {
-    getResidents().then((resid) => setResidents(resid));
+    listAccounts().then((res) => {
+      if (res.state === 'success') setAccountListings(res.accounts);
+    });
   }, []);
   return (
     <div>
       <PageTitle message={'Módulo de acceso'} />
-      {residents.map((r) => (
-        <UserDisplay key={r.residentID} resident={r} />
-      ))}
+      {accountListings === undefined ? (
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <CircularProgressIndicator />
+        </div>
+      ) : (
+        accountListings.map((acc) => (
+          <UserDisplay key={acc.accountID} {...acc} />
+        ))
+      )}
     </div>
   );
 };

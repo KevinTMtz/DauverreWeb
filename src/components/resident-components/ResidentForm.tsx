@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import 'date-fns';
 
+import DateFnsUtils from '@date-io/date-fns';
+/** @jsx jsx */ import { css, jsx } from '@emotion/core';
 import TextField from '@material-ui/core/TextField';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
@@ -18,15 +20,14 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import Dialog from '@material-ui/core/Dialog';
-import DateFnsUtils from '@date-io/date-fns';
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from '@material-ui/pickers';
-/** @jsx jsx */ import { css, jsx } from '@emotion/core';
 
-import { listAccounts } from '../../firebase/functions';
 import CircularProgressIndicator from '../CircularProgressIndicator';
+import { listAccounts } from '../../firebase/functions';
+import joinStringsAsList from '../../utils/joinStringsAsList';
 
 const styledForm = css({
   width: '70%',
@@ -214,9 +215,9 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
               })
             }
           >
-            {accountListings.map(({ accountID, name, telephone }) => (
+            {accountListings.map(({ accountID, residents, telephone }) => (
               <MenuItem key={accountID} value={accountID}>
-                {telephone} - {name}
+                {telephone} - {joinStringsAsList(residents.map((r) => r.name))}
               </MenuItem>
             ))}
           </Select>
@@ -240,12 +241,7 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
       >
         Cancelar
       </Button>
-      <Dialog
-        disableBackdropClick
-        disableEscapeKeyDown
-        open={dialogOpen}
-        style={{ overflow: 'hidden' }}
-      >
+      <Dialog disableBackdropClick disableEscapeKeyDown open={dialogOpen}>
         {formState.state === 'waiting' && (
           <React.Fragment>
             <DialogTitle>

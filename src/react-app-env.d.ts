@@ -72,7 +72,10 @@ type ResidentFamLoginMethod =
 interface AccountListing {
   accountID: string;
   telephone: string;
-  name: string;
+  residents: {
+    residentID: string;
+    name: string;
+  }[];
 }
 
 interface SuccessState {
