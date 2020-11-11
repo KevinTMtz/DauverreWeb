@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 /** @jsx jsx */ import { css, jsx } from '@emotion/core';
 import {
   BarChart,
@@ -10,7 +10,6 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
   ResponsiveContainer,
 } from 'recharts';
 
@@ -21,6 +20,8 @@ import RenderCustomAxisTickHealth from '../components/statistics-components/Rend
 import RenderCustomAxisTickPostsOrResidents from '../components/statistics-components/RenderCustomAxisTickPostsOrResidents';
 import RenderCustomBarLabel from '../components/statistics-components/RenderCustomBarLabel';
 import IconAndData from '../components/statistics-components/IconAndData';
+
+import { getStatsDoc } from '../firebase/db/stats';
 
 const styledReportDiv = css({
   textAlign: 'center',
@@ -43,91 +44,56 @@ const pStyled = css({
   marginBottom: '5px',
 });
 
+interface nameAndTotal {
+  name: string;
+  total: number;
+}
+
+interface nameAndResidentes {
+  name: string;
+  residentes: number;
+}
+
+interface totalAndCountByCase {
+  total: number;
+  countByCase: number[];
+}
+
 const StatisticsPage: React.FC = () => {
-  const dataResidentes = [
-    { name: 'FEB', residentes: 5 },
-    { name: 'MAR', residentes: 5 },
-    { name: 'ABR', residentes: 5 },
-    { name: 'MAY', residentes: 6 },
-    { name: 'JUN', residentes: 6 },
-    { name: 'JUL', residentes: 6 },
-  ];
+  const [dataGeneralCount, setDataGeneralCount] = useState<
+    totalAndCountByCase
+  >();
+  const [dataPostsAdministration, setDataPostsAdministration] = useState<
+    nameAndTotal[]
+  >();
+  const [
+    dataResidentsAdministration,
+    setDataResidentsAdministration,
+  ] = useState<nameAndTotal[]>();
+  const [dataMood, setDataMood] = useState<nameAndResidentes[]>();
+  const [dataHealth, setDataHealth] = useState<nameAndResidentes[]>();
 
-  const dataReportes = [
-    { name: 'FEB', reportes: 5 },
-    { name: 'MAR', reportes: 25 },
-    { name: 'ABR', reportes: 45 },
-    { name: 'MAY', reportes: 69 },
-    { name: 'JUN', reportes: 93 },
-    { name: 'JUL', reportes: 117 },
-  ];
-
-  const dataPublicaciones = [
-    { name: 'FEB', publicaciones: 8 },
-    { name: 'MAR', publicaciones: 7 },
-    { name: 'ABR', publicaciones: 10 },
-    { name: 'MAY', publicaciones: 15 },
-    { name: 'JUN', publicaciones: 13 },
-    { name: 'JUL', publicaciones: 17 },
-  ];
-
-  const dataMood = [
-    { name: 'Muy felíz', residentes: 4 },
-    { name: 'Felíz', residentes: 3 },
-    { name: 'Neutro', residentes: 2 },
-    { name: 'Triste', residentes: 3 },
-    { name: 'Muy triste', residentes: 1 },
-  ];
-
-  const dataHealth = [
-    { name: 'Saludable', residentes: 4 },
-    { name: 'Poco enfermo', residentes: 3 },
-    { name: 'Enfermo', residentes: 3 },
-    { name: 'Muy enfermo', residentes: 2 },
-    { name: 'Peligro', residentes: 1 },
-  ];
-
-  const dataPostsAdministration = [
-    { name: 'Altas', total: 4 },
-    { name: 'Actualizaciones', total: 6 },
-    { name: 'Bajas', total: 2 },
-  ];
-
-  const dataResidentsAdministration = [
-    { name: 'Altas', total: 3 },
-    { name: 'Desactivaciones', total: 2 },
-    { name: 'Bajas', total: 1 },
-  ];
-
-  const dataCountReportsGenerated = [
-    { name: 'Generados', value: 10 },
-    { name: 'No generados', value: 6 },
-  ];
+  const [dataCountReportsGenerated, setDataCountReportsGenerated] = useState<
+    nameAndTotal[]
+  >();
   const colorsCountReportsGenerated = ['#77B255', '#EA596E'];
 
-  const dataCountSpecialCases = {
-    total: 20,
-    countByCase: [5, 4, 11, 19, 2],
-  };
+  const [dataCountSpecialCases, setDataCountSpecialCases] = useState<
+    totalAndCountByCase
+  >();
 
-  const forRenderingGeneralCharts = [
+  const forRenderingGeneralCount = [
     {
-      message: 'Total de residentes activos',
-      data: dataResidentes,
-      dataKeyX: 'name',
-      dataKeyBar: 'residentes',
+      message: 'Total de residentes',
+      state: 'senior',
     },
     {
-      message: 'Total de reportes de estado generados',
-      data: dataReportes,
-      dataKeyX: 'name',
-      dataKeyBar: 'reportes',
+      message: 'Total de reportes de estado',
+      state: 'doctor',
     },
     {
-      message: 'Total de publicaciones activas',
-      data: dataPublicaciones,
-      dataKeyX: 'name',
-      dataKeyBar: 'publicaciones',
+      message: 'Total de publicaciones',
+      state: 'post',
     },
   ];
 
@@ -141,7 +107,7 @@ const StatisticsPage: React.FC = () => {
     },
     {
       message1: 'Residentes',
-      message2: 'Altas, desactivaciones y bajas',
+      message2: 'Altas, actualizaciones y bajas',
       data: dataResidentsAdministration,
       dataKeyX: 'name',
       dataKeyY: 'total',
@@ -190,54 +156,91 @@ const StatisticsPage: React.FC = () => {
     },
   ];
 
+  useEffect(() => {
+    getStatsDoc().then((value) => {
+      const statsDocArr = value.statsCollection;
+
+      setDataGeneralCount({
+        total: 20,
+        countByCase: [5, 4, 11],
+      });
+
+      const postsOperationsCount = statsDocArr.find(
+        (object) => object.statsName === 'postsOperationsCount',
+      );
+      if (postsOperationsCount !== undefined) {
+        setDataPostsAdministration([
+          { name: 'Altas', total: postsOperationsCount.registrations },
+          { name: 'Actualizaciones', total: postsOperationsCount.updates },
+          { name: 'Bajas', total: postsOperationsCount.deletions },
+        ]);
+      }
+
+      const residentsOperationsCount = statsDocArr.find(
+        (object) => object.statsName === 'residentsOperationsCount',
+      );
+      if (residentsOperationsCount !== undefined) {
+        setDataResidentsAdministration([
+          { name: 'Altas', total: residentsOperationsCount.registrations },
+          { name: 'Actualizaciones', total: residentsOperationsCount.updates },
+          { name: 'Bajas', total: residentsOperationsCount.deletions },
+        ]);
+      }
+
+      setDataCountReportsGenerated([
+        { name: 'Generados', total: 10 },
+        { name: 'No generados', total: 6 },
+      ]);
+
+      setDataMood([
+        { name: 'Muy felíz', residentes: 4 },
+        { name: 'Felíz', residentes: 3 },
+        { name: 'Neutro', residentes: 2 },
+        { name: 'Triste', residentes: 3 },
+        { name: 'Muy triste', residentes: 1 },
+      ]);
+
+      setDataHealth([
+        { name: 'Saludable', residentes: 4 },
+        { name: 'Poco enfermo', residentes: 3 },
+        { name: 'Enfermo', residentes: 3 },
+        { name: 'Muy enfermo', residentes: 2 },
+        { name: 'Peligro', residentes: 1 },
+      ]);
+
+      setDataCountSpecialCases({
+        total: 20,
+        countByCase: [5, 4, 11, 19, 2],
+      });
+    });
+  }, []);
+
   return (
     <div>
       <PageTitle message={'Estadísticas'} />
-
       <Divisor />
-
-      <PageTitle message={'Generales'} />
       <div css={styledReportDiv}>
-        {forRenderingGeneralCharts.map(
-          ({ message, data, dataKeyX, dataKeyBar }) => (
-            <div>
+        <PageTitle message={'Generales'} />
+        {dataGeneralCount &&
+          forRenderingGeneralCount.map(({ message, state }, index) => (
+            <div key={`Resident state ${index}`}>
               <p css={pStyled}>{message}</p>
-              <div css={chartGeneralStyle}>
-                <ResponsiveContainer>
-                  <BarChart
-                    data={data}
-                    margin={{
-                      top: 20,
-                    }}
-                  >
-                    <CartesianGrid strokeDasharray="10 10" />
-                    <XAxis dataKey={dataKeyX} />
-                    <YAxis yAxisId="left" />
-                    <Tooltip />
-                    <Legend />
-                    <Bar
-                      yAxisId="left"
-                      dataKey={dataKeyBar}
-                      stroke="#8884d8"
-                      fill="#8884d8"
-                      label={RenderCustomBarLabel}
-                    />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
+              <IconAndData
+                state={state}
+                value={dataGeneralCount.countByCase[index]}
+                total={dataGeneralCount.total}
+              />
             </div>
-          ),
-        )}
+          ))}
       </div>
 
       <Divisor />
 
       <div css={styledReportDiv}>
-        <PageTitle message={'Semanales'} />
-
+        <PageTitle message={'Total de operaciones'} />
         {forRenderingPostAndResidentsCharts.map(
-          ({ message1, message2, data, dataKeyX, dataKeyY }) => (
-            <div>
+          ({ message1, message2, data, dataKeyX, dataKeyY }, index) => (
+            <div key={`PostAndResidentChart ${index}`}>
               <h2>{message1}</h2>
               <p css={pStyled}>{message2}</p>
               <div css={chartGeneralStyle}>
@@ -267,10 +270,16 @@ const StatisticsPage: React.FC = () => {
             </div>
           ),
         )}
+      </div>
+
+      <Divisor />
+
+      <div css={styledReportDiv}>
+        <PageTitle message={'En los últimos 7 días'} />
 
         <h2>Reportes de estado anímico</h2>
         <p css={pStyled}>
-          Residentes a los que se les generó reporte de estado y a los que no
+          Residentes que cuentan con reporte de estado y los que no
         </p>
         <div css={chartGeneralStyle}>
           <ResponsiveContainer>
@@ -278,20 +287,21 @@ const StatisticsPage: React.FC = () => {
               <Pie
                 isAnimationActive={true}
                 data={dataCountReportsGenerated}
-                dataKey="value"
+                dataKey="total"
                 fill="#8884d8"
                 label
               >
-                {colorsCountReportsGenerated.map((entry, index) => (
-                  <Cell
-                    key={entry}
-                    fill={
-                      colorsCountReportsGenerated[
-                        index % dataCountReportsGenerated.length
-                      ]
-                    }
-                  />
-                ))}
+                {dataCountReportsGenerated &&
+                  colorsCountReportsGenerated.map((entry, index) => (
+                    <Cell
+                      key={entry}
+                      fill={
+                        colorsCountReportsGenerated[
+                          index % dataCountReportsGenerated.length
+                        ]
+                      }
+                    />
+                  ))}
               </Pie>
               <Tooltip />
             </PieChart>
@@ -299,8 +309,11 @@ const StatisticsPage: React.FC = () => {
         </div>
 
         {forRenderingHealthAndMood.map(
-          ({ message1, message2, data, dataKeyX, dataKeyY, customLabel }) => (
-            <div>
+          (
+            { message1, message2, data, dataKeyX, dataKeyY, customLabel },
+            index,
+          ) => (
+            <div key={`Health and mood chart ${index}`}>
               <h2>{message1}</h2>
               <p css={pStyled}>{message2}</p>
               <div css={chartGeneralStyle}>
@@ -329,17 +342,19 @@ const StatisticsPage: React.FC = () => {
         )}
 
         <h3>Respecto a las situaciones especiales de los reportes</h3>
-        {forRenderingStates.map(({ message, state }, index) => (
-          <div>
-            <p css={pStyled}>{message}</p>
-            <IconAndData
-              state={state}
-              value={dataCountSpecialCases.countByCase[index]}
-              total={dataCountSpecialCases.total}
-            />
-          </div>
-        ))}
+        {dataCountSpecialCases &&
+          forRenderingStates.map(({ message, state }, index) => (
+            <div key={`Resident state ${index}`}>
+              <p css={pStyled}>{message}</p>
+              <IconAndData
+                state={state}
+                value={dataCountSpecialCases.countByCase[index]}
+                total={dataCountSpecialCases.total}
+              />
+            </div>
+          ))}
       </div>
+      <Divisor />
     </div>
   );
 };
