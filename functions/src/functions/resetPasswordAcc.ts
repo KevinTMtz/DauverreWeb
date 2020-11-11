@@ -25,9 +25,8 @@ const resetPasswordAcc = async (data: any, context: https.CallableContext) => {
       `El id de la cuenta del residente (${resAccountID}) no coincide con el id de la cuenta (${accountID})`,
     );
   await assert.accountExists(accountID);
-  await admin.auth().updateUser(accountID, {
-    password: dateToPass(birthDate.toDate()),
-  });
+  const password = dateToPass(birthDate.toDate());
+  await admin.auth().updateUser(accountID, { password });
 };
 
 export default resetPasswordAcc;
