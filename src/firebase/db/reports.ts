@@ -1,6 +1,7 @@
 import { firestore } from 'firebase/app';
 
 import { db } from '../app';
+import { statsCollection, increment, decrement } from './stats';
 import { reportDocSchema } from '../validation';
 
 const reportsCollection = (residentID: string) =>
@@ -64,6 +65,9 @@ export const createReport = async (
       ...validatedReport,
       date,
     });
+    await statsCollection
+      .doc('generalCount')
+      .update({ totalReports: increment });
     return { state: 'success' };
   } catch (error) {
     if (error.name === 'ValidationError') {
@@ -119,5 +123,6 @@ export const deleteReport = async (
   reportID: string,
 ): Promise<SuccessAndURL> => {
   await reportsCollection(residentID).doc(reportID).delete();
+  await statsCollection.doc('generalCount').update({ totalReports: decrement });
   return { state: 'success', url: `/residents/${residentID}/reports` };
 };

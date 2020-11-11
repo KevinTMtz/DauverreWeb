@@ -21,9 +21,9 @@ const IconAndData: React.FC<IconAndDataProps> = ({ value, total, state }) => (
       state={state as SVGEmojiType}
       style={{ width: '40px', height: '40px', margin: 'auto 32px auto 0px' }}
     />
-    <p
-      style={{ fontSize: '25px', fontWeight: 'bold', margin: '10px 0px' }}
-    >{`${value} de ${total}`}</p>
+    <p style={{ fontSize: '25px', fontWeight: 'bold', margin: '10px 0px' }}>
+      {total !== -1 ? `${value} de ${total}` : `${value}`}
+    </p>
   </div>
 );
 

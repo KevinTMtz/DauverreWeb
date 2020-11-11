@@ -84,6 +84,10 @@ const StatisticsPage: React.FC = () => {
 
   const forRenderingGeneralCount = [
     {
+      message: 'Total de publicaciones',
+      state: 'post',
+    },
+    {
       message: 'Total de residentes',
       state: 'senior',
     },
@@ -91,15 +95,11 @@ const StatisticsPage: React.FC = () => {
       message: 'Total de reportes de estado',
       state: 'doctor',
     },
-    {
-      message: 'Total de publicaciones',
-      state: 'post',
-    },
   ];
 
   const forRenderingPostAndResidentsCharts = [
     {
-      message1: 'Publicaciones de la página',
+      message1: 'Publicaciones',
       message2: 'Altas, actualizaciones y bajas',
       data: dataPostsAdministration,
       dataKeyX: 'name',
@@ -159,12 +159,6 @@ const StatisticsPage: React.FC = () => {
   useEffect(() => {
     getStatsDoc().then((value) => {
       const statsDocArr = value.statsCollection;
-
-      setDataGeneralCount({
-        total: 20,
-        countByCase: [5, 4, 11],
-      });
-
       const postsOperationsCount = statsDocArr.find(
         (object) => object.statsName === 'postsOperationsCount',
       );
@@ -187,31 +181,45 @@ const StatisticsPage: React.FC = () => {
         ]);
       }
 
-      setDataCountReportsGenerated([
-        { name: 'Generados', total: 10 },
-        { name: 'No generados', total: 6 },
-      ]);
+      const generalCount = statsDocArr.find(
+        (object) => object.statsName === 'generalCount',
+      );
+      if (generalCount !== undefined) {
+        setDataGeneralCount({
+          total: -1,
+          countByCase: [
+            generalCount.totalPosts,
+            generalCount.totalResidents,
+            generalCount.totalReports,
+          ],
+        });
+      }
+    });
 
-      setDataMood([
-        { name: 'Muy felíz', residentes: 4 },
-        { name: 'Felíz', residentes: 3 },
-        { name: 'Neutro', residentes: 2 },
-        { name: 'Triste', residentes: 3 },
-        { name: 'Muy triste', residentes: 1 },
-      ]);
+    setDataCountReportsGenerated([
+      { name: 'Generados', total: 10 },
+      { name: 'No generados', total: 6 },
+    ]);
 
-      setDataHealth([
-        { name: 'Saludable', residentes: 4 },
-        { name: 'Poco enfermo', residentes: 3 },
-        { name: 'Enfermo', residentes: 3 },
-        { name: 'Muy enfermo', residentes: 2 },
-        { name: 'Peligro', residentes: 1 },
-      ]);
+    setDataMood([
+      { name: 'Muy felíz', residentes: 4 },
+      { name: 'Felíz', residentes: 3 },
+      { name: 'Neutro', residentes: 2 },
+      { name: 'Triste', residentes: 3 },
+      { name: 'Muy triste', residentes: 1 },
+    ]);
 
-      setDataCountSpecialCases({
-        total: 20,
-        countByCase: [5, 4, 11, 19, 2],
-      });
+    setDataHealth([
+      { name: 'Saludable', residentes: 4 },
+      { name: 'Poco enfermo', residentes: 3 },
+      { name: 'Enfermo', residentes: 3 },
+      { name: 'Muy enfermo', residentes: 2 },
+      { name: 'Peligro', residentes: 1 },
+    ]);
+
+    setDataCountSpecialCases({
+      total: 20,
+      countByCase: [5, 4, 11, 19, 2],
     });
   }, []);
 
