@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 import PageTitle from '../../components/PageTitle';
 import ResidentForm from '../../components/resident-components/ResidentForm';
 import { createResident } from '../../firebase/functions';
+import cleanPhone from '../../utils/cleanPhone';
 
 const RegisterResidentPage: React.FC = () => {
   const history = useHistory();
@@ -19,11 +20,13 @@ const RegisterResidentPage: React.FC = () => {
     loginMethodIdx: 0,
     telephone: '',
   });
-  const [formState, setFormState] = useState<FormState>({ state: 'waiting' });
+  const [formState, setFormState] = useState<FormState>({ state: 'closed' });
 
-  const submit = (shouldUpdatePassword: boolean) => {
+  const submit = () => {
     setFormState({ state: 'loading' });
-    createResident(resident, loginMethod, shouldUpdatePassword).then((res) => {
+    if (loginMethod.loginMethodIdx === 0)
+      loginMethod.telephone = cleanPhone(loginMethod.telephone);
+    createResident(resident, loginMethod).then((res) => {
       if (res.state === 'success')
         setFormState({
           state: 'correct',

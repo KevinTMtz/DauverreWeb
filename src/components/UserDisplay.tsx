@@ -14,10 +14,15 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
+import TextField from '@material-ui/core/TextField';
 
 import CircularProgressIndicator from './CircularProgressIndicator';
-import { resetPasswordFromAccount } from '../firebase/functions';
+import {
+  changeTelephone,
+  resetPasswordFromAccount,
+} from '../firebase/functions';
 import joinStringsAsList from '../utils/joinStringsAsList';
+import cleanPhone from '../utils/cleanPhone';
 
 const divStyle = css({
   margin: '0 20px 20px 20px',
@@ -28,13 +33,14 @@ const divStyle = css({
   '@media (max-width: 600px)': {
     flexDirection: 'column',
     alignItems: 'start',
+    '& > div': { paddingBottom: '8px' },
   },
 });
 
 const h1Style = css({
   margin: 'auto 0px',
   fontSize: '22px',
-  maxWidth: 'calc(100vw - 360px)',
+  maxWidth: 'calc(100vw - 370px)',
   '@media (max-width: 600px)': {
     fontSize: '20px',
     maxWidth: '100%',
@@ -43,42 +49,87 @@ const h1Style = css({
 
 const pStyle = css({
   '@media (max-width: 600px)': {
-    marginBottom: '0',
+    margin: '4px 0 0 0',
   },
 });
 
-interface UserDisplayProps extends AccountListing {}
+const buttonContainerStyle = css({
+  display: 'flex',
+  flexDirection: 'column',
+  height: '80px',
+  justifyContent: 'space-between',
+  '@media (max-width: 600px)': {
+    height: 'initial',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  '& > button': { margin: '4px 8px' },
+});
+
+interface UserDisplayProps extends AccountListing {
+  updateOwnPhone: (telephone: string) => void;
+}
 
 const UserDisplay: React.FC<UserDisplayProps> = ({
   accountID,
   telephone,
+  updateOwnPhone,
   residents,
 }) => {
-  const [formState, setFormState] = useState<FormState>({ state: 'waiting' });
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [formState, setFormState] = useState<FormState>({ state: 'closed' });
+
+  const [telephoneInp, setTelephoneInp] = useState<string>('');
+  const changePhoneNumber = async () => {
+    setFormState({ state: 'loading' });
+    const resp = await changeTelephone(accountID, cleanPhone(telephoneInp));
+    switch (resp.state) {
+      case 'success':
+        setFormState({
+          state: 'correct',
+          message: 'El teléfono fue actualizado correctamente',
+        });
+        updateOwnPhone(cleanPhone(telephoneInp));
+        break;
+      case 'firebase error':
+        setFormState({
+          state: 'server error',
+          message: 'El servidor tiene problemas con su solicitud',
+        });
+        break;
+      case 'validation errors':
+        setFormState({
+          state: 'server error',
+          message: resp.errors.join('\n'),
+        });
+    }
+  };
+  const dialogChangeTelephone =
+    formState.state === 'waiting' && formState.substate === 'changeTelephone';
+
   const [selectedResidentID, setSelectedResidentID] = useState(
     residents[0].residentID,
   );
-
-  const onSubmit = () => {
-    setDialogOpen(true);
-    if (residents.length === 1) resetPassword();
-  };
-
   const resetPassword = async () => {
     setFormState({ state: 'loading' });
     const resp = await resetPasswordFromAccount(accountID, selectedResidentID);
     if (resp.state === 'success') {
       setFormState({
         state: 'correct',
-        message: 'La cuenta se ha actualizado correctamente',
+        message: 'La contraseña fue cambiada correctamente',
+      });
+    } else {
+      setFormState({
+        state: 'server error',
+        message: 'El servidor tiene problemas con su solicitud',
       });
     }
   };
+  const dialogResetPassword =
+    formState.state === 'waiting' && formState.substate === 'resetPassword';
 
   const exit = () => {
-    setDialogOpen(false);
-    setTimeout(() => setFormState({ state: 'waiting' }), 500);
+    setTelephoneInp('');
+    setFormState({ state: 'closed' });
   };
 
   return (
@@ -87,13 +138,33 @@ const UserDisplay: React.FC<UserDisplayProps> = ({
         <h1 css={h1Style}>{joinStringsAsList(residents.map((r) => r.name))}</h1>
         <p css={pStyle}>Teléfono {telephone}</p>
       </CardContent>
-      <CardActions>
-        <Button variant="contained" color="primary" onClick={onSubmit}>
+      <CardActions css={buttonContainerStyle}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() =>
+            setFormState({ state: 'waiting', substate: 'changeTelephone' })
+          }
+        >
+          Cambiar teléfono
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => {
+            if (residents.length === 1) resetPassword();
+            else setFormState({ state: 'waiting', substate: 'resetPassword' });
+          }}
+        >
           Reiniciar constraseña
         </Button>
       </CardActions>
-      <Dialog disableBackdropClick disableEscapeKeyDown open={dialogOpen}>
-        {formState.state === 'waiting' && (
+      <Dialog
+        disableBackdropClick
+        disableEscapeKeyDown
+        open={formState.state !== 'closed'}
+      >
+        {dialogResetPassword && (
           <React.Fragment>
             <DialogTitle>
               La cuenta a la que quiere reiniciar la contraseña está asociada a
@@ -136,6 +207,37 @@ const UserDisplay: React.FC<UserDisplayProps> = ({
             </DialogActions>
           </React.Fragment>
         )}
+        {dialogChangeTelephone && (
+          <form onSubmit={changePhoneNumber}>
+            <DialogTitle>Escriba el nuevo número de teléfono</DialogTitle>
+            <DialogContent>
+              <FormControl fullWidth>
+                <TextField
+                  variant="outlined"
+                  margin="normal"
+                  fullWidth
+                  id="telephone"
+                  label="Número de teléfono"
+                  name="telephone"
+                  autoComplete="telephone"
+                  autoFocus
+                  required
+                  inputProps={{ pattern: '(\\d\\s?-?){10}' }}
+                  value={telephoneInp}
+                  onChange={(event) => setTelephoneInp(event.target.value)}
+                />
+              </FormControl>
+            </DialogContent>
+            <DialogActions>
+              <Button autoFocus onClick={exit} color="primary">
+                Cancelar
+              </Button>
+              <Button type="submit" color="primary">
+                Actualizar
+              </Button>
+            </DialogActions>
+          </form>
+        )}
         {formState.state === 'loading' && (
           <DialogContent>
             <CircularProgressIndicator />
@@ -144,13 +246,11 @@ const UserDisplay: React.FC<UserDisplayProps> = ({
         {formState.state === 'correct' && (
           <React.Fragment>
             <DialogContent>
-              <DialogContentText>
-                La contraseña fue cambiada correctamente
-              </DialogContentText>
+              <DialogContentText>{formState.message}</DialogContentText>
             </DialogContent>
             <DialogActions>
               <Button autoFocus onClick={exit} color="primary">
-                Okay
+                Ok
               </Button>
             </DialogActions>
           </React.Fragment>
