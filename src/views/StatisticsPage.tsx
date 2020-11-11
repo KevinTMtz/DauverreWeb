@@ -22,6 +22,8 @@ import RenderCustomBarLabel from '../components/statistics-components/RenderCust
 import IconAndData from '../components/statistics-components/IconAndData';
 
 import { getStatsDoc } from '../firebase/db/stats';
+import { getResidents } from '../firebase/db/residents';
+import { getReports } from '../firebase/db/reports';
 
 const styledReportDiv = css({
   textAlign: 'center',
@@ -194,32 +196,68 @@ const StatisticsPage: React.FC = () => {
           ],
         });
       }
-    });
 
-    setDataCountReportsGenerated([
-      { name: 'Generados', total: 10 },
-      { name: 'No generados', total: 6 },
-    ]);
+      getResidents().then((resArr) =>
+        Promise.all(
+          resArr.map((resident) =>
+            getReports(resident.residentID).then((value) => {
+              return value
+                .sort((a, b) => b.date.getDate() - a.date.getDate())
+                .slice(0, 1)
+                .filter(
+                  (report) =>
+                    report.date >
+                    new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+                );
+            }),
+          ),
+        ).then((r) => {
+          const filteredReporstArr = r.flat(1);
 
-    setDataMood([
-      { name: 'Muy felíz', residentes: 4 },
-      { name: 'Felíz', residentes: 3 },
-      { name: 'Neutro', residentes: 2 },
-      { name: 'Triste', residentes: 3 },
-      { name: 'Muy triste', residentes: 1 },
-    ]);
+          setDataCountReportsGenerated([
+            { name: 'Generados', total: filteredReporstArr.length },
+            {
+              name: 'No generados',
+              total: generalCount.totalResidents - filteredReporstArr.length,
+            },
+          ]);
 
-    setDataHealth([
-      { name: 'Saludable', residentes: 4 },
-      { name: 'Poco enfermo', residentes: 3 },
-      { name: 'Enfermo', residentes: 3 },
-      { name: 'Muy enfermo', residentes: 2 },
-      { name: 'Peligro', residentes: 1 },
-    ]);
+          const dataMoodTemp = [
+            { name: 'Muy felíz', residentes: 0 },
+            { name: 'Felíz', residentes: 0 },
+            { name: 'Neutro', residentes: 0 },
+            { name: 'Triste', residentes: 0 },
+            { name: 'Muy triste', residentes: 0 },
+          ];
 
-    setDataCountSpecialCases({
-      total: 20,
-      countByCase: [5, 4, 11, 19, 2],
+          const dataHealthTemp = [
+            { name: 'Saludable', residentes: 0 },
+            { name: 'Poco enfermo', residentes: 0 },
+            { name: 'Enfermo', residentes: 0 },
+            { name: 'Muy enfermo', residentes: 0 },
+            { name: 'Peligro', residentes: 0 },
+          ];
+
+          const dataCountSpecialCasesTemp = {
+            total: filteredReporstArr.length,
+            countByCase: [0, 0, 0, 0, 0],
+          };
+
+          filteredReporstArr.forEach((report) => {
+            dataMoodTemp[report.mood - 1].residentes += 1;
+            dataHealthTemp[report.health - 1].residentes += 1;
+            dataCountSpecialCasesTemp.countByCase[0] += +report.sad;
+            dataCountSpecialCasesTemp.countByCase[1] += +report.angry;
+            dataCountSpecialCasesTemp.countByCase[2] += +report.rested;
+            dataCountSpecialCasesTemp.countByCase[3] += +report.wellFed;
+            dataCountSpecialCasesTemp.countByCase[4] += +report.lonely;
+          });
+
+          setDataMood(dataMoodTemp);
+          setDataHealth(dataHealthTemp);
+          setDataCountSpecialCases(dataCountSpecialCasesTemp);
+        }),
+      );
     });
   }, []);
 
@@ -316,6 +354,9 @@ const StatisticsPage: React.FC = () => {
           </ResponsiveContainer>
         </div>
 
+        <PageTitle
+          message={'De los residentes que cuentan con reporte de estado'}
+        />
         {forRenderingHealthAndMood.map(
           (
             { message1, message2, data, dataKeyX, dataKeyY, customLabel },
@@ -349,7 +390,7 @@ const StatisticsPage: React.FC = () => {
           ),
         )}
 
-        <h3>Respecto a las situaciones especiales de los reportes</h3>
+        <h3>Situaciones especiales de los reportes</h3>
         {dataCountSpecialCases &&
           forRenderingStates.map(({ message, state }, index) => (
             <div key={`Resident state ${index}`}>
