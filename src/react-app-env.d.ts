@@ -128,8 +128,13 @@ interface FirebaseErrorState {
   message: string;
 }
 
+interface ClosedDialogFormState {
+  state: 'closed';
+}
+
 interface WaitingOnInputFormState {
   state: 'waiting';
+  substate?: string;
 }
 
 interface CorrectFormState {
@@ -147,6 +152,7 @@ interface ServerErrorFormState {
 }
 
 type FormState =
+  | ClosedDialogFormState
   | WaitingOnInputFormState
   | CorrectFormState
   | LoadingFormState

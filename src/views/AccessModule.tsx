@@ -7,11 +7,13 @@ import { listAccounts } from '../firebase/functions';
 
 const AccessModule: React.FC = () => {
   const [accountListings, setAccountListings] = useState<AccountListing[]>();
+
   useEffect(() => {
     listAccounts().then((res) => {
       if (res.state === 'success') setAccountListings(res.accounts);
     });
   }, []);
+
   return (
     <div>
       <PageTitle message={'Módulo de acceso'} />
@@ -21,7 +23,17 @@ const AccessModule: React.FC = () => {
         </div>
       ) : (
         accountListings.map((acc) => (
-          <UserDisplay key={acc.accountID} {...acc} />
+          <UserDisplay
+            key={acc.accountID}
+            updateOwnPhone={(telephone) => {
+              setAccountListings(
+                accountListings.map((a) =>
+                  a.accountID === acc.accountID ? { ...a, telephone } : a,
+                ),
+              );
+            }}
+            {...acc}
+          />
         ))
       )}
     </div>
