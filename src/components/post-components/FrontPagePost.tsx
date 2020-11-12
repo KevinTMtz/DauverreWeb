@@ -7,8 +7,10 @@ const divStyle = css({
   margin: '10px 0px',
   borderRadius: '10px',
   boxShadow: '0 4px 12px 0 rgba(0,0,0,0.2)',
+  minWidth: 'calc(45vw - 32px)',
   width: 'calc(45vw - 32px)',
   '@media (max-width: 600px)': {
+    minWidth: 'calc(90vw - 32px)',
     width: 'calc(90vw - 32px)',
   },
 });

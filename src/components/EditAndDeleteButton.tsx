@@ -16,7 +16,7 @@ const buttonStyle = css({
 
 export enum BGColor {
   Edit = '#00b894',
-  Delete = '#d63031',
+  Delete = '#e74c3c',
 }
 
 interface EditAndDeleteButtonProps {
