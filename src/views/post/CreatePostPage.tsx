@@ -18,6 +18,7 @@ const CreatePostPage: React.FC = () => {
   });
 
   const [imageFile, setImageFile] = useState<File>();
+  const [imageURL, setImageURL] = useState<string>();
 
   const onSubmit = (
     event: React.FormEvent<HTMLFormElement>,
@@ -51,6 +52,8 @@ const CreatePostPage: React.FC = () => {
         setPostState={setNewPostState}
         imageFile={imageFile}
         setImageFile={setImageFile}
+        imageURL={imageURL}
+        setImageURL={setImageURL}
         buttonMessage={'Crear publicación'}
         onSubmit={onSubmit}
         cancelOperation={() => history.push('/posts')}
