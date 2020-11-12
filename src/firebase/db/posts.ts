@@ -2,7 +2,8 @@ import { firestore } from 'firebase/app';
 import Post from '../../components/post-components/Post';
 
 import { db } from '../app';
-import { postDocSchema } from './validation';
+import { statsCollection, increment, decrement } from './stats';
+import { postDocSchema } from '../validation';
 
 const postsCollection = db.collection('posts');
 
@@ -47,6 +48,10 @@ export const createPost = async (
       ...validatedPost,
       date: firestore.Timestamp.fromDate(validatedPost.date),
     });
+    await statsCollection
+      .doc('postsOperationsCount')
+      .update({ registrations: increment });
+    await statsCollection.doc('generalCount').update({ totalPosts: increment });
     return { state: 'success', url: `/posts/${postID}` };
   } catch (error) {
     if (error.name === 'ValidationError') {
@@ -73,6 +78,9 @@ export const updatePost = async (
       ...validatedPost,
       date: firestore.Timestamp.fromDate(validatedPost.date),
     });
+    await statsCollection
+      .doc('postsOperationsCount')
+      .update({ updates: increment });
     return { state: 'success', url: `/posts/${postID}` };
   } catch (error) {
     if (error.name === 'ValidationError') {
@@ -91,5 +99,9 @@ export const updatePost = async (
 
 export const deletePost = async (postID: string): Promise<SuccessAndURL> => {
   await postsCollection.doc(postID).delete();
+  await statsCollection
+    .doc('postsOperationsCount')
+    .update({ deletions: increment });
+  await statsCollection.doc('generalCount').update({ totalPosts: decrement });
   return { state: 'success', url: '/posts' };
 };

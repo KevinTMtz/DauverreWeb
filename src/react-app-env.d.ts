@@ -27,7 +27,6 @@ interface ResidentData {
   gender: string;
   isVisible: boolean;
   birthDate: Date;
-  telephone: string;
 }
 
 type Resident = ResidentData & ResidentParams;
@@ -56,6 +55,29 @@ interface ReportData {
 
 type Report = ReportData & ReportParams;
 
+interface ResidentFamNewAccount {
+  loginMethodIdx: 0;
+  telephone: string;
+}
+
+interface ResidentFamExistingAccount {
+  loginMethodIdx: 1;
+  accountID: string;
+}
+
+type ResidentFamLoginMethod =
+  | ResidentFamNewAccount
+  | ResidentFamExistingAccount;
+
+interface AccountListing {
+  accountID: string;
+  telephone: string;
+  residents: {
+    residentID: string;
+    name: string;
+  }[];
+}
+
 interface SuccessState {
   state: 'success';
 }
@@ -74,10 +96,20 @@ interface SuccessAndReport extends SuccessState {
 
 interface SuccessAndResident extends SuccessState {
   resident: Resident;
+  account: ResidentFamExistingAccount;
+}
+
+interface SuccessAndAccountListings extends SuccessState {
+  accounts: AccountListing[];
+}
+
+interface SuccessAndStats extends SuccessState {
+  statsCollection: DocumentData[];
 }
 
 interface NotFoundState {
   state: 'not found';
+  message?: string;
 }
 
 interface UnableToUploadFileState {
@@ -99,6 +131,36 @@ interface FirebaseErrorState {
   code: string;
   message: string;
 }
+
+interface ClosedDialogFormState {
+  state: 'closed';
+}
+
+interface WaitingOnInputFormState {
+  state: 'waiting';
+  substate?: string;
+}
+
+interface CorrectFormState {
+  state: 'correct';
+  message: string;
+}
+
+interface LoadingFormState {
+  state: 'loading';
+}
+
+interface ServerErrorFormState {
+  state: 'server error';
+  message: string;
+}
+
+type FormState =
+  | ClosedDialogFormState
+  | WaitingOnInputFormState
+  | CorrectFormState
+  | LoadingFormState
+  | ServerErrorFormState;
 
 type FirebaseCollection = firebase.firestore.CollectionReference<
   firebase.firestore.DocumentData

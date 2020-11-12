@@ -7,7 +7,6 @@ import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from '@material-ui/pickers';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -15,6 +14,8 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Backdrop from '@material-ui/core/Backdrop';
 /** @jsx jsx */ import { css, jsx } from '@emotion/core';
+
+import CircularProgressIndicator from '../CircularProgressIndicator';
 
 const styledForm = css({
   width: '70%',
@@ -68,6 +69,8 @@ interface PostFormProps {
   setPostState: React.Dispatch<React.SetStateAction<PostData>>;
   imageFile: File | undefined;
   setImageFile: React.Dispatch<React.SetStateAction<File | undefined>>;
+  imageURL: string | undefined;
+  setImageURL: React.Dispatch<React.SetStateAction<string | undefined>>;
   buttonMessage: string;
   onSubmit: (
     event: React.FormEvent<HTMLFormElement>,
@@ -82,10 +85,12 @@ interface PostFormProps {
 const PostForm: React.FC<PostFormProps> = ({
   buttonMessage,
   cancelOperation,
-  imageFile,
   onSubmit,
   post,
   setImageFile,
+  imageFile,
+  imageURL,
+  setImageURL,
   setPostState,
   isEditing,
   dialogAction,
@@ -162,14 +167,7 @@ const PostForm: React.FC<PostFormProps> = ({
       {typeof imageFile === 'undefined' && isEditing ? (
         <label css={styledInputImageLabel}>
           <div style={{ display: 'flex', alignContent: 'center' }}>
-            <CircularProgress
-              style={{
-                width: '75px',
-                height: '75px',
-                margin: '25px',
-                color: '#74b9ff',
-              }}
-            />
+            <CircularProgressIndicator />
           </div>
         </label>
       ) : (
@@ -180,16 +178,18 @@ const PostForm: React.FC<PostFormProps> = ({
             accept="image/*"
             css={styledInputImage}
             required={imageFile ? false : true}
-            onChange={(event) =>
-              setImageFile(
-                event.target.files ? event.target.files[0] : imageFile,
-              )
-            }
+            onChange={(event) => {
+              const newImageFile = event.target.files
+                ? event.target.files[0]
+                : imageFile;
+              setImageFile(newImageFile);
+              setImageURL(URL.createObjectURL(newImageFile));
+            }}
           />
           {imageFile && (
             <img
               alt="No fue posible mostrar la imagen, cargar de nuevo"
-              src={URL.createObjectURL(imageFile)}
+              src={imageURL}
               css={styledInputImagePreview}
             ></img>
           )}
@@ -232,14 +232,7 @@ const PostForm: React.FC<PostFormProps> = ({
       </Dialog>
 
       <Backdrop style={{ zIndex: 1000 }} open={openBackdrop}>
-        <CircularProgress
-          style={{
-            width: '75px',
-            height: '75px',
-            margin: '25px',
-            color: '#74b9ff',
-          }}
-        />
+        <CircularProgressIndicator />
       </Backdrop>
     </form>
   );

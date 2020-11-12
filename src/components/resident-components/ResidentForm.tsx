@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import 'date-fns';
 
+import DateFnsUtils from '@date-io/date-fns';
+/** @jsx jsx */ import { css, jsx } from '@emotion/core';
 import TextField from '@material-ui/core/TextField';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
@@ -8,12 +10,24 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 import Button from '@material-ui/core/Button';
-import DateFnsUtils from '@date-io/date-fns';
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import InputLabel from '@material-ui/core/InputLabel';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogActions from '@material-ui/core/DialogActions';
+import Dialog from '@material-ui/core/Dialog';
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from '@material-ui/pickers';
-/** @jsx jsx */ import { css, jsx } from '@emotion/core';
+
+import CircularProgressIndicator from '../CircularProgressIndicator';
+import { listAccounts } from '../../firebase/functions';
+import joinStringsAsList from '../../utils/joinStringsAsList';
 
 const styledForm = css({
   width: '70%',
@@ -28,144 +42,241 @@ const styledForm = css({
 
 interface ResidentFormProps {
   resident: ResidentData;
-  onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
-  cancelOperation: () => void;
   setResidentState: React.Dispatch<React.SetStateAction<ResidentData>>;
+  loginMethod: ResidentFamLoginMethod;
+  setLoginMethod: React.Dispatch<React.SetStateAction<ResidentFamLoginMethod>>;
+  formState: FormState;
+  setFormState: React.Dispatch<React.SetStateAction<FormState>>;
+  submit: () => void;
+  exit: () => void;
   buttonMessage: string;
 }
 
 const ResidentForm: React.FC<ResidentFormProps> = ({
   resident,
-  onSubmit,
-  cancelOperation,
   setResidentState,
+  loginMethod,
+  setLoginMethod,
+  formState,
+  setFormState,
+  submit,
+  exit,
   buttonMessage,
-}) => (
-  <form autoComplete="off" onSubmit={onSubmit} css={styledForm}>
-    <TextField
-      variant="outlined"
-      margin="normal"
-      required
-      fullWidth
-      id="firstName"
-      label="Nombre(s)"
-      name="firstName"
-      autoComplete="firstName"
-      autoFocus
-      value={resident.firstName}
-      onChange={(event) =>
-        setResidentState({
-          ...resident,
-          firstName: event.target.value,
-        })
-      }
-    />
-    <TextField
-      variant="outlined"
-      margin="normal"
-      required
-      fullWidth
-      id="lastName"
-      label="Apellido"
-      name="lastName"
-      autoComplete="lastName"
-      autoFocus
-      value={resident.lastName}
-      onChange={(event) =>
-        setResidentState({
-          ...resident,
-          lastName: event.target.value,
-        })
-      }
-    />
-    <p>Fecha de nacimiento</p>
-    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-      <KeyboardDatePicker
-        disableToolbar
-        variant="inline"
-        format="dd/MM/yyyy"
+}) => {
+  const [accountListings, setAccountListings] = useState<AccountListing[]>([]);
+
+  useEffect(() => {
+    listAccounts().then((res) => {
+      if (res.state === 'success') setAccountListings(res.accounts);
+    });
+  }, []);
+
+  return (
+    <form
+      autoComplete="off"
+      onSubmit={(event) => {
+        event.preventDefault();
+        submit();
+      }}
+      css={styledForm}
+    >
+      <TextField
+        variant="outlined"
         margin="normal"
-        id="date-picker-inline"
-        label="Fecha"
+        required
         fullWidth
-        value={resident.birthDate}
+        id="firstName"
+        label="Nombre(s)"
+        name="firstName"
+        autoComplete="firstName"
+        autoFocus
+        value={resident.firstName}
         onChange={(event) =>
-          setResidentState({
-            ...resident,
-            birthDate: new Date(event!.valueOf()),
-          })
+          setResidentState({ ...resident, firstName: event.target.value })
         }
-        KeyboardButtonProps={{
-          'aria-label': 'change date',
-        }}
       />
-    </MuiPickersUtilsProvider>
-    <FormControl
-      variant="outlined"
-      margin="normal"
-      required
-      fullWidth
-      component="fieldset"
-    >
-      <FormLabel component="legend">Sexo</FormLabel>
-      <RadioGroup aria-label="gender" name="gender" row>
-        <FormControlLabel
-          control={<Radio />}
-          label="Masculino"
-          value="male"
-          onChange={() => setResidentState({ ...resident, gender: 'Hombre' })}
+      <TextField
+        variant="outlined"
+        margin="normal"
+        required
+        fullWidth
+        id="lastName"
+        label="Apellido"
+        name="lastName"
+        autoComplete="lastName"
+        autoFocus
+        value={resident.lastName}
+        onChange={(event) =>
+          setResidentState({ ...resident, lastName: event.target.value })
+        }
+      />
+      <p>Fecha de nacimiento</p>
+      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+        <KeyboardDatePicker
+          disableToolbar
+          variant="inline"
+          format="dd/MM/yyyy"
+          margin="normal"
+          id="date-picker-inline"
+          label="Fecha"
+          fullWidth
+          value={resident.birthDate}
+          onChange={(event) =>
+            setResidentState({
+              ...resident,
+              birthDate: new Date(event!.valueOf()),
+            })
+          }
+          KeyboardButtonProps={{ 'aria-label': 'change date' }}
         />
-        <FormControlLabel
-          control={<Radio />}
-          label="Femenino"
-          value="female"
-          onChange={() => setResidentState({ ...resident, gender: 'Mujer' })}
+      </MuiPickersUtilsProvider>
+      <FormControl
+        variant="outlined"
+        margin="normal"
+        required
+        fullWidth
+        component="fieldset"
+      >
+        <FormLabel component="legend">Sexo</FormLabel>
+        <RadioGroup
+          value={resident.gender}
+          aria-label="gender"
+          name="gender"
+          row
+        >
+          <FormControlLabel
+            control={<Radio />}
+            label="Masculino"
+            value="Hombre"
+            onChange={() => setResidentState({ ...resident, gender: 'Hombre' })}
+          />
+          <FormControlLabel
+            control={<Radio />}
+            label="Femenino"
+            value="Mujer"
+            onChange={() => setResidentState({ ...resident, gender: 'Mujer' })}
+          />
+          <FormControlLabel
+            control={<Radio />}
+            label="Otro"
+            value="Otro"
+            onChange={() => setResidentState({ ...resident, gender: 'Otro' })}
+          />
+        </RadioGroup>
+      </FormControl>
+      <AppBar position="static">
+        <Tabs
+          value={loginMethod.loginMethodIdx}
+          onChange={(_, newTabIdx) => {
+            if (newTabIdx === 0)
+              setLoginMethod({ loginMethodIdx: 0, telephone: '' });
+            else setLoginMethod({ loginMethodIdx: 1, accountID: '' });
+          }}
+          variant="fullWidth"
+          centered
+        >
+          <Tab label="Crear una cuenta de familiar nueva" />
+          <Tab label="Añadir residente a una cuenta existente" />
+        </Tabs>
+      </AppBar>
+      {loginMethod.loginMethodIdx === 0 && (
+        <TextField
+          variant="outlined"
+          margin="normal"
+          fullWidth
+          id="telephone"
+          label="Número de teléfono"
+          name="telephone"
+          autoComplete="telephone"
+          autoFocus
+          required
+          inputProps={{ pattern: '(\\d\\s?-?){10}' }}
+          value={loginMethod.telephone}
+          onChange={(event) =>
+            setLoginMethod({ ...loginMethod, telephone: event.target.value })
+          }
         />
-        <FormControlLabel
-          control={<Radio />}
-          label="Otro"
-          value="other"
-          onChange={() => setResidentState({ ...resident, gender: 'Otro' })}
-        />
-      </RadioGroup>
-    </FormControl>
-    <TextField
-      variant="outlined"
-      margin="normal"
-      fullWidth
-      id="telephone"
-      label="Número de teléfono"
-      name="telephone"
-      autoComplete="telephone"
-      autoFocus
-      value={resident.telephone}
-      onChange={(event) =>
-        setResidentState({
-          ...resident,
-          telephone: event.target.value,
-        })
-      }
-    />
-    <Button
-      type="submit"
-      variant="contained"
-      color="primary"
-      fullWidth
-      style={{ marginTop: '32px' }}
-    >
-      {buttonMessage}
-    </Button>
-    <Button
-      type="submit"
-      variant="contained"
-      color="secondary"
-      fullWidth
-      style={{ marginTop: '20px' }}
-      onClick={cancelOperation}
-    >
-      Cancelar
-    </Button>
-  </form>
-);
+      )}
+      {loginMethod.loginMethodIdx === 1 && (
+        <FormControl fullWidth>
+          <InputLabel id="select-login-account">
+            Selecciona la cuenta
+          </InputLabel>
+          <Select
+            required
+            autoFocus
+            labelId="select-login-account"
+            value={loginMethod.accountID}
+            onChange={(e) =>
+              setLoginMethod({
+                ...loginMethod,
+                accountID: e.target.value as string,
+              })
+            }
+          >
+            {accountListings.map(({ accountID, residents, telephone }) => (
+              <MenuItem key={accountID} value={accountID}>
+                {telephone} - {joinStringsAsList(residents.map((r) => r.name))}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      )}
+      <Button
+        type="submit"
+        variant="contained"
+        color="primary"
+        fullWidth
+        style={{ marginTop: '32px' }}
+      >
+        {buttonMessage}
+      </Button>
+      <Button
+        variant="contained"
+        color="secondary"
+        fullWidth
+        style={{ marginTop: '20px' }}
+        onClick={exit}
+      >
+        Cancelar
+      </Button>
+      <Dialog
+        disableBackdropClick
+        disableEscapeKeyDown
+        open={formState.state !== 'closed'}
+      >
+        {formState.state === 'loading' && (
+          <DialogContent>
+            <CircularProgressIndicator />
+          </DialogContent>
+        )}
+        {formState.state === 'correct' && (
+          <React.Fragment>
+            <DialogTitle>{formState.message}</DialogTitle>
+            <DialogActions>
+              <Button onClick={exit} color="primary">
+                Ok
+              </Button>
+            </DialogActions>
+          </React.Fragment>
+        )}
+        {formState.state === 'server error' && (
+          <React.Fragment>
+            <DialogTitle>Error</DialogTitle>
+            <DialogContent>{formState.message}</DialogContent>
+            <DialogActions>
+              <Button
+                onClick={() => setFormState({ state: 'closed' })}
+                color="primary"
+              >
+                Ok
+              </Button>
+            </DialogActions>
+          </React.Fragment>
+        )}
+      </Dialog>
+    </form>
+  );
+};
 
 export default ResidentForm;

@@ -1,9 +1,114 @@
 import { functions } from './app';
+import { statsCollection, increment } from './db/stats';
 
 export const resetPasswordFromAccount = async (
   accountID: string,
-): Promise<any> => {
-  const cloudFun = functions.httpsCallable(`/api/users/reset/${accountID}`);
-  const { data } = await cloudFun();
-  return data;
+  residentID: string,
+): Promise<SuccessState | NotFoundState | FirebaseErrorState> => {
+  const cloudFun = functions.httpsCallable('resetPasswordAccF');
+  try {
+    await cloudFun({ accountID, residentID });
+    return { state: 'success' };
+  } catch (err) {
+    return { state: 'firebase error', ...err } as FirebaseErrorState;
+  }
+};
+
+export const listAccounts = async (): Promise<
+  SuccessAndAccountListings | FirebaseErrorState
+> => {
+  const cloudFun = functions.httpsCallable('listResFamAccountsF');
+  try {
+    const { data } = await cloudFun();
+    return {
+      state: 'success',
+      accounts: data,
+    };
+  } catch (err) {
+    return { state: 'firebase error', ...err } as FirebaseErrorState;
+  }
+};
+
+export const createResident = async (
+  resident: ResidentData,
+  loginMethod: ResidentFamLoginMethod,
+): Promise<SuccessAndURL | ValidationErrorsState | FirebaseErrorState> => {
+  const cloudFun = functions.httpsCallable('createResidentF');
+  try {
+    const { data } = await cloudFun({
+      resident: { ...resident, birthDate: JSON.stringify(resident.birthDate) },
+      loginMethod,
+    });
+    await statsCollection
+      .doc('residentsOperationsCount')
+      .update({ registrations: increment });
+    await statsCollection
+      .doc('generalCount')
+      .update({ totalResidents: increment });
+    return { state: 'success', url: `/residents/${data.residentID}` };
+  } catch (err) {
+    switch (err.code) {
+      case 'invalid-argument':
+        return {
+          state: 'validation errors',
+          errors: ['Falló la validación en el servidor'],
+        };
+      case 'already-exists':
+      case 'failed-precondition':
+        return { state: 'validation errors', errors: [err.message] };
+      default:
+        return { state: 'firebase error', ...err } as FirebaseErrorState;
+    }
+  }
+};
+
+export const updateResident = async (
+  resident: ResidentData,
+  loginMethod: ResidentFamLoginMethod,
+): Promise<SuccessState | ValidationErrorsState | FirebaseErrorState> => {
+  const cloudFun = functions.httpsCallable('updateResidentF');
+  try {
+    await cloudFun({
+      resident: { ...resident, birthDate: JSON.stringify(resident.birthDate) },
+      loginMethod,
+    });
+    await statsCollection
+      .doc('residentsOperationsCount')
+      .update({ updates: increment });
+    return { state: 'success' };
+  } catch (err) {
+    switch (err.code) {
+      case 'invalid-argument':
+        return {
+          state: 'validation errors',
+          errors: ['Falló la validación en el servidor'],
+        };
+      case 'already-exists':
+      case 'failed-precondition':
+        return { state: 'validation errors', errors: [err.message] };
+      default:
+        return { state: 'firebase error', ...err } as FirebaseErrorState;
+    }
+  }
+};
+
+export const changeTelephone = async (
+  accountID: string,
+  telephone: string,
+): Promise<SuccessState | ValidationErrorsState | FirebaseErrorState> => {
+  const cloudFun = functions.httpsCallable('changeTelephoneF');
+  try {
+    await cloudFun({ accountID, telephone });
+    return { state: 'success' };
+  } catch (err) {
+    switch (err.code) {
+      case 'already-exists':
+        return {
+          state: 'validation errors',
+          errors: ['Ya existe una cuenta con ese correo'],
+        };
+      default:
+        return { state: 'firebase error', ...err } as FirebaseErrorState;
+    }
+  }
 };
