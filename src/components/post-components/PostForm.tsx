@@ -69,6 +69,8 @@ interface PostFormProps {
   setPostState: React.Dispatch<React.SetStateAction<PostData>>;
   imageFile: File | undefined;
   setImageFile: React.Dispatch<React.SetStateAction<File | undefined>>;
+  imageURL: string | undefined;
+  setImageURL: React.Dispatch<React.SetStateAction<string | undefined>>;
   buttonMessage: string;
   onSubmit: (
     event: React.FormEvent<HTMLFormElement>,
@@ -83,10 +85,12 @@ interface PostFormProps {
 const PostForm: React.FC<PostFormProps> = ({
   buttonMessage,
   cancelOperation,
-  imageFile,
   onSubmit,
   post,
   setImageFile,
+  imageFile,
+  imageURL,
+  setImageURL,
   setPostState,
   isEditing,
   dialogAction,
@@ -172,16 +176,18 @@ const PostForm: React.FC<PostFormProps> = ({
             accept="image/*"
             css={styledInputImage}
             required={imageFile ? false : true}
-            onChange={(event) =>
-              setImageFile(
-                event.target.files ? event.target.files[0] : imageFile,
-              )
-            }
+            onChange={(event) => {
+              const newImageFile = event.target.files
+                ? event.target.files[0]
+                : imageFile;
+              setImageFile(newImageFile);
+              setImageURL(URL.createObjectURL(newImageFile));
+            }}
           />
           {imageFile && (
             <img
               alt="No fue posible mostrar la imagen, cargar de nuevo"
-              src={URL.createObjectURL(imageFile)}
+              src={imageURL}
               css={styledInputImagePreview}
             ></img>
           )}

@@ -20,6 +20,7 @@ const EditPostPage: React.FC = () => {
   });
 
   const [imageFile, setImageFile] = useState<File>();
+  const [imageURL, setImageURL] = useState<string>();
 
   useEffect(() => {
     getPost(postID).then((value) => {
@@ -39,6 +40,7 @@ const EditPostPage: React.FC = () => {
           file.name = postID;
           file.lastModified = new Date();
           setImageFile(file);
+          setImageURL(URL.createObjectURL(file));
         };
         xhr.open('GET', value.url);
         xhr.send();
@@ -74,6 +76,8 @@ const EditPostPage: React.FC = () => {
         setPostState={setPost}
         imageFile={imageFile}
         setImageFile={setImageFile}
+        imageURL={imageURL}
+        setImageURL={setImageURL}
         buttonMessage={'Guardar cambios'}
         onSubmit={onSubmit}
         cancelOperation={() => history.push('/posts')}
