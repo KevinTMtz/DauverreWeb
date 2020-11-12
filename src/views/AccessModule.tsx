@@ -1,9 +1,19 @@
 import React, { useEffect, useState } from 'react';
+/** @jsx jsx */ import { css, jsx } from '@emotion/core';
 
 import CircularProgressIndicator from '../components/CircularProgressIndicator';
 import PageTitle from '../components/PageTitle';
 import UserDisplay from '../components/UserDisplay';
 import { listAccounts } from '../firebase/functions';
+
+const styledContainer = css({
+  margin: '0px auto',
+  width: '70%',
+  transitionDuration: '0.3s',
+  '@media (max-width: 600px)': {
+    width: '90%',
+  },
+});
 
 const AccessModule: React.FC = () => {
   const [accountListings, setAccountListings] = useState<AccountListing[]>();
@@ -15,7 +25,7 @@ const AccessModule: React.FC = () => {
   }, []);
 
   return (
-    <div>
+    <div css={styledContainer}>
       <PageTitle message={'Módulo de acceso'} />
       {accountListings === undefined ? (
         <div style={{ display: 'flex', justifyContent: 'center' }}>
