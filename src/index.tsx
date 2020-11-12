@@ -2,6 +2,7 @@ import React from 'react';
 import firebase from 'firebase/app';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { createMuiTheme, ThemeProvider } from '@material-ui/core';
 
 import Header from './components/Header';
 import AccessModule from './views/AccessModule';
@@ -19,6 +20,23 @@ declare global {
     firebaseApp: firebase.app.App;
   }
 }
+
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#74b9ff',
+    },
+    secondary: {
+      main: '#e74c3c',
+    },
+  },
+  typography: {
+    button: {
+      fontSize: '18px',
+      textTransform: 'none',
+    },
+  },
+});
 
 const App: React.FC = () => (
   <BrowserRouter>
@@ -54,7 +72,9 @@ const App: React.FC = () => (
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <ThemeProvider theme={theme}>
+      <App />
+    </ThemeProvider>
   </React.StrictMode>,
   document.getElementById('root'),
 );

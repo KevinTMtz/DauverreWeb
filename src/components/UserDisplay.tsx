@@ -25,8 +25,8 @@ import joinStringsAsList from '../utils/joinStringsAsList';
 import cleanPhone from '../utils/cleanPhone';
 
 const divStyle = css({
-  margin: '0 20px 20px 20px',
-  padding: '10px 20px',
+  marginBottom: '20px',
+  padding: '10px 10px',
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
@@ -56,14 +56,20 @@ const pStyle = css({
 const buttonContainerStyle = css({
   display: 'flex',
   flexDirection: 'column',
-  height: '80px',
+  height: 'auto',
+  minWidth: '238px',
   justifyContent: 'space-between',
   '@media (max-width: 600px)': {
+    width: 'calc(100% - 16px)',
     height: 'initial',
     flexDirection: 'row',
     flexWrap: 'wrap',
   },
   '& > button': { margin: '4px 8px' },
+});
+
+const buttonStyle = css({
+  width: '100%',
 });
 
 interface UserDisplayProps extends AccountListing {
@@ -133,13 +139,20 @@ const UserDisplay: React.FC<UserDisplayProps> = ({
   };
 
   return (
-    <Card css={divStyle}>
+    <Card
+      css={divStyle}
+      style={{
+        boxShadow: '0 4px 12px 0 rgba(0,0,0,0.2)',
+        borderRadius: '10px',
+      }}
+    >
       <CardContent>
         <h1 css={h1Style}>{joinStringsAsList(residents.map((r) => r.name))}</h1>
         <p css={pStyle}>Teléfono {telephone}</p>
       </CardContent>
       <CardActions css={buttonContainerStyle}>
         <Button
+          css={buttonStyle}
           variant="contained"
           color="primary"
           onClick={() =>
@@ -149,6 +162,7 @@ const UserDisplay: React.FC<UserDisplayProps> = ({
           Cambiar teléfono
         </Button>
         <Button
+          css={buttonStyle}
           variant="contained"
           color="primary"
           onClick={() => {

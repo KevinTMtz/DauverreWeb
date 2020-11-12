@@ -39,6 +39,7 @@ const dauverreInfoSubContainer = css({
   minHeight: '25vh',
   display: 'flex',
   flexDirection: 'column',
+  justifyContent: 'center',
   '@media (max-width: 600px)': {
     width: 'calc(100% - 64px)',
   },
@@ -47,7 +48,7 @@ const dauverreInfoSubContainer = css({
 const postContainerStyle = css({
   display: 'flex',
   flexWrap: 'wrap',
-  justifyContent: 'space-around',
+  justifyContent: 'space-evenly',
   marginBottom: '16px',
 });
 
@@ -70,6 +71,21 @@ const founderImg = css({
     height: 'auto',
     width: 'calc(100% - 118px)',
     margin: '32px 48px 0px 48px',
+  },
+});
+
+const dauverreContactImg = css({
+  backgroundPosition: '50%',
+  backgroundSize: 'cover',
+  width: '50%',
+  height: 'auto',
+  backgroundImage:
+    'url(https://firebasestorage.googleapis.com/v0/b/dauverre-ac.appspot.com/o/start_page_images%2FLogo.jpg?alt=media&token=90fcbfde-b3b6-46d3-af6f-2952f5a1dbc0)',
+  '@media (max-width: 600px)': {
+    height: '30vh',
+    width: '100%',
+    backgroundImage:
+      'url(https://firebasestorage.googleapis.com/v0/b/dauverre-ac.appspot.com/o/start_page_images%2FLogo1.jpg?alt=media&token=de0f9aaf-a8e0-41ea-afc6-97f109690d9e)',
   },
 });
 
@@ -117,7 +133,7 @@ const StartPage: React.FC = () => {
           css={dauverreInfoImg}
           style={{
             backgroundImage:
-              'url(https://firebasestorage.googleapis.com/v0/b/dauverre-ac.appspot.com/o/start_page_images%2Fteam.jpg?alt=media&token=6337e549-b1b5-40d4-b2af-195138d5faee)',
+              'url(https://firebasestorage.googleapis.com/v0/b/dauverre-ac.appspot.com/o/start_page_images%2Fteam.jpg?alt=media&token=24c880a6-abaa-4ab6-9411-c4cf85bdd37e)',
           }}
         />
       </div>
@@ -138,7 +154,7 @@ const StartPage: React.FC = () => {
         <div>
           <Divisor />
           <PageTitle message={'Conoce nuestras actividades'} />
-          <div className="postContainer" css={postContainerStyle}>
+          <div css={postContainerStyle}>
             {posts.map((p) => (
               <FrontPagePost key={p.postID} {...p} />
             ))}
@@ -165,13 +181,7 @@ const StartPage: React.FC = () => {
           <PageTitle message={'Contáctanos'} />
           <Markdown>{contactText}</Markdown>
         </div>
-        <div
-          css={dauverreInfoImg}
-          style={{
-            backgroundImage:
-              'url(https://firebasestorage.googleapis.com/v0/b/dauverre-ac.appspot.com/o/start_page_images%2FinfoPlate.jpg?alt=media&token=99862663-7d3d-49e7-b387-68b601cf4b52)',
-          }}
-        />
+        <div css={dauverreContactImg} />
       </div>
       <Divisor />
     </div>
