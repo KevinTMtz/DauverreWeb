@@ -17,6 +17,11 @@ const h1Style = css({
   margin: '5px 0px',
 });
 
+const pStyle = css({
+  margin: '0px',
+  color: '#636e72',
+});
+
 const imgStyle = css({
   width: '100%',
   height: '300px',
@@ -30,9 +35,18 @@ const FrontPagePost: React.FC<FrontPagePostProps> = ({
   title,
   imageUrl,
   content,
+  date,
 }) => (
   <div css={divStyle}>
     <h1 css={h1Style}>{title}</h1>
+    <p css={pStyle}>
+      {date.toLocaleDateString('es-MX', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      })}
+    </p>
     <img src={imageUrl} alt={`Imagen de ${title}`} css={imgStyle}></img>
     <Markdown>{content}</Markdown>
   </div>
