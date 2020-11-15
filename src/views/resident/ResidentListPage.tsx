@@ -50,7 +50,7 @@ const ResidentListPage: React.FC = () => {
   return (
     <div css={divStyle}>
       <PageTitle message={'Residentes'} />
-      <SearchInput />
+      <SearchInput residentsList={residents} />
       <button
         css={addButtonStyle}
         onClick={() => history.push(`${match.path}/new`)}
