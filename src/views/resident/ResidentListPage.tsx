@@ -39,8 +39,10 @@ const ResidentListPage: React.FC = () => {
   const [residents, setResidents] = useState<Resident[]>([]);
   const [displayedResidents, setDisplayedResidents] = useState<Resident[]>([]);
   useEffect(() => {
-    getResidents().then((resid) => setDisplayedResidents(resid));
-    getResidents().then((resid) => setResidents(resid));
+    getResidents().then((resid) => {
+      setDisplayedResidents(resid);
+      setResidents(resid);
+    });
   }, []);
 
   const deleteSelectedResident = (residentID: string) => {
@@ -54,8 +56,7 @@ const ResidentListPage: React.FC = () => {
       <PageTitle message={'Residentes'} />
       <SearchInput
         residentsList={residents}
-        residentsState={displayedResidents}
-        setResidentsState={setDisplayedResidents}
+        setDisplayedResidents={setDisplayedResidents}
       />
       <button
         css={addButtonStyle}
