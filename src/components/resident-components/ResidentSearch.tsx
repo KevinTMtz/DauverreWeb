@@ -1,5 +1,4 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
 /** @jsx jsx */ import { css, jsx } from '@emotion/core';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -21,20 +20,36 @@ const divStyle = css({
 
 interface ResidentListProps {
   residentsList: Resident[];
+  residentsState: Resident[];
+  setResidentsState: React.Dispatch<React.SetStateAction<Resident[]>>;
 }
 
-const SearchInput: React.FC<ResidentListProps> = ({ residentsList }) => {
+const SearchInput: React.FC<ResidentListProps> = ({
+  residentsList,
+  setResidentsState,
+}) => {
+  const showSelectedResident = (residentInput: string | undefined) => {
+    if (typeof residentInput !== 'undefined') {
+      setResidentsState(
+        residentsList.filter((r) => r.firstName === residentInput),
+      );
+    }
+  };
+
   return (
     <div css={divStyle}>
       <Autocomplete
         freeSolo
         id="search-input-residents"
         disableClearable
+        onChange={(event: any, newResidentInput: string | undefined) => {
+          showSelectedResident(newResidentInput);
+        }}
         options={residentsList.map((resident) => resident.firstName)}
         renderInput={(params: AutocompleteRenderInputParams) => (
           <TextField
             {...params}
-            label="Search input"
+            label="Buscar residente"
             margin="normal"
             variant="outlined"
             InputProps={{ ...params.InputProps, type: 'search' }}
