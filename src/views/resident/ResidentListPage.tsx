@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 
 import PageTitle from '../../components/PageTitle';
 import ResidentListCell from '../../components/resident-components/ResidentListCell';
+import SearchInput from '../../components/resident-components/ResidentSearch';
 
 import { getResidents, deleteResident } from '../../firebase/db/residents';
 
@@ -49,6 +50,7 @@ const ResidentListPage: React.FC = () => {
   return (
     <div css={divStyle}>
       <PageTitle message={'Residentes'} />
+      <SearchInput />
       <button
         css={addButtonStyle}
         onClick={() => history.push(`${match.path}/new`)}
