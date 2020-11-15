@@ -1,12 +1,9 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 /** @jsx jsx */ import { css, jsx } from '@emotion/core';
-import TextField, {
-  FilledTextFieldProps,
-  OutlinedTextFieldProps,
-  StandardTextFieldProps,
-} from '@material-ui/core/TextField';
+import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import { AutocompleteRenderInputParams } from '@material-ui/lab/Autocomplete/Autocomplete';
 
 const divStyle = css({
   display: 'flex',
@@ -22,21 +19,19 @@ const divStyle = css({
   },
 });
 
-const SearchInput: React.FC = () => {
-  const history = useHistory();
+interface ResidentListProps {
+  residentsList: Resident[];
+}
+
+const SearchInput: React.FC<ResidentListProps> = ({ residentsList }) => {
   return (
     <div css={divStyle}>
       <Autocomplete
         freeSolo
-        id="free-solo-2-demo"
+        id="search-input-residents"
         disableClearable
-        options={residentsList.map((option) => option.title)}
-        renderInput={(
-          params:
-            | (JSX.IntrinsicAttributes & StandardTextFieldProps)
-            | (JSX.IntrinsicAttributes & FilledTextFieldProps)
-            | (JSX.IntrinsicAttributes & OutlinedTextFieldProps),
-        ) => (
+        options={residentsList.map((resident) => resident.firstName)}
+        renderInput={(params: AutocompleteRenderInputParams) => (
           <TextField
             {...params}
             label="Search input"
@@ -51,10 +46,3 @@ const SearchInput: React.FC = () => {
 };
 
 export default SearchInput;
-
-// Top 100 films as rated by IMDb users. http://www.imdb.com/chart/top
-const residentsList = [
-  { title: 'MarioJim', year: 1994 },
-  { title: 'ElItsukakito XD', year: 1972 },
-  { title: 'Lars17S Plata IV Lol xd', year: 1974 },
-];
