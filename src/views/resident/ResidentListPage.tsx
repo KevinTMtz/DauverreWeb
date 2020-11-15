@@ -37,7 +37,9 @@ const ResidentListPage: React.FC = () => {
   const history = useHistory();
 
   const [residents, setResidents] = useState<Resident[]>([]);
+  const [displayedResidents, setDisplayedResidents] = useState<Resident[]>([]);
   useEffect(() => {
+    getResidents().then((resid) => setDisplayedResidents(resid));
     getResidents().then((resid) => setResidents(resid));
   }, []);
 
@@ -50,18 +52,22 @@ const ResidentListPage: React.FC = () => {
   return (
     <div css={divStyle}>
       <PageTitle message={'Residentes'} />
-      <SearchInput residentsList={residents} />
+      <SearchInput
+        residentsList={residents}
+        residentsState={displayedResidents}
+        setResidentsState={setDisplayedResidents}
+      />
       <button
         css={addButtonStyle}
         onClick={() => history.push(`${match.path}/new`)}
       >
         Añadir residente
       </button>
-      {residents.map((resident) => (
+      {displayedResidents.map((dispResident) => (
         <ResidentListCell
-          key={resident.residentID}
-          deleteResident={() => deleteSelectedResident(resident.residentID)}
-          {...resident}
+          key={dispResident.residentID}
+          deleteResident={() => deleteSelectedResident(dispResident.residentID)}
+          {...dispResident}
         />
       ))}
     </div>
