@@ -24,7 +24,7 @@ const ViewResidentPage: React.FC = () => {
   });
   useEffect(() => {
     getResident(residentID).then((value) => {
-      if (value.state != 'not found') {
+      if (value.state !== 'not found') {
         setResident(value.resident);
       }
     });
