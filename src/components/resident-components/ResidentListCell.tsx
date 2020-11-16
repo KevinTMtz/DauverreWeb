@@ -64,6 +64,12 @@ const ResidentListCell: React.FC<ResidentListCellProps> = ({
           Borrar
         </EditAndDeleteButton>
         <EditAndDeleteButton
+          color={BGColor.View}
+          onClick={() => history.push(`/residents/${residentID}`)}
+        >
+          Ver reportes
+        </EditAndDeleteButton>
+        <EditAndDeleteButton
           color={BGColor.Edit}
           onClick={() => history.push(`/residents/${residentID}/edit`)}
         >

@@ -2,7 +2,7 @@ import React from 'react';
 /** @jsx jsx */ import { css, jsx } from '@emotion/core';
 
 const buttonStyle = css({
-  width: '48%',
+  width: '30%',
   height: '35px',
   borderRadius: '10px',
   fontSize: '18px',
@@ -17,6 +17,7 @@ const buttonStyle = css({
 export enum BGColor {
   Edit = '#00b894',
   Delete = '#e74c3c',
+  View = '#4b94de',
 }
 
 interface EditAndDeleteButtonProps {
