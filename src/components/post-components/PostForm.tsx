@@ -115,8 +115,7 @@ const PostForm: React.FC<PostFormProps> = ({
       <TextField
         variant="outlined"
         margin="normal"
-        id="date-picker-inline"
-        label="Date picker inline"
+        required
         fullWidth
         id="title"
         label="Título"
@@ -127,7 +126,6 @@ const PostForm: React.FC<PostFormProps> = ({
         onChange={(event) =>
           setPostState({ ...post, title: event.target.value })
         }
-        KeyboardButtonProps={{ 'aria-label': 'change date' }}
       />
       <p css={styledP}>Fecha</p>
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
