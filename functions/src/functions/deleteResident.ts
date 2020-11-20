@@ -16,7 +16,8 @@ const deleteResident = async (data: any, context: https.CallableContext) => {
       'No se enviaron los argumentos correctos',
     );
 
-  const residentDoc = await getResidentsColl().doc(residentID).get();
+  const residentRef = getResidentsColl().doc(residentID);
+  const residentDoc = await residentRef.get();
   if (!residentDoc.exists)
     throw new https.HttpsError(
       'not-found',
@@ -29,7 +30,21 @@ const deleteResident = async (data: any, context: https.CallableContext) => {
   if (!(await accountHasMultipleResidents(accountID))) {
     await admin.auth().deleteUser(accountID);
   }
-  await getResidentsColl().doc(residentID).delete();
+  // Remove reports
+  const query = residentRef
+    .collection('reports')
+    .orderBy('__name__')
+    .limit(100);
+  while (true) {
+    const snapshot = await query.get();
+    if (snapshot.size === 0) break;
+    const batch = admin.firestore().batch();
+    snapshot.docs.forEach((doc) => batch.delete(doc.ref));
+    await batch.commit();
+  }
+
+  // Remove resident document
+  await residentRef.delete();
 };
 
 export default deleteResident;
