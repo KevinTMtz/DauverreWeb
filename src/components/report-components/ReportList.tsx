@@ -50,6 +50,7 @@ const ReportsList: React.FC = () => {
         width: '100%',
       }}
     >
+      <h1 style={{ textAlign: 'center' }}>Últimos reportes</h1>
       <button
         css={addButtonStyle}
         onClick={() => history.push(`/residents/${residentID}/newreport`)}
@@ -71,7 +72,6 @@ const ReportsList: React.FC = () => {
         <h1 style={{ textAlign: 'center' }}>No hay reportes</h1>
       ) : (
         <div css={reportsDiv}>
-          <h1 style={{ textAlign: 'center' }}>Últimos reportes</h1>
           {reports.map((r) => (
             <ReportListCell key={r.reportID} {...r} />
           ))}
