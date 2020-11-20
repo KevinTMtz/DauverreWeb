@@ -1,5 +1,5 @@
 import { functions } from './app';
-import { statsCollection, increment } from './db/stats';
+import { statsCollection, increment, decrement } from './db/stats';
 
 export const resetPasswordFromAccount = async (
   accountID: string,
@@ -89,6 +89,21 @@ export const updateResident = async (
       default:
         return { state: 'firebase error', ...err } as FirebaseErrorState;
     }
+  }
+};
+
+export const deleteResident = async (
+  residentID: string,
+): Promise<SuccessState | FirebaseErrorState> => {
+  const cloudFun = functions.httpsCallable('deleteResidentF');
+  try {
+    await cloudFun({ residentID });
+    await statsCollection
+      .doc('generalCount')
+      .update({ totalResidents: decrement });
+    return { state: 'success' };
+  } catch (err) {
+    return { state: 'firebase error', ...err } as FirebaseErrorState;
   }
 };
 
