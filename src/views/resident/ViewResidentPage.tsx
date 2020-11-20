@@ -31,7 +31,7 @@ const ViewResidentPage: React.FC = () => {
   }, [residentID, history]);
   const match = useRouteMatch();
   return (
-    <div>
+    <div style={{ marginBottom: '16px' }}>
       <PageTitle message={'Residente:'} />
       <h3 style={{ textAlign: 'center' }}>
         {resident.firstName + ' ' + resident.lastName}

@@ -9,7 +9,7 @@ import SVGEmoji from '../SVGEmoji';
 
 const cellStyle = css({
   padding: '16px',
-  margin: '10px 0',
+  margin: '24px 0',
   borderRadius: '10px',
   boxShadow: '0 4px 12px 0 rgba(0,0,0,0.2)',
   width: 'calc(100% - 32px)',

@@ -2,7 +2,7 @@ import React from 'react';
 /** @jsx jsx */ import { css, jsx } from '@emotion/core';
 
 const buttonStyle = css({
-  width: '30%',
+  width: '48%',
   height: '35px',
   borderRadius: '10px',
   fontSize: '18px',

@@ -17,6 +17,12 @@ const styledContainer = css({
   },
 });
 
+const divStyle = css({
+  marginBottom: '12px',
+  width: '100%',
+  transitionDuration: '0.3s',
+});
+
 const AccessModule: React.FC = () => {
   const [accountListings, setAccountListings] = useState<AccountListing[]>();
   const [displayedAccs, setDisplayedAccs] = useState<AccountListing[]>([]);
@@ -69,7 +75,7 @@ const AccessModule: React.FC = () => {
     <div css={styledContainer}>
       <PageTitle message={'Módulo de acceso'} />
       <div>
-        <div style={{ width: '250px', marginLeft: '50px' }}>
+        <div css={divStyle}>
           <Autocomplete
             id="search-telephone"
             onChange={(_: any, newResidentInput: string | null) => {
