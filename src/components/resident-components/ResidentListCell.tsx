@@ -30,6 +30,20 @@ const buttonsDiv = css({
   marginTop: '20px',
 });
 
+const seeReportsButton = css({
+  backgroundColor: BGColor.View,
+  width: '100%',
+  height: '35px',
+  borderRadius: '10px',
+  fontSize: '18px',
+  border: 'none',
+  color: 'white',
+  transitionDuration: '0.3s',
+  ':hover': {
+    transform: 'scale(1.01)',
+  },
+});
+
 interface ResidentListCellProps extends Resident {
   deleteResident: () => void;
 }
@@ -59,15 +73,15 @@ const ResidentListCell: React.FC<ResidentListCellProps> = ({
         )}
         <h5>ID: {residentID}</h5>
       </div>
+      <button
+        css={seeReportsButton}
+        onClick={() => history.push(`/residents/${residentID}`)}
+      >
+        Ver reportes
+      </button>
       <div css={buttonsDiv}>
         <EditAndDeleteButton color={BGColor.Delete} onClick={deleteResident}>
           Borrar
-        </EditAndDeleteButton>
-        <EditAndDeleteButton
-          color={BGColor.View}
-          onClick={() => history.push(`/residents/${residentID}`)}
-        >
-          Ver reportes
         </EditAndDeleteButton>
         <EditAndDeleteButton
           color={BGColor.Edit}
