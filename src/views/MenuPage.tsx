@@ -1,6 +1,7 @@
-import { Link } from 'react-router-dom';
 import React from 'react';
+import { useHistory, Link } from 'react-router-dom';
 /** @jsx jsx */ import { css, jsx } from '@emotion/core';
+import { Button } from '@material-ui/core';
 
 import PageTitle from '../components/PageTitle';
 
@@ -8,6 +9,7 @@ import EmojiSenior from '../assets/emojis/senior.svg';
 import EmojiUser from '../assets/emojis/user.svg';
 import EmojiStats from '../assets/emojis/stats.svg';
 import EmojiPost from '../assets/emojis/post.svg';
+import { signOut } from '../firebase/auth';
 
 const styledMainDiv = css({
   width: '100%',
@@ -53,7 +55,12 @@ const styledIcon = css({
   },
 });
 
-const MenuPage: React.FC = () => {
+interface MenuPageProps {
+  setUserAcc: React.Dispatch<React.SetStateAction<UserAcc | undefined>>;
+}
+
+const MenuPage: React.FC<MenuPageProps> = ({ setUserAcc }) => {
+  const history = useHistory();
   const options = [
     { name: 'Publicaciones', toPath: '/posts', image: EmojiPost },
     { name: 'Residentes', toPath: '/residents', image: EmojiSenior },
@@ -64,6 +71,12 @@ const MenuPage: React.FC = () => {
     },
     { name: 'Estadísticas', toPath: '/statistics', image: EmojiStats },
   ];
+
+  const signOutAndExit = async () => {
+    await signOut();
+    setUserAcc(undefined);
+    history.push('/');
+  };
 
   return (
     <div css={styledMainDiv}>
@@ -80,18 +93,18 @@ const MenuPage: React.FC = () => {
           </Link>
         ))}
       </div>
-      <Link
-        to="/"
+      <Button
         css={styledLink}
         style={{
           backgroundColor: '#e74c3c',
           margin: '40px 0px',
         }}
+        onClick={signOutAndExit}
       >
         <h2 style={{ margin: '0px', textAlign: 'center', width: '100%' }}>
           Cerrar sesión
         </h2>
-      </Link>
+      </Button>
     </div>
   );
 };

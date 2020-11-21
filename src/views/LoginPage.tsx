@@ -18,14 +18,18 @@ const styledErrorMsg = css({
   fontSize: '20px !important',
 });
 
-const LoginPage: React.FC = () => {
+interface LoginPageProps {
+  setUserAcc: React.Dispatch<React.SetStateAction<UserAcc | undefined>>;
+}
+
+const LoginPage: React.FC<LoginPageProps> = ({ setUserAcc }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const history = useHistory();
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    signInWithCredentials(username, password).then((result) => {
+    signInWithCredentials(username, password, setUserAcc).then((result) => {
       if (result.state === 'success') {
         history.push(result.url);
       } else {
