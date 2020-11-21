@@ -1,5 +1,6 @@
 import { functions } from './app';
 import { statsCollection, increment, decrement } from './db/stats';
+import { getReports } from './db/reports';
 
 export const resetPasswordFromAccount = async (
   accountID: string,
@@ -41,10 +42,10 @@ export const createResident = async (
     });
     await statsCollection
       .doc('residentsOperationsCount')
-      .update({ registrations: increment });
+      .update({ registrations: increment(1) });
     await statsCollection
       .doc('generalCount')
-      .update({ totalResidents: increment });
+      .update({ totalResidents: increment(1) });
     return { state: 'success', url: `/residents/${data.residentID}` };
   } catch (err) {
     switch (err.code) {
@@ -74,7 +75,7 @@ export const updateResident = async (
     });
     await statsCollection
       .doc('residentsOperationsCount')
-      .update({ updates: increment });
+      .update({ updates: increment(1) });
     return { state: 'success' };
   } catch (err) {
     switch (err.code) {
@@ -97,10 +98,14 @@ export const deleteResident = async (
 ): Promise<SuccessState | FirebaseErrorState> => {
   const cloudFun = functions.httpsCallable('deleteResidentF');
   try {
+    const numOfReports = await getReports(residentID).then(
+      (resports) => resports.length,
+    );
     await cloudFun({ residentID });
-    await statsCollection
-      .doc('generalCount')
-      .update({ totalResidents: decrement });
+    await statsCollection.doc('generalCount').update({
+      totalResidents: decrement(1),
+      totalReports: decrement(numOfReports),
+    });
     return { state: 'success' };
   } catch (err) {
     return { state: 'firebase error', ...err } as FirebaseErrorState;

@@ -49,8 +49,10 @@ export const createPost = async (
     });
     await statsCollection
       .doc('postsOperationsCount')
-      .update({ registrations: increment });
-    await statsCollection.doc('generalCount').update({ totalPosts: increment });
+      .update({ registrations: increment(1) });
+    await statsCollection
+      .doc('generalCount')
+      .update({ totalPosts: increment(1) });
     return { state: 'success', url: `/posts/${postID}` };
   } catch (error) {
     if (error.name === 'ValidationError') {
@@ -79,7 +81,7 @@ export const updatePost = async (
     });
     await statsCollection
       .doc('postsOperationsCount')
-      .update({ updates: increment });
+      .update({ updates: increment(1) });
     return { state: 'success', url: `/posts/${postID}` };
   } catch (error) {
     if (error.name === 'ValidationError') {
@@ -100,7 +102,9 @@ export const deletePost = async (postID: string): Promise<SuccessAndURL> => {
   await postsCollection.doc(postID).delete();
   await statsCollection
     .doc('postsOperationsCount')
-    .update({ deletions: increment });
-  await statsCollection.doc('generalCount').update({ totalPosts: decrement });
+    .update({ deletions: increment(1) });
+  await statsCollection
+    .doc('generalCount')
+    .update({ totalPosts: decrement(1) });
   return { state: 'success', url: '/posts' };
 };
