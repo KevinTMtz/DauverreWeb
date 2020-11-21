@@ -49,6 +49,10 @@ const ResidentListPage: React.FC<ResidentListPageProps> = ({ userAcc }) => {
   const match = useRouteMatch();
   const history = useHistory();
 
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   const [residents, setResidents] = useState<Resident[]>([]);
   const [displayedResidents, setDisplayedResidents] = useState<Resident[]>([]);
   const [formState, setFormState] = useState<FormState>({ state: 'closed' });
@@ -69,6 +73,7 @@ const ResidentListPage: React.FC<ResidentListPageProps> = ({ userAcc }) => {
           displayedResidents.filter((r) => r.residentID !== residentID),
         );
         setFormState({ state: 'closed' });
+        handleOpen();
       } else {
         setFormState({
           state: 'server error',
@@ -120,6 +125,22 @@ const ResidentListPage: React.FC<ResidentListPageProps> = ({ userAcc }) => {
             </DialogActions>
           </React.Fragment>
         )}
+      </Dialog>
+
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          El residente fue borrado exitosamente
+        </DialogTitle>
+        <DialogActions>
+          <Button onClick={handleClose} color="secondary">
+            Aceptar
+          </Button>
+        </DialogActions>
       </Dialog>
 
       <Backdrop style={{ zIndex: 1000 }} open={formState.state === 'loading'}>

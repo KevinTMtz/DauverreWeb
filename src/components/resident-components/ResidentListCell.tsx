@@ -2,6 +2,12 @@ import React from 'react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { useHistory } from 'react-router-dom';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 /** @jsx jsx */ import { css, jsx } from '@emotion/core';
 
 import EditAndDeleteButton, { BGColor } from '../EditAndDeleteButton';
@@ -60,6 +66,11 @@ const ResidentListCell: React.FC<ResidentListCellProps> = ({
   displayDeleteEditBtns,
 }) => {
   const history = useHistory();
+
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   return (
     <div css={divStyle}>
       <h1 css={h1Style}>
@@ -83,7 +94,7 @@ const ResidentListCell: React.FC<ResidentListCellProps> = ({
       </button>
       {displayDeleteEditBtns && (
         <div css={buttonsDiv}>
-          <EditAndDeleteButton color={BGColor.Delete} onClick={deleteResident}>
+          <EditAndDeleteButton color={BGColor.Delete} onClick={handleOpen}>
             Borrar
           </EditAndDeleteButton>
           <EditAndDeleteButton
@@ -94,6 +105,34 @@ const ResidentListCell: React.FC<ResidentListCellProps> = ({
           </EditAndDeleteButton>
         </div>
       )}
+
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">Borrar residente</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            {`¿Estás seguro que quieres borrar el residente: ${firstName} ${lastName}?`}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Cancelar
+          </Button>
+          <Button
+            onClick={() => {
+              handleClose();
+              deleteResident();
+            }}
+            color="secondary"
+          >
+            Aceptar
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };
