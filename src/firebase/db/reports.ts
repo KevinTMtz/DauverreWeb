@@ -67,7 +67,7 @@ export const createReport = async (
     });
     await statsCollection
       .doc('generalCount')
-      .update({ totalReports: increment });
+      .update({ totalReports: increment(1) });
     return { state: 'success' };
   } catch (error) {
     if (error.name === 'ValidationError') {
@@ -123,6 +123,8 @@ export const deleteReport = async (
   reportID: string,
 ): Promise<SuccessAndURL> => {
   await reportsCollection(residentID).doc(reportID).delete();
-  await statsCollection.doc('generalCount').update({ totalReports: decrement });
+  await statsCollection
+    .doc('generalCount')
+    .update({ totalReports: decrement(1) });
   return { state: 'success', url: `/residents/${residentID}/reports` };
 };
