@@ -20,6 +20,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import Dialog from '@material-ui/core/Dialog';
+import Backdrop from '@material-ui/core/Backdrop';
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
@@ -240,16 +241,12 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
       >
         Cancelar
       </Button>
+
       <Dialog
         disableBackdropClick
         disableEscapeKeyDown
-        open={formState.state !== 'closed'}
+        open={formState.state !== 'closed' && formState.state !== 'loading'}
       >
-        {formState.state === 'loading' && (
-          <DialogContent>
-            <CircularProgressIndicator />
-          </DialogContent>
-        )}
         {formState.state === 'correct' && (
           <React.Fragment>
             <DialogTitle>{formState.message}</DialogTitle>
@@ -275,6 +272,10 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
           </React.Fragment>
         )}
       </Dialog>
+
+      <Backdrop style={{ zIndex: 1000 }} open={formState.state === 'loading'}>
+        <CircularProgressIndicator />
+      </Backdrop>
     </form>
   );
 };

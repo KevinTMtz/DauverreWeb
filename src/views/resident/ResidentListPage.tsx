@@ -6,6 +6,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import Dialog from '@material-ui/core/Dialog';
+import Backdrop from '@material-ui/core/Backdrop';
 
 import CircularProgressIndicator from '../../components/CircularProgressIndicator';
 import PageTitle from '../../components/PageTitle';
@@ -103,13 +104,8 @@ const ResidentListPage: React.FC<ResidentListPageProps> = ({ userAcc }) => {
       <Dialog
         disableBackdropClick
         disableEscapeKeyDown
-        open={formState.state !== 'closed'}
+        open={formState.state !== 'closed' && formState.state !== 'loading'}
       >
-        {formState.state === 'loading' && (
-          <DialogContent>
-            <CircularProgressIndicator />
-          </DialogContent>
-        )}
         {formState.state === 'server error' && (
           <React.Fragment>
             <DialogTitle>Error</DialogTitle>
@@ -125,6 +121,10 @@ const ResidentListPage: React.FC<ResidentListPageProps> = ({ userAcc }) => {
           </React.Fragment>
         )}
       </Dialog>
+
+      <Backdrop style={{ zIndex: 1000 }} open={formState.state === 'loading'}>
+        <CircularProgressIndicator />
+      </Backdrop>
     </div>
   );
 };
