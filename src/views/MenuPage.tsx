@@ -1,9 +1,9 @@
 import React from 'react';
 import { useHistory, Link } from 'react-router-dom';
 /** @jsx jsx */ import { css, jsx } from '@emotion/core';
-import { Button } from '@material-ui/core';
 
 import PageTitle from '../components/PageTitle';
+import { BGColor } from '../components/EditAndDeleteButton';
 
 import EmojiSenior from '../assets/emojis/senior.svg';
 import EmojiUser from '../assets/emojis/user.svg';
@@ -12,10 +12,14 @@ import EmojiPost from '../assets/emojis/post.svg';
 import { signOut } from '../firebase/auth';
 
 const styledMainDiv = css({
-  width: '100%',
   display: 'flex',
   alignItems: 'center',
   flexDirection: 'column',
+  margin: '0px auto',
+  width: '70%',
+  '@media (max-width: 600px)': {
+    width: '90%',
+  },
 });
 
 const styledCellContainer = css({
@@ -37,13 +41,12 @@ const styledLink = css({
   justifyContent: 'space-between',
   margin: '10px 0px',
   padding: '10px 20px',
-  width: 'calc(70% - 40px)',
+  width: 'calc(100% - 40px)',
   ':hover': {
     transform: 'scale(1.015)',
   },
   '@media (max-width: 600px)': {
     fontSize: '14px',
-    width: 'calc(90% - 40px)',
   },
 });
 
@@ -52,6 +55,21 @@ const styledIcon = css({
   marginLeft: '16px',
   '@media (max-width: 600px)': {
     width: '50px',
+  },
+});
+
+const logOutButton = css({
+  backgroundColor: BGColor.Delete,
+  width: '100%',
+  borderRadius: '10px',
+  fontSize: '18px',
+  border: 'none',
+  color: 'white',
+  margin: '40px 0px',
+  padding: '10px 0px',
+  transitionDuration: '0.3s',
+  ':hover': {
+    transform: 'scale(1.015)',
   },
 });
 
@@ -93,18 +111,11 @@ const MenuPage: React.FC<MenuPageProps> = ({ setUserAcc }) => {
           </Link>
         ))}
       </div>
-      <Button
-        css={styledLink}
-        style={{
-          backgroundColor: '#e74c3c',
-          margin: '40px 0px',
-        }}
-        onClick={signOutAndExit}
-      >
+      <button css={logOutButton} onClick={signOutAndExit}>
         <h2 style={{ margin: '0px', textAlign: 'center', width: '100%' }}>
           Cerrar sesión
         </h2>
-      </Button>
+      </button>
     </div>
   );
 };

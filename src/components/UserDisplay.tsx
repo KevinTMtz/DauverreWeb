@@ -15,6 +15,7 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import TextField from '@material-ui/core/TextField';
+import Backdrop from '@material-ui/core/Backdrop';
 
 import CircularProgressIndicator from './CircularProgressIndicator';
 import {
@@ -176,7 +177,7 @@ const UserDisplay: React.FC<UserDisplayProps> = ({
       <Dialog
         disableBackdropClick
         disableEscapeKeyDown
-        open={formState.state !== 'closed'}
+        open={formState.state !== 'closed' && formState.state !== 'loading'}
       >
         {dialogResetPassword && (
           <React.Fragment>
@@ -252,11 +253,6 @@ const UserDisplay: React.FC<UserDisplayProps> = ({
             </DialogActions>
           </form>
         )}
-        {formState.state === 'loading' && (
-          <DialogContent>
-            <CircularProgressIndicator />
-          </DialogContent>
-        )}
         {formState.state === 'correct' && (
           <React.Fragment>
             <DialogContent>
@@ -281,6 +277,10 @@ const UserDisplay: React.FC<UserDisplayProps> = ({
           </React.Fragment>
         )}
       </Dialog>
+
+      <Backdrop style={{ zIndex: 1000 }} open={formState.state === 'loading'}>
+        <CircularProgressIndicator />
+      </Backdrop>
     </Card>
   );
 };
