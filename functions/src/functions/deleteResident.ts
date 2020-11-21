@@ -7,7 +7,7 @@ import { FirestoreResident } from '../types';
 import { accountHasMultipleResidents } from '../util';
 
 const deleteResident = async (data: any, context: https.CallableContext) => {
-  // assert.isAdmin(context);
+  assert.isAdmin(context);
   const { residentID: r } = data;
   const residentID = r as string;
   if (typeof residentID !== 'string')

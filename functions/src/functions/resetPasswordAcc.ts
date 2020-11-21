@@ -7,7 +7,7 @@ import { FirestoreResident } from '../types';
 import { dateToPass } from '../util';
 
 const resetPasswordAcc = async (data: any, context: https.CallableContext) => {
-  // assert.isAdmin(context);
+  assert.isAdmin(context);
   const { accountID, residentID } = data;
   const residentDoc = await getResidentsColl().doc(residentID).get();
   if (!residentDoc.exists)

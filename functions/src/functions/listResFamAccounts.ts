@@ -1,7 +1,7 @@
 import * as admin from 'firebase-admin';
 import { https } from 'firebase-functions';
 
-// import * as assert from '../assert';
+import * as assert from '../assert';
 import { getResidentsColl } from '../firestore';
 
 interface AccountListing {
@@ -17,7 +17,7 @@ const listResFamAccounts = async (
   _: any,
   context: https.CallableContext,
 ): Promise<AccountListing[]> => {
-  // assert.isAdmin(context);
+  assert.isAdmin(context);
   const { users } = await admin.auth().listUsers();
   const accounts = users
     .filter(
