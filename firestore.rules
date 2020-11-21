@@ -11,11 +11,13 @@ service cloud.firestore {
       allow read;
       allow write: if request.auth != null
         && request.auth.token.admin == true
-        && request.resource.data.keys().hasOnly(['content', 'date', 'imageURL', 'title'])
+        && request.resource.data.keys().hasOnly(['content', 'date', 'imageUrl', 'title'])
         && request.resource.data.content is string
         && request.resource.data.date is timestamp
-        && request.resource.data.imageURL is string
+        && request.resource.data.imageUrl is string
         && request.resource.data.title is string;
+      allow delete: if request.auth != null
+      	&& request.auth.token.admin == true;
     }
 
     match /residents/{resident} {
