@@ -1,6 +1,5 @@
 import { functions } from './app';
 import { statsCollection, increment, decrement } from './db/stats';
-import { getReports } from './db/reports';
 
 export const resetPasswordFromAccount = async (
   accountID: string,
@@ -98,13 +97,10 @@ export const deleteResident = async (
 ): Promise<SuccessState | FirebaseErrorState> => {
   const cloudFun = functions.httpsCallable('deleteResidentF');
   try {
-    const numOfReports = await getReports(residentID).then(
-      (resports) => resports.length,
-    );
-    await cloudFun({ residentID });
+    const { data } = await cloudFun({ residentID });
     await statsCollection.doc('generalCount').update({
       totalResidents: decrement(1),
-      totalReports: decrement(numOfReports),
+      totalReports: decrement(data.numReports),
     });
     return { state: 'success' };
   } catch (err) {
