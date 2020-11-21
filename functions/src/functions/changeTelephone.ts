@@ -5,7 +5,7 @@ import * as assert from '../assert';
 import { phoneToMail, telephoneIsValid } from '../util';
 
 const changeTelephone = async (data: any, context: https.CallableContext) => {
-  // assert.isAdmin(context);
+  assert.isAdmin(context);
   const { accountID, telephone } = data;
   if (!telephoneIsValid(telephone))
     throw new https.HttpsError('invalid-argument', 'Teléfono no válido');

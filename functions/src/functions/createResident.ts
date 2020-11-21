@@ -13,7 +13,7 @@ import {
 } from '../util';
 
 const createResident = async (data: any, context: https.CallableContext) => {
-  // assert.isAdmin(context);
+  assert.isAdmin(context);
   const { resident: r, loginMethod: l } = data;
   const loginMethod = l as ResidentFamLoginMethod;
   const resident = r as CreateResidentData;
