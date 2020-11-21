@@ -12,6 +12,7 @@ import PageTitle from '../../components/PageTitle';
 import ResidentListCell from '../../components/resident-components/ResidentListCell';
 import SearchInput from '../../components/resident-components/ResidentSearch';
 
+import { isAdmin, isPsyOrAdmin } from '../../firebase/auth';
 import { getResidents } from '../../firebase/db/residents';
 import { deleteResident } from '../../firebase/functions';
 
@@ -39,7 +40,11 @@ const divStyle = css({
   marginBottom: '16px',
 });
 
-const ResidentListPage: React.FC = () => {
+interface ResidentListPageProps {
+  userAcc: UserAcc | undefined;
+}
+
+const ResidentListPage: React.FC<ResidentListPageProps> = ({ userAcc }) => {
   const match = useRouteMatch();
   const history = useHistory();
 
@@ -47,11 +52,12 @@ const ResidentListPage: React.FC = () => {
   const [displayedResidents, setDisplayedResidents] = useState<Resident[]>([]);
   const [formState, setFormState] = useState<FormState>({ state: 'closed' });
   useEffect(() => {
-    getResidents().then((resid) => {
+    const uid = isPsyOrAdmin(userAcc) ? undefined : userAcc?.uid;
+    getResidents(uid).then((resid) => {
       setDisplayedResidents(resid);
       setResidents(resid);
     });
-  }, []);
+  }, [userAcc]);
 
   const deleteSelectedResident = (residentID: string) => {
     setFormState({ state: 'loading' });
@@ -78,15 +84,18 @@ const ResidentListPage: React.FC = () => {
         residentsList={residents}
         setDisplayedResidents={setDisplayedResidents}
       />
-      <button
-        css={addButtonStyle}
-        onClick={() => history.push(`${match.path}/new`)}
-      >
-        Añadir residente
-      </button>
+      {isAdmin(userAcc) && (
+        <button
+          css={addButtonStyle}
+          onClick={() => history.push(`${match.path}/new`)}
+        >
+          Añadir residente
+        </button>
+      )}
       {displayedResidents.map((dispResident) => (
         <ResidentListCell
           key={dispResident.residentID}
+          displayDeleteEditBtns={isAdmin(userAcc)}
           deleteResident={() => deleteSelectedResident(dispResident.residentID)}
           {...dispResident}
         />

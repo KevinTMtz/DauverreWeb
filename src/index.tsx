@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import firebase from 'firebase/app';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core';
 
 import Header from './components/Header';
+import PrivateRoute from './components/PrivateRoute';
+import { isAdmin, isLoggedIn } from './firebase/auth';
 import AccessModule from './views/AccessModule';
 import ForgotPasswordPage from './views/ForgotPasswordPage';
 import LoginPage from './views/LoginPage';
@@ -38,37 +40,40 @@ const theme = createMuiTheme({
   },
 });
 
-const App: React.FC = () => (
-  <BrowserRouter>
-    <Header />
-    <Switch>
-      <Route path="/login">
-        <LoginPage />
-      </Route>
-      <Route path="/forgotpass">
-        <ForgotPasswordPage />
-      </Route>
-      <Route path="/menu">
-        <MenuPage />
-      </Route>
-      <Route path="/posts">
-        <PostsRouter />
-      </Route>
-      <Route path="/residents">
-        <ResidentsRouter />
-      </Route>
-      <Route path="/accessmodule">
-        <AccessModule />
-      </Route>
-      <Route path="/statistics">
-        <StatisticsPage />
-      </Route>
-      <Route path="/">
-        <StartPage />
-      </Route>
-    </Switch>
-  </BrowserRouter>
-);
+const App: React.FC = () => {
+  const [userAcc, setUserAcc] = useState<UserAcc>();
+  return (
+    <BrowserRouter>
+      <Header />
+      <Switch>
+        <Route path="/login">
+          <LoginPage setUserAcc={setUserAcc} />
+        </Route>
+        <Route path="/forgotpass">
+          <ForgotPasswordPage />
+        </Route>
+        <PrivateRoute path="/menu" hasPermission={isAdmin(userAcc)}>
+          <MenuPage setUserAcc={setUserAcc} />
+        </PrivateRoute>
+        <PrivateRoute path="/posts" hasPermission={isAdmin(userAcc)}>
+          <PostsRouter />
+        </PrivateRoute>
+        <PrivateRoute path="/accessmodule" hasPermission={isAdmin(userAcc)}>
+          <AccessModule />
+        </PrivateRoute>
+        <PrivateRoute path="/statistics" hasPermission={isAdmin(userAcc)}>
+          <StatisticsPage />
+        </PrivateRoute>
+        <PrivateRoute path="/residents" hasPermission={isLoggedIn(userAcc)}>
+          <ResidentsRouter userAcc={userAcc} />
+        </PrivateRoute>
+        <Route path="/">
+          <StartPage />
+        </Route>
+      </Switch>
+    </BrowserRouter>
+  );
+};
 
 ReactDOM.render(
   <React.StrictMode>

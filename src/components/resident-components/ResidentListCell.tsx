@@ -46,6 +46,7 @@ const seeReportsButton = css({
 
 interface ResidentListCellProps extends Resident {
   deleteResident: () => void;
+  displayDeleteEditBtns: boolean;
 }
 
 const ResidentListCell: React.FC<ResidentListCellProps> = ({
@@ -56,6 +57,7 @@ const ResidentListCell: React.FC<ResidentListCellProps> = ({
   isVisible,
   birthDate,
   deleteResident,
+  displayDeleteEditBtns,
 }) => {
   const history = useHistory();
   return (
@@ -79,17 +81,19 @@ const ResidentListCell: React.FC<ResidentListCellProps> = ({
       >
         Ver reportes
       </button>
-      <div css={buttonsDiv}>
-        <EditAndDeleteButton color={BGColor.Delete} onClick={deleteResident}>
-          Borrar
-        </EditAndDeleteButton>
-        <EditAndDeleteButton
-          color={BGColor.Edit}
-          onClick={() => history.push(`/residents/${residentID}/edit`)}
-        >
-          Editar
-        </EditAndDeleteButton>
-      </div>
+      {displayDeleteEditBtns && (
+        <div css={buttonsDiv}>
+          <EditAndDeleteButton color={BGColor.Delete} onClick={deleteResident}>
+            Borrar
+          </EditAndDeleteButton>
+          <EditAndDeleteButton
+            color={BGColor.Edit}
+            onClick={() => history.push(`/residents/${residentID}/edit`)}
+          >
+            Editar
+          </EditAndDeleteButton>
+        </div>
+      )}
     </div>
   );
 };
