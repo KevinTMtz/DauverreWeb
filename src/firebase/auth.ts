@@ -3,13 +3,21 @@ import { auth } from './app';
 export const signInWithCredentials = async (
   username: string,
   password: string,
+  setUserAcc: React.Dispatch<React.SetStateAction<UserAcc | undefined>>,
 ): Promise<SuccessAndURL | AuthenticationError> => {
   const email = username.includes('@') ? username : `${username}@example.com`;
   try {
     const userCred = await auth.signInWithEmailAndPassword(email, password);
-    const token = await userCred.user?.getIdTokenResult();
-    if (token?.claims.admin) return { state: 'success', url: '/menu' };
-    return { state: 'success', url: `/residents/${userCred.user?.uid}` };
+    if (userCred.user !== null) {
+      const token = await userCred.user?.getIdTokenResult();
+      setUserAcc({
+        uid: userCred.user.uid,
+        claims: token.claims,
+      });
+      if (token.claims.admin) return { state: 'success', url: '/menu' };
+      return { state: 'success', url: '/residents' };
+    }
+    return { state: 'auth error', error: 'Error en el servidor' };
   } catch (error) {
     const authMethod = username.includes('@')
       ? 'correo electrónico'
@@ -32,3 +40,14 @@ export const signInWithCredentials = async (
     }
   }
 };
+
+export const signOut = () => auth.signOut();
+
+export const isLoggedIn = (userAcc: UserAcc | undefined): boolean =>
+  typeof userAcc !== 'undefined';
+
+export const isAdmin = (userAcc: UserAcc | undefined): boolean =>
+  !!userAcc?.claims.admin;
+
+export const isPsyOrAdmin = (userAcc: UserAcc | undefined): boolean =>
+  !!userAcc?.claims.admin || !!userAcc?.claims.psy;

@@ -3,6 +3,7 @@ import { useParams, useHistory } from 'react-router-dom';
 import CircularProgress from '@material-ui/core/CircularProgress';
 /** @jsx jsx */ import { css, jsx } from '@emotion/core';
 
+import { isPsyOrAdmin } from '../../firebase/auth';
 import { getReports } from '../../firebase/db/reports';
 import ReportListCell from './ReportListCell';
 
@@ -31,7 +32,11 @@ const reportsDiv = css({
   },
 });
 
-const ReportsList: React.FC = () => {
+interface ReportsListProps {
+  userAcc: UserAcc | undefined;
+}
+
+const ReportsList: React.FC<ReportsListProps> = ({ userAcc }) => {
   const history = useHistory();
   const { residentID } = useParams<ResidentParams>();
   const [reports, setReports] = useState<Report[]>();
@@ -51,12 +56,14 @@ const ReportsList: React.FC = () => {
       }}
     >
       <h1 style={{ textAlign: 'center' }}>Últimos reportes</h1>
-      <button
-        css={addButtonStyle}
-        onClick={() => history.push(`/residents/${residentID}/newreport`)}
-      >
-        Crear reporte
-      </button>
+      {isPsyOrAdmin(userAcc) && (
+        <button
+          css={addButtonStyle}
+          onClick={() => history.push(`/residents/${residentID}/newreport`)}
+        >
+          Crear reporte
+        </button>
+      )}
       {typeof reports === 'undefined' ? (
         <div style={{ display: 'flex', alignContent: 'center' }}>
           <CircularProgress

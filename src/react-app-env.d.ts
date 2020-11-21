@@ -162,6 +162,12 @@ type FormState =
   | LoadingFormState
   | ServerErrorFormState;
 
-type FirebaseCollection = firebase.firestore.CollectionReference<
-  firebase.firestore.DocumentData
->;
+type FirebaseCollection = firebase.firestore.CollectionReference<firebase.firestore.DocumentData>;
+
+interface UserAcc {
+  uid: string;
+  claims: {
+    admin?: boolean;
+    psy?: boolean;
+  };
+}

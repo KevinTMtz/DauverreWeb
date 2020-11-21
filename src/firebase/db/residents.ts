@@ -4,8 +4,12 @@ import { db } from '../app';
 
 const residentsCollection = db.collection('residents');
 
-export const getResidents = async (): Promise<Resident[]> => {
-  const snapshot = await residentsCollection.get();
+export const getResidents = async (uid?: string): Promise<Resident[]> => {
+  const residentsColl =
+    typeof uid !== 'string'
+      ? residentsCollection
+      : residentsCollection.where('accountID', '==', uid);
+  const snapshot = await residentsColl.get();
   return snapshot.docs.map((doc) => {
     const data = doc.data();
     return {

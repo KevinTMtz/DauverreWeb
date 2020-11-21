@@ -8,11 +8,17 @@ import {
 } from 'react-router-dom';
 
 import PageTitle from '../../components/PageTitle';
+import PrivateRoute from '../../components/PrivateRoute';
 import CreateReport from '../../components/report-components/CreateReport';
 import ReportsList from '../../components/report-components/ReportList';
+import { isPsyOrAdmin } from '../../firebase/auth';
 import { getResident } from '../../firebase/db/residents';
 
-const ViewResidentPage: React.FC = () => {
+interface ViewResidentPageProps {
+  userAcc: UserAcc | undefined;
+}
+
+const ViewResidentPage: React.FC<ViewResidentPageProps> = ({ userAcc }) => {
   const { residentID } = useParams<ResidentParams>();
   const history = useHistory();
   const [resident, setResident] = useState<ResidentData>({
@@ -32,16 +38,18 @@ const ViewResidentPage: React.FC = () => {
   const match = useRouteMatch();
   return (
     <div style={{ marginBottom: '16px' }}>
-      <PageTitle message={'Residente:'} />
-      <h3 style={{ textAlign: 'center' }}>
-        {resident.firstName + ' ' + resident.lastName}
-      </h3>
+      <PageTitle
+        message={`Residente ${resident.firstName} ${resident.lastName}`}
+      />
       <Switch>
-        <Route path={`${match.path}/newreport`}>
+        <PrivateRoute
+          path={`${match.path}/newreport`}
+          hasPermission={isPsyOrAdmin(userAcc)}
+        >
           <CreateReport />
-        </Route>
+        </PrivateRoute>
         <Route path={match.path}>
-          <ReportsList />
+          <ReportsList userAcc={userAcc} />
         </Route>
       </Switch>
     </div>
