@@ -31,6 +31,7 @@ const deleteResident = async (data: any, context: https.CallableContext) => {
     await admin.auth().deleteUser(accountID);
   }
   // Remove reports
+  let numReports = 0;
   const query = residentRef
     .collection('reports')
     .orderBy('__name__')
@@ -38,13 +39,14 @@ const deleteResident = async (data: any, context: https.CallableContext) => {
   while (true) {
     const snapshot = await query.get();
     if (snapshot.size === 0) break;
+    numReports += snapshot.size;
     const batch = admin.firestore().batch();
     snapshot.docs.forEach((doc) => batch.delete(doc.ref));
     await batch.commit();
   }
-
   // Remove resident document
   await residentRef.delete();
+  return { numReports };
 };
 
 export default deleteResident;
