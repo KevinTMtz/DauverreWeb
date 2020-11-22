@@ -116,10 +116,7 @@ const ResidentListPage: React.FC<ResidentListPageProps> = ({ userAcc }) => {
             <DialogTitle>Error</DialogTitle>
             <DialogContent>{formState.message}</DialogContent>
             <DialogActions>
-              <Button
-                onClick={() => setFormState({ state: 'closed' })}
-                color="primary"
-              >
+              <Button onClick={() => setFormState({ state: 'closed' })}>
                 Ok
               </Button>
             </DialogActions>

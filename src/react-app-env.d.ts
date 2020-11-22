@@ -1,4 +1,7 @@
 /// <reference types="react-scripts" />
+declare module '@material-ui/lab/dateAdapter/date-fns';
+declare module '@material-ui/lab/LocalizationProvider';
+declare module '@material-ui/lab/DatePicker';
 
 interface PostParams {
   postID: string;

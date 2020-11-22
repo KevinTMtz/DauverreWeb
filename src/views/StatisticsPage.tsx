@@ -469,9 +469,7 @@ const StatisticsPage: React.FC = () => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Cancelar
-          </Button>
+          <Button onClick={handleClose}>Cancelar</Button>
           <Button onClick={restartOperationsCountUseState} color="secondary">
             Aceptar
           </Button>

@@ -1,8 +1,7 @@
 import React from 'react';
 /** @jsx jsx */ import { css, jsx } from '@emotion/core';
 import TextField from '@material-ui/core/TextField';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import { AutocompleteRenderInputParams } from '@material-ui/lab/Autocomplete/Autocomplete';
+import Autocomplete from '@material-ui/core/Autocomplete';
 
 const divStyle = css({
   marginBottom: '12px',
@@ -40,13 +39,8 @@ const SearchInput: React.FC<ResidentListProps> = ({
           showSelectedResident(newResidentInput);
         }}
         options={residentsList.map((resident) => resident.firstName)}
-        renderInput={(params: AutocompleteRenderInputParams) => (
-          <TextField
-            {...params}
-            label="Buscar residente"
-            margin="normal"
-            variant="outlined"
-          />
+        renderInput={(params) => (
+          <TextField {...params} label="Buscar residente" margin="normal" />
         )}
       />
     </div>

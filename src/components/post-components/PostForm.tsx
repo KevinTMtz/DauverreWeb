@@ -1,19 +1,17 @@
 import React from 'react';
-import 'date-fns';
+/** @jsx jsx */ import { css, jsx } from '@emotion/core';
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import DateFnsUtils from '@date-io/date-fns';
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from '@material-ui/pickers';
+import TextField, { TextFieldProps } from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Backdrop from '@material-ui/core/Backdrop';
-/** @jsx jsx */ import { css, jsx } from '@emotion/core';
+import DateFnsAdapter from '@material-ui/lab/dateAdapter/date-fns';
+import LocalizationProvider from '@material-ui/lab/LocalizationProvider';
+import DatePicker from '@material-ui/lab/DatePicker';
+import esLocale from 'date-fns/locale/es';
 
 import CircularProgressIndicator from '../CircularProgressIndicator';
 
@@ -113,14 +111,11 @@ const PostForm: React.FC<PostFormProps> = ({
     >
       <p css={styledP}>Título</p>
       <TextField
-        variant="outlined"
         margin="normal"
         required
         fullWidth
         id="title"
-        label="Título"
         name="title"
-        autoComplete="username"
         autoFocus
         value={post.title}
         onChange={(event) =>
@@ -128,33 +123,25 @@ const PostForm: React.FC<PostFormProps> = ({
         }
       />
       <p css={styledP}>Fecha</p>
-      <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <KeyboardDatePicker
-          disableToolbar
-          variant="inline"
-          format="dd/MM/yyyy"
-          margin="normal"
-          id="date-picker-inline"
-          label="Date picker inline"
+      <LocalizationProvider dateAdapter={DateFnsAdapter} locale={esLocale}>
+        <DatePicker
           fullWidth
           value={post.date}
-          onChange={(event) =>
-            setPostState({ ...post, date: new Date(event!.valueOf()) })
-          }
-          KeyboardButtonProps={{ 'aria-label': 'change date' }}
+          onChange={(date: Date) => setPostState({ ...post, date })}
+          renderInput={(params: TextFieldProps) => (
+            <TextField {...params} margin="normal" variant="standard" />
+          )}
         />
-      </MuiPickersUtilsProvider>
+      </LocalizationProvider>
       <p css={styledP}>Contenido de texto</p>
       <TextField
-        variant="outlined"
         margin="normal"
         required
         fullWidth
         multiline
+        minRows={4}
         id="textContent"
-        label="Contenido textual"
         name="textContent"
-        autoComplete="username"
         autoFocus
         value={post.content}
         onChange={(event) =>
@@ -193,7 +180,7 @@ const PostForm: React.FC<PostFormProps> = ({
           )}
         </label>
       )}
-      <Button type="submit" variant="contained" color="primary" fullWidth>
+      <Button type="submit" variant="contained" fullWidth>
         {buttonMessage}
       </Button>
       <Button
@@ -222,9 +209,7 @@ const PostForm: React.FC<PostFormProps> = ({
         </DialogContent>
         <DialogActions>
           {isEditing && <Button onClick={handleClose}>Seguir editando</Button>}
-          <Button onClick={cancelOperation} color="primary">
-            Finalizar
-          </Button>
+          <Button onClick={cancelOperation}>Finalizar</Button>
         </DialogActions>
       </Dialog>
 

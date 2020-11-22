@@ -104,9 +104,7 @@ const PostListCell: React.FC<PostListCellProps> = ({
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Cancelar
-          </Button>
+          <Button onClick={handleClose}>Cancelar</Button>
           <Button onClick={deletePost} color="secondary">
             Aceptar
           </Button>
