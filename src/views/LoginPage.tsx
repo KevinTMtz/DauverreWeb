@@ -10,8 +10,10 @@ import PageTitle from '../components/PageTitle';
 import { signInWithCredentials } from '../firebase/auth';
 
 const styledLink = css({
-  padding: '16px',
+  padding: '8px',
   textDecoration: 'inherit',
+  color: '#0984e3',
+  marginTop: '12px',
 });
 
 const styledErrorMsg = css({
@@ -72,7 +74,13 @@ const LoginPage: React.FC<LoginPageProps> = ({ setUserAcc }) => {
           value={password}
           onChange={(event) => setPassword(event.target.value)}
         />
-        <Button type="submit" fullWidth variant="contained" color="primary">
+        <Button
+          style={{ marginTop: '32px' }}
+          type="submit"
+          fullWidth
+          variant="contained"
+          color="primary"
+        >
           Inicia sesión
         </Button>
         <Link to="/forgotpass" css={styledLink}>

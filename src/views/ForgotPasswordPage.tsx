@@ -8,8 +8,10 @@ import CenteredLoginForm from '../components/CenteredLoginForm';
 import PageTitle from '../components/PageTitle';
 
 const styledLink = css({
-  padding: '16px',
+  padding: '8px',
   textDecoration: 'inherit',
+  color: '#0984e3',
+  marginTop: '12px',
 });
 
 const ForgotPasswordPage: React.FC = () => {
@@ -35,7 +37,13 @@ const ForgotPasswordPage: React.FC = () => {
           value={username}
           onChange={(event) => setUsername(event.target.value)}
         />
-        <Button type="submit" fullWidth variant="contained" color="primary">
+        <Button
+          style={{ marginTop: '32px' }}
+          type="submit"
+          fullWidth
+          variant="contained"
+          color="primary"
+        >
           Enviar solicitud
         </Button>
         <Link to="/login" css={styledLink}>
