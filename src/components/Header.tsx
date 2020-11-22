@@ -1,6 +1,8 @@
 import React from 'react';
-import { useLocation, Link } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 /** @jsx jsx */ import { css, jsx } from '@emotion/core';
+
+import { isAdmin } from '../firebase/auth';
 
 const divStyle = css({
   margin: '0px',
@@ -56,12 +58,25 @@ const linkStyle = css({
   },
 });
 
-const Header: React.FC = () => {
-  const locationPathname = useLocation().pathname;
-  const isInLoginPage =
-    locationPathname === '/login' || locationPathname === '/forgotpass';
-  const isInStartPage = locationPathname === '/';
+interface HeaderProps {
+  userAcc: UserAcc | undefined;
+}
 
+const Header: React.FC<HeaderProps> = ({ userAcc }) => {
+  const history = useHistory();
+  const location = useLocation();
+
+  const { pathname: url } = location;
+  let backBtn: { to: string; text: string } | undefined;
+  if (url === '/') {
+    backBtn = { to: '/login', text: 'Inicia sesión' };
+  } else if (url === '/login' || url === '/forgotpass') {
+    backBtn = { to: '/', text: 'Cancelar' };
+  } else if (url !== '/residents' && !isAdmin(userAcc)) {
+    backBtn = { to: '/residents', text: 'Regresar' };
+  } else if (url !== '/menu' && isAdmin(userAcc)) {
+    backBtn = { to: '/menu', text: 'Regresar al menú' };
+  }
   return (
     <div css={divStyle}>
       <div css={divLogoAndTitle}>
@@ -74,15 +89,13 @@ const Header: React.FC = () => {
         />
         <p css={pStyle}>Dauverre A.C.</p>
       </div>
-      {isInStartPage && (
-        <Link to="/login" css={linkStyle}>
-          Iniciar sesión
-        </Link>
-      )}
-      {isInLoginPage && (
-        <Link to="/" css={linkStyle}>
-          Cancelar
-        </Link>
+      {typeof backBtn !== 'undefined' && (
+        <button
+          css={linkStyle}
+          onClick={() => history.push(backBtn?.to || '/')}
+        >
+          {backBtn.text}
+        </button>
       )}
     </div>
   );
