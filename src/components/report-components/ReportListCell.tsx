@@ -1,7 +1,8 @@
 import React from 'react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
-/** @jsx jsx */ import { css, jsx } from '@emotion/core';
+/** @jsxImportSource @emotion/react */
+import { css } from '@emotion/react';
 
 import HealthEmoji from './HealthEmoji';
 import MoodEmoji from './MoodEmoji';

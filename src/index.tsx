@@ -3,6 +3,7 @@ import firebase from 'firebase/app';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core';
+import {} from '@emotion/core';
 
 import Header from './components/Header';
 import PrivateRoute from './components/PrivateRoute';

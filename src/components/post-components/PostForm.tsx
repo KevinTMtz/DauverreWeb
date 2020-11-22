@@ -1,5 +1,6 @@
 import React from 'react';
-/** @jsx jsx */ import { css, jsx } from '@emotion/core';
+/** @jsxImportSource @emotion/react */
+import { css } from '@emotion/react';
 import Button from '@material-ui/core/Button';
 import TextField, { TextFieldProps } from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
