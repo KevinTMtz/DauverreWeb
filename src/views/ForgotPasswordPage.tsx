@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-/** @jsx jsx */ import { css, jsx } from '@emotion/core';
+/** @jsxImportSource @emotion/react */
+import { css } from '@emotion/react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 

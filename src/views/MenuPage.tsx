@@ -1,6 +1,7 @@
 import React from 'react';
 import { useHistory, Link } from 'react-router-dom';
-/** @jsx jsx */ import { css, jsx } from '@emotion/core';
+/** @jsxImportSource @emotion/react */
+import { css } from '@emotion/react';
 
 import PageTitle from '../components/PageTitle';
 import { BGColor } from '../components/EditAndDeleteButton';

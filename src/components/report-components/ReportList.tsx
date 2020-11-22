@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import CircularProgress from '@material-ui/core/CircularProgress';
-/** @jsx jsx */ import { css, jsx } from '@emotion/core';
+/** @jsxImportSource @emotion/react */
+import { css } from '@emotion/react';
 
 import { isPsyOrAdmin } from '../../firebase/auth';
 import { getReports } from '../../firebase/db/reports';

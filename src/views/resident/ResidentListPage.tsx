@@ -1,6 +1,7 @@
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
-/** @jsx jsx */ import { css, jsx } from '@emotion/core';
+/** @jsxImportSource @emotion/react */
+import { css } from '@emotion/react';
 import Button from '@material-ui/core/Button';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
