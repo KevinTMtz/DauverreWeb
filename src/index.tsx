@@ -44,7 +44,7 @@ const App: React.FC = () => {
   const [userAcc, setUserAcc] = useState<UserAcc>();
   return (
     <BrowserRouter>
-      <Header />
+      <Header userAcc={userAcc} />
       <Switch>
         <Route path="/login">
           <LoginPage setUserAcc={setUserAcc} />
