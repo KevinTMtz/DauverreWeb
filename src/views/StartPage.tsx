@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Markdown from 'markdown-to-jsx';
-/** @jsx jsx */ import { css, jsx } from '@emotion/core';
+/** @jsxImportSource @emotion/react */
+import { css } from '@emotion/react';
 
 import FrontPagePost from '../components/post-components/FrontPagePost';
 import Divisor from '../components/Divisor';

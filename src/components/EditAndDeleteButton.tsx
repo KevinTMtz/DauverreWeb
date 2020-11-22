@@ -1,5 +1,6 @@
 import React from 'react';
-/** @jsx jsx */ import { css, jsx } from '@emotion/core';
+/** @jsxImportSource @emotion/react */
+import { css } from '@emotion/react';
 
 const buttonStyle = css({
   width: '48%',
