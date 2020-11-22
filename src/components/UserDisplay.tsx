@@ -155,7 +155,6 @@ const UserDisplay: React.FC<UserDisplayProps> = ({
         <Button
           css={buttonStyle}
           variant="contained"
-          color="primary"
           onClick={() =>
             setFormState({ state: 'waiting', substate: 'changeTelephone' })
           }
@@ -165,7 +164,6 @@ const UserDisplay: React.FC<UserDisplayProps> = ({
         <Button
           css={buttonStyle}
           variant="contained"
-          color="primary"
           onClick={() => {
             if (residents.length === 1) resetPassword();
             else setFormState({ state: 'waiting', substate: 'resetPassword' });
@@ -213,12 +211,10 @@ const UserDisplay: React.FC<UserDisplayProps> = ({
               </FormControl>
             </DialogContent>
             <DialogActions>
-              <Button autoFocus onClick={exit} color="primary">
+              <Button autoFocus onClick={exit}>
                 Cancelar
               </Button>
-              <Button onClick={resetPassword} color="primary">
-                Sobreescribir
-              </Button>
+              <Button onClick={resetPassword}>Sobreescribir</Button>
             </DialogActions>
           </React.Fragment>
         )}
@@ -228,7 +224,6 @@ const UserDisplay: React.FC<UserDisplayProps> = ({
             <DialogContent>
               <FormControl fullWidth>
                 <TextField
-                  variant="outlined"
                   margin="normal"
                   fullWidth
                   id="telephone"
@@ -244,12 +239,10 @@ const UserDisplay: React.FC<UserDisplayProps> = ({
               </FormControl>
             </DialogContent>
             <DialogActions>
-              <Button autoFocus onClick={exit} color="primary">
+              <Button autoFocus onClick={exit}>
                 Cancelar
               </Button>
-              <Button type="submit" color="primary">
-                Actualizar
-              </Button>
+              <Button type="submit">Actualizar</Button>
             </DialogActions>
           </form>
         )}
@@ -259,7 +252,7 @@ const UserDisplay: React.FC<UserDisplayProps> = ({
               <DialogContentText>{formState.message}</DialogContentText>
             </DialogContent>
             <DialogActions>
-              <Button autoFocus onClick={exit} color="primary">
+              <Button autoFocus onClick={exit}>
                 Ok
               </Button>
             </DialogActions>
@@ -270,9 +263,7 @@ const UserDisplay: React.FC<UserDisplayProps> = ({
             <DialogTitle>Error</DialogTitle>
             <DialogContent>{formState.message}</DialogContent>
             <DialogActions>
-              <Button onClick={exit} color="primary">
-                Ok
-              </Button>
+              <Button onClick={exit}>Ok</Button>
             </DialogActions>
           </React.Fragment>
         )}

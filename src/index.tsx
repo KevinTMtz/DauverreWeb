@@ -25,12 +25,8 @@ declare global {
 
 const theme = createMuiTheme({
   palette: {
-    primary: {
-      main: '#74b9ff',
-    },
-    secondary: {
-      main: '#e74c3c',
-    },
+    primary: { main: '#74b9ff' },
+    secondary: { main: '#e74c3c' },
   },
   typography: {
     button: {

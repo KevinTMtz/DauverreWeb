@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import 'date-fns';
-
-import DateFnsUtils from '@date-io/date-fns';
 /** @jsx jsx */ import { css, jsx } from '@emotion/core';
-import TextField from '@material-ui/core/TextField';
+import TextField, { TextFieldProps } from '@material-ui/core/TextField';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -21,10 +18,10 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import Dialog from '@material-ui/core/Dialog';
 import Backdrop from '@material-ui/core/Backdrop';
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from '@material-ui/pickers';
+import DateFnsAdapter from '@material-ui/lab/dateAdapter/date-fns';
+import LocalizationProvider from '@material-ui/lab/LocalizationProvider';
+import DatePicker from '@material-ui/lab/DatePicker';
+import esLocale from 'date-fns/locale/es';
 
 import CircularProgressIndicator from '../CircularProgressIndicator';
 import { listAccounts } from '../../firebase/functions';
@@ -38,15 +35,20 @@ const loginMethodDiv = css({
   justifyContent: 'center',
 });
 
+const birthDateGenderDiv = css({
+  display: 'grid',
+  gridTemplateColumns: '1fr 1fr',
+  columnGap: '5%',
+  '@media (max-width: 800px)': { gridTemplateColumns: '1fr' },
+});
+
 const styledForm = css({
   width: '70%',
   margin: 'auto',
   fontSize: '18px',
   fontWeight: 'bold',
   transitionDuration: '0.3s',
-  '@media (max-width: 600px)': {
-    width: '90%',
-  },
+  '@media (max-width: 600px)': { width: '90%' },
 });
 
 interface ResidentFormProps {
@@ -90,7 +92,6 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
       css={styledForm}
     >
       <TextField
-        variant="outlined"
         margin="normal"
         required
         fullWidth
@@ -105,7 +106,6 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
         }
       />
       <TextField
-        variant="outlined"
         margin="normal"
         required
         fullWidth
@@ -119,68 +119,77 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
           setResidentState({ ...resident, lastName: event.target.value })
         }
       />
-      <p>Fecha de nacimiento</p>
-      <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <KeyboardDatePicker
-          disableToolbar
-          variant="inline"
-          format="dd/MM/yyyy"
+      <div css={birthDateGenderDiv}>
+        <FormControl
+          variant="outlined"
           margin="normal"
-          id="date-picker-inline"
-          label="Fecha"
-          fullWidth
-          value={resident.birthDate}
-          onChange={(event) =>
-            setResidentState({
-              ...resident,
-              birthDate: new Date(event!.valueOf()),
-            })
-          }
-          KeyboardButtonProps={{ 'aria-label': 'change date' }}
-        />
-      </MuiPickersUtilsProvider>
-      <FormControl
-        variant="outlined"
-        margin="normal"
-        required
-        fullWidth
-        component="fieldset"
-      >
-        <FormLabel component="legend">Sexo</FormLabel>
-        <RadioGroup
-          value={resident.gender}
-          aria-label="gender"
-          name="gender"
-          row
+          required
+          component="fieldset"
         >
-          <FormControlLabel
-            control={<Radio />}
-            label="Masculino"
-            value="Hombre"
-            onChange={() => setResidentState({ ...resident, gender: 'Hombre' })}
-          />
-          <FormControlLabel
-            control={<Radio />}
-            label="Femenino"
-            value="Mujer"
-            onChange={() => setResidentState({ ...resident, gender: 'Mujer' })}
-          />
-          <FormControlLabel
-            control={<Radio />}
-            label="Otro"
-            value="Otro"
-            onChange={() => setResidentState({ ...resident, gender: 'Otro' })}
-          />
-        </RadioGroup>
-      </FormControl>
+          <FormLabel component="legend">Fecha de nacimiento</FormLabel>
+          <LocalizationProvider dateAdapter={DateFnsAdapter} locale={esLocale}>
+            <DatePicker
+              disableFuture
+              openTo="year"
+              views={['year', 'month', 'date']}
+              value={resident.birthDate}
+              onChange={(birthDate: Date) =>
+                setResidentState({ ...resident, birthDate })
+              }
+              renderInput={(params: TextFieldProps) => (
+                <TextField {...params} margin="normal" variant="standard" />
+              )}
+            />
+          </LocalizationProvider>
+        </FormControl>
+        <FormControl
+          variant="outlined"
+          margin="normal"
+          required
+          component="fieldset"
+        >
+          <FormLabel component="legend">Sexo</FormLabel>
+          <RadioGroup
+            value={resident.gender}
+            aria-label="gender"
+            name="gender"
+            row
+          >
+            <FormControlLabel
+              control={<Radio />}
+              label="Masculino"
+              value="Hombre"
+              onChange={() =>
+                setResidentState({ ...resident, gender: 'Hombre' })
+              }
+            />
+            <FormControlLabel
+              control={<Radio />}
+              label="Femenino"
+              value="Mujer"
+              onChange={() =>
+                setResidentState({ ...resident, gender: 'Mujer' })
+              }
+            />
+            <FormControlLabel
+              control={<Radio />}
+              label="Otro"
+              value="Otro"
+              onChange={() => setResidentState({ ...resident, gender: 'Otro' })}
+            />
+          </RadioGroup>
+        </FormControl>
+      </div>
       <AppBar position="static">
         <Tabs
           value={loginMethod.loginMethodIdx}
-          onChange={(_, newTabIdx) => {
-            if (newTabIdx === 0)
-              setLoginMethod({ loginMethodIdx: 0, telephone: '' });
-            else setLoginMethod({ loginMethodIdx: 1, accountID: '' });
-          }}
+          onChange={(_, newTabIdx) =>
+            setLoginMethod(
+              newTabIdx === 0
+                ? { loginMethodIdx: 0, telephone: '' }
+                : { loginMethodIdx: 1, accountID: '' },
+            )
+          }
           variant="fullWidth"
           centered
         >
@@ -191,7 +200,6 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
       <div css={loginMethodDiv}>
         {loginMethod.loginMethodIdx === 0 && (
           <TextField
-            variant="outlined"
             margin="normal"
             fullWidth
             id="telephone"
@@ -240,7 +248,6 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
       <Button
         type="submit"
         variant="contained"
-        color="primary"
         fullWidth
         style={{ marginTop: '32px' }}
       >
@@ -265,9 +272,7 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
           <React.Fragment>
             <DialogTitle>{formState.message}</DialogTitle>
             <DialogActions>
-              <Button onClick={exit} color="primary">
-                Ok
-              </Button>
+              <Button onClick={exit}>Ok</Button>
             </DialogActions>
           </React.Fragment>
         )}
@@ -276,10 +281,7 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
             <DialogTitle>Error</DialogTitle>
             <DialogContent>{formState.message}</DialogContent>
             <DialogActions>
-              <Button
-                onClick={() => setFormState({ state: 'closed' })}
-                color="primary"
-              >
+              <Button onClick={() => setFormState({ state: 'closed' })}>
                 Ok
               </Button>
             </DialogActions>

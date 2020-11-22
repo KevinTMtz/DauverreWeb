@@ -49,7 +49,6 @@ const LoginPage: React.FC<LoginPageProps> = ({ setUserAcc }) => {
           </FormHelperText>
         )}
         <TextField
-          variant="outlined"
           margin="normal"
           required
           fullWidth
@@ -62,7 +61,6 @@ const LoginPage: React.FC<LoginPageProps> = ({ setUserAcc }) => {
           onChange={(event) => setUsername(event.target.value)}
         />
         <TextField
-          variant="outlined"
           margin="normal"
           required
           fullWidth
@@ -79,7 +77,6 @@ const LoginPage: React.FC<LoginPageProps> = ({ setUserAcc }) => {
           type="submit"
           fullWidth
           variant="contained"
-          color="primary"
         >
           Inicia sesión
         </Button>

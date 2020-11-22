@@ -214,7 +214,6 @@ const ReportForm: React.FC<ReportFormProps> = ({
         ))}
       </FormControl>
       <TextField
-        variant="outlined"
         margin="normal"
         required={false}
         fullWidth
@@ -233,14 +232,12 @@ const ReportForm: React.FC<ReportFormProps> = ({
       <Button
         type="submit"
         variant="contained"
-        color="primary"
         fullWidth
         style={{ marginTop: '32px' }}
       >
         {buttonMessage}
       </Button>
       <Button
-        type="submit"
         variant="contained"
         color="secondary"
         fullWidth
