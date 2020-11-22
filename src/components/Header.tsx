@@ -43,8 +43,7 @@ const logoStyle = css({
 });
 
 const linkStyle = css({
-  textDecoration: 'inherit',
-  color: 'inherit',
+  border: 'none',
   backgroundColor: '#74b9ff',
   borderRadius: '10px',
   fontSize: '18px',
