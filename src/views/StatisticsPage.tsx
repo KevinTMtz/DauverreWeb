@@ -1,4 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 /** @jsx jsx */ import { css, jsx } from '@emotion/core';
 import {
   BarChart,
@@ -80,6 +86,10 @@ interface totalAndCountByCase {
 }
 
 const StatisticsPage: React.FC = () => {
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   const [
     dataGeneralCount,
     setDataGeneralCount,
@@ -192,6 +202,8 @@ const StatisticsPage: React.FC = () => {
       },
       { name: 'Bajas', total: 0 },
     ]);
+    restartOperationsCount();
+    handleClose();
   };
 
   useEffect(() => {
@@ -320,13 +332,7 @@ const StatisticsPage: React.FC = () => {
 
       <div css={styledReportDiv}>
         <PageTitle message={'Total de operaciones'} />
-        <button
-          css={restartOperationsButton}
-          onClick={() => {
-            restartOperationsCountUseState();
-            restartOperationsCount();
-          }}
-        >
+        <button css={restartOperationsButton} onClick={handleOpen}>
           Reiniciar conteo de operaciones
         </button>
         {forRenderingPostAndResidentsCharts.map(
@@ -449,6 +455,28 @@ const StatisticsPage: React.FC = () => {
           ))}
       </div>
       <Divisor />
+
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">Reiniciar conteo</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            {'¿Estás seguro que quieres reiniciar el conteo de operaciones?'}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Cancelar
+          </Button>
+          <Button onClick={restartOperationsCountUseState} color="secondary">
+            Aceptar
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };
