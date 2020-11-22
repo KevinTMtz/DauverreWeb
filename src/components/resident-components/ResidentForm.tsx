@@ -30,6 +30,14 @@ import CircularProgressIndicator from '../CircularProgressIndicator';
 import { listAccounts } from '../../firebase/functions';
 import joinStringsAsList from '../../utils/joinStringsAsList';
 
+const loginMethodDiv = css({
+  width: '100%',
+  height: '80px',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+});
+
 const styledForm = css({
   width: '70%',
   margin: 'auto',
@@ -180,49 +188,55 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
           <Tab label="Añadir residente a una cuenta existente" />
         </Tabs>
       </AppBar>
-      {loginMethod.loginMethodIdx === 0 && (
-        <TextField
-          variant="outlined"
-          margin="normal"
-          fullWidth
-          id="telephone"
-          label="Número de teléfono"
-          name="telephone"
-          autoComplete="telephone"
-          autoFocus
-          required
-          inputProps={{ pattern: '(\\d\\s?-?){10}' }}
-          value={loginMethod.telephone}
-          onChange={(event) =>
-            setLoginMethod({ ...loginMethod, telephone: event.target.value })
-          }
-        />
-      )}
-      {loginMethod.loginMethodIdx === 1 && (
-        <FormControl fullWidth>
-          <InputLabel id="select-login-account">
-            Selecciona la cuenta
-          </InputLabel>
-          <Select
-            required
+      <div css={loginMethodDiv}>
+        {loginMethod.loginMethodIdx === 0 && (
+          <TextField
+            variant="outlined"
+            margin="normal"
+            fullWidth
+            id="telephone"
+            label="Número de teléfono"
+            name="telephone"
+            autoComplete="telephone"
             autoFocus
-            labelId="select-login-account"
-            value={loginMethod.accountID}
-            onChange={(e) =>
-              setLoginMethod({
-                ...loginMethod,
-                accountID: e.target.value as string,
-              })
+            required
+            inputProps={{ pattern: '(\\d\\s?-?){10}' }}
+            value={loginMethod.telephone}
+            onChange={(event) =>
+              setLoginMethod({ ...loginMethod, telephone: event.target.value })
             }
-          >
-            {accountListings.map(({ accountID, residents, telephone }) => (
-              <MenuItem key={accountID} value={accountID}>
-                {telephone} - {joinStringsAsList(residents.map((r) => r.name))}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      )}
+          />
+        )}
+        {loginMethod.loginMethodIdx === 1 && accountListings.length === 0 && (
+          <CircularProgressIndicator size="50px" margin="0" />
+        )}
+        {loginMethod.loginMethodIdx === 1 && accountListings.length > 0 && (
+          <FormControl fullWidth>
+            <InputLabel id="select-login-account">
+              Selecciona la cuenta
+            </InputLabel>
+            <Select
+              required
+              autoFocus
+              labelId="select-login-account"
+              value={loginMethod.accountID}
+              onChange={(e) =>
+                setLoginMethod({
+                  ...loginMethod,
+                  accountID: e.target.value as string,
+                })
+              }
+            >
+              {accountListings.map(({ accountID, residents, telephone }) => (
+                <MenuItem key={accountID} value={accountID}>
+                  {`${telephone} - `}
+                  {joinStringsAsList(residents.map((r) => r.name))}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        )}
+      </div>
       <Button
         type="submit"
         variant="contained"
