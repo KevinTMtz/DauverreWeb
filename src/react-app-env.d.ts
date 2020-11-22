@@ -1,4 +1,5 @@
 /// <reference types="react-scripts" />
+/// <reference types="@emotion/react/types/css-prop" />
 declare module '@material-ui/lab/dateAdapter/date-fns';
 declare module '@material-ui/lab/LocalizationProvider';
 declare module '@material-ui/lab/DatePicker';
