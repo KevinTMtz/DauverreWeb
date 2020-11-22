@@ -21,9 +21,10 @@ import RenderCustomAxisTickPostsOrResidents from '../components/statistics-compo
 import RenderCustomBarLabel from '../components/statistics-components/RenderCustomBarLabel';
 import IconAndData from '../components/statistics-components/IconAndData';
 
-import { getStatsDoc } from '../firebase/db/stats';
+import { getStatsDoc, restartOperationsCount } from '../firebase/db/stats';
 import { getResidents } from '../firebase/db/residents';
 import { getReports } from '../firebase/db/reports';
+import { BGColor } from '../components/EditAndDeleteButton';
 
 const styledReportDiv = css({
   textAlign: 'center',
@@ -46,6 +47,23 @@ const pStyled = css({
   marginBottom: '5px',
 });
 
+const restartOperationsButton = css({
+  backgroundColor: BGColor.View,
+  width: '70%',
+  borderRadius: '10px',
+  fontSize: '18px',
+  border: 'none',
+  color: 'white',
+  padding: '10px 15px',
+  transitionDuration: '0.3s',
+  ':hover': {
+    transform: 'scale(1.01)',
+  },
+  '@media (max-width: 600px)': {
+    width: '90%',
+  },
+});
+
 interface nameAndTotal {
   name: string;
   total: number;
@@ -62,9 +80,10 @@ interface totalAndCountByCase {
 }
 
 const StatisticsPage: React.FC = () => {
-  const [dataGeneralCount, setDataGeneralCount] = useState<
-    totalAndCountByCase
-  >();
+  const [
+    dataGeneralCount,
+    setDataGeneralCount,
+  ] = useState<totalAndCountByCase>();
   const [dataPostsAdministration, setDataPostsAdministration] = useState<
     nameAndTotal[]
   >();
@@ -80,9 +99,10 @@ const StatisticsPage: React.FC = () => {
   >();
   const colorsCountReportsGenerated = ['#77B255', '#EA596E'];
 
-  const [dataCountSpecialCases, setDataCountSpecialCases] = useState<
-    totalAndCountByCase
-  >();
+  const [
+    dataCountSpecialCases,
+    setDataCountSpecialCases,
+  ] = useState<totalAndCountByCase>();
 
   const forRenderingGeneralCount = [
     {
@@ -158,9 +178,25 @@ const StatisticsPage: React.FC = () => {
     },
   ];
 
+  const restartOperationsCountUseState = () => {
+    setDataPostsAdministration([
+      { name: 'Altas', total: 0 },
+      { name: 'Actualizaciones', total: 0 },
+      { name: 'Bajas', total: 0 },
+    ]);
+    setDataResidentsAdministration([
+      { name: 'Altas', total: 0 },
+      {
+        name: 'Actualizaciones',
+        total: 0,
+      },
+      { name: 'Bajas', total: 0 },
+    ]);
+  };
+
   useEffect(() => {
     getStatsDoc().then((value) => {
-      const statsDocArr = value.statsCollection;
+      const statsDocArr = (value as SuccessAndStats).statsCollection;
       const postsOperationsCount = statsDocArr.find(
         (object) => object.statsName === 'postsOperationsCount',
       );
@@ -284,6 +320,15 @@ const StatisticsPage: React.FC = () => {
 
       <div css={styledReportDiv}>
         <PageTitle message={'Total de operaciones'} />
+        <button
+          css={restartOperationsButton}
+          onClick={() => {
+            restartOperationsCountUseState();
+            restartOperationsCount();
+          }}
+        >
+          Reiniciar conteo de operaciones
+        </button>
         {forRenderingPostAndResidentsCharts.map(
           ({ message1, message2, data, dataKeyX, dataKeyY }, index) => (
             <div key={`PostAndResidentChart ${index}`}>
