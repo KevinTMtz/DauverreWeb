@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 /** @jsx jsx */ import { css, jsx } from '@emotion/core';
 import TextField from '@material-ui/core/TextField';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import Autocomplete from '@material-ui/core/Autocomplete';
 
 import CircularProgressIndicator from '../components/CircularProgressIndicator';
 import PageTitle from '../components/PageTitle';
@@ -83,12 +83,7 @@ const AccessModule: React.FC = () => {
             }}
             options={accountListings.map((option) => option.telephone)}
             renderInput={(params: any) => (
-              <TextField
-                {...params}
-                label="Buscar teléfono"
-                margin="normal"
-                variant="outlined"
-              />
+              <TextField {...params} label="Buscar teléfono" margin="normal" />
             )}
           />
         </div>

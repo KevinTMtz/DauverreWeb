@@ -25,7 +25,6 @@ const ForgotPasswordPage: React.FC = () => {
       <PageTitle message={'Recuperar contraseña'} />
       <CenteredLoginForm noValidate onSubmit={onSubmit}>
         <TextField
-          variant="outlined"
           margin="normal"
           required
           fullWidth
@@ -42,7 +41,6 @@ const ForgotPasswordPage: React.FC = () => {
           type="submit"
           fullWidth
           variant="contained"
-          color="primary"
         >
           Enviar solicitud
         </Button>
