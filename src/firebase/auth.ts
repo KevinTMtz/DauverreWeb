@@ -43,6 +43,30 @@ export const signInWithCredentials = async (
 
 export const signOut = () => auth.signOut();
 
+export const updatePassword = async (
+  newPassword: string,
+): Promise<SuccessState | ValidationErrorsState | FirebaseErrorState> => {
+  try {
+    if (auth.currentUser === null)
+      throw new Error('No hay usuario autenticado');
+    await auth.currentUser.updatePassword(newPassword);
+    return { state: 'success' };
+  } catch (error) {
+    if (error.code === 'auth/weak-password') {
+      return {
+        state: 'validation errors',
+        errors: [
+          'Tu nueva contraseña es demasiado débil, añade por lo menos 6 caracteres',
+        ],
+      };
+    }
+    return {
+      state: 'validation errors',
+      errors: ['Intenta inciar sesión de nuevo'],
+    };
+  }
+};
+
 export const isLoggedIn = (userAcc: UserAcc | undefined): boolean =>
   typeof userAcc !== 'undefined';
 
