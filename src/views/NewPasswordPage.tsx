@@ -81,6 +81,7 @@ const NewPasswordPage: React.FC = () => {
           name="password"
           label="Ingrese su nueva contraseña"
           type="password"
+          autoComplete="new-password"
           value={newPassword.p1}
           onChange={(event) => onChange(event.target.value, 'p1')}
         />
@@ -91,6 +92,7 @@ const NewPasswordPage: React.FC = () => {
           name="password"
           label="Ingrese su nueva contraseña de nuevo"
           type="password"
+          autoComplete="new-password"
           value={newPassword.p2}
           onChange={(event) => onChange(event.target.value, 'p2')}
         />

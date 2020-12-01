@@ -34,7 +34,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ setUserAcc }) => {
     event.preventDefault();
     signInWithCredentials(username, password, setUserAcc).then((result) => {
       if (result.state === 'success') {
-        history.push(result.url);
+        history.push('/menu');
       } else {
         setError(result.error);
       }
