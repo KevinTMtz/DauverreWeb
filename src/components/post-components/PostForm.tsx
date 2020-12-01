@@ -2,19 +2,19 @@ import React from 'react';
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 import Button from '@material-ui/core/Button';
-import TextField, { TextFieldProps } from '@material-ui/core/TextField';
-import Dialog from '@material-ui/core/Dialog';
+import TextField from '@material-ui/core/TextField';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Backdrop from '@material-ui/core/Backdrop';
-import DateFnsAdapter from '@material-ui/lab/dateAdapter/date-fns';
+import DateFnsAdapter from '@material-ui/lab/AdapterDateFns';
 import LocalizationProvider from '@material-ui/lab/LocalizationProvider';
 import DatePicker from '@material-ui/lab/DatePicker';
 import esLocale from 'date-fns/locale/es';
 
 import CircularProgressIndicator from '../CircularProgressIndicator';
+import CustomDialog from '../CustomDialog';
 
 const styledForm = css({
   width: '70%',
@@ -126,10 +126,11 @@ const PostForm: React.FC<PostFormProps> = ({
       <p css={styledP}>Fecha</p>
       <LocalizationProvider dateAdapter={DateFnsAdapter} locale={esLocale}>
         <DatePicker
-          fullWidth
           value={post.date}
-          onChange={(date: Date) => setPostState({ ...post, date })}
-          renderInput={(params: TextFieldProps) => (
+          onChange={(date) =>
+            setPostState({ ...post, date: date || new Date() })
+          }
+          renderInput={(params) => (
             <TextField {...params} margin="normal" variant="standard" />
           )}
         />
@@ -194,14 +195,7 @@ const PostForm: React.FC<PostFormProps> = ({
         Cancelar
       </Button>
 
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-        disableBackdropClick
-        disableEscapeKeyDown
-      >
+      <CustomDialog open={open} onClose={isEditing ? handleClose : undefined}>
         <DialogTitle id="alert-dialog-title">Acción terminada</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
@@ -212,7 +206,7 @@ const PostForm: React.FC<PostFormProps> = ({
           {isEditing && <Button onClick={handleClose}>Seguir editando</Button>}
           <Button onClick={cancelOperation}>Finalizar</Button>
         </DialogActions>
-      </Dialog>
+      </CustomDialog>
 
       <Backdrop style={{ zIndex: 1000 }} open={openBackdrop}>
         <CircularProgressIndicator />
