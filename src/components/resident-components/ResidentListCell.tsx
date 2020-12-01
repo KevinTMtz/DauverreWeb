@@ -3,7 +3,6 @@ import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { useHistory } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
@@ -11,6 +10,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 
+import CustomDialog from '../CustomDialog';
 import EditAndDeleteButton, { BGColor } from '../EditAndDeleteButton';
 
 const divStyle = css({
@@ -106,12 +106,7 @@ const ResidentListCell: React.FC<ResidentListCellProps> = ({
         </div>
       )}
 
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
+      <CustomDialog open={open} onClose={handleClose}>
         <DialogTitle id="alert-dialog-title">Borrar residente</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
@@ -130,7 +125,7 @@ const ResidentListCell: React.FC<ResidentListCellProps> = ({
             Aceptar
           </Button>
         </DialogActions>
-      </Dialog>
+      </CustomDialog>
     </div>
   );
 };

@@ -6,7 +6,6 @@ import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
@@ -19,6 +18,7 @@ import TextField from '@material-ui/core/TextField';
 import Backdrop from '@material-ui/core/Backdrop';
 
 import CircularProgressIndicator from './CircularProgressIndicator';
+import CustomDialog from './CustomDialog';
 import {
   changeTelephone,
   resetPasswordFromAccount,
@@ -173,9 +173,7 @@ const UserDisplay: React.FC<UserDisplayProps> = ({
           Reiniciar constraseña
         </Button>
       </CardActions>
-      <Dialog
-        disableBackdropClick
-        disableEscapeKeyDown
+      <CustomDialog
         open={formState.state !== 'closed' && formState.state !== 'loading'}
       >
         {dialogResetPassword && (
@@ -268,7 +266,7 @@ const UserDisplay: React.FC<UserDisplayProps> = ({
             </DialogActions>
           </React.Fragment>
         )}
-      </Dialog>
+      </CustomDialog>
 
       <Backdrop style={{ zIndex: 1000 }} open={formState.state === 'loading'}>
         <CircularProgressIndicator />

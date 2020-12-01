@@ -6,10 +6,10 @@ import Button from '@material-ui/core/Button';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
-import Dialog from '@material-ui/core/Dialog';
 import Backdrop from '@material-ui/core/Backdrop';
 
 import CircularProgressIndicator from '../../components/CircularProgressIndicator';
+import CustomDialog from '../../components/CustomDialog';
 import PageTitle from '../../components/PageTitle';
 import ResidentListCell from '../../components/resident-components/ResidentListCell';
 import SearchInput from '../../components/resident-components/ResidentSearch';
@@ -51,7 +51,6 @@ const ResidentListPage: React.FC<ResidentListPageProps> = ({ userAcc }) => {
   const history = useHistory();
 
   const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   const [residents, setResidents] = useState<Resident[]>([]);
@@ -74,7 +73,7 @@ const ResidentListPage: React.FC<ResidentListPageProps> = ({ userAcc }) => {
           displayedResidents.filter((r) => r.residentID !== residentID),
         );
         setFormState({ state: 'closed' });
-        handleOpen();
+        setOpen(true);
       } else {
         setFormState({
           state: 'server error',
@@ -107,9 +106,7 @@ const ResidentListPage: React.FC<ResidentListPageProps> = ({ userAcc }) => {
           {...dispResident}
         />
       ))}
-      <Dialog
-        disableBackdropClick
-        disableEscapeKeyDown
+      <CustomDialog
         open={formState.state !== 'closed' && formState.state !== 'loading'}
       >
         {formState.state === 'server error' && (
@@ -123,14 +120,9 @@ const ResidentListPage: React.FC<ResidentListPageProps> = ({ userAcc }) => {
             </DialogActions>
           </React.Fragment>
         )}
-      </Dialog>
+      </CustomDialog>
 
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
+      <CustomDialog open={open} onClose={handleClose}>
         <DialogTitle id="alert-dialog-title">
           El residente fue borrado exitosamente
         </DialogTitle>
@@ -139,7 +131,7 @@ const ResidentListPage: React.FC<ResidentListPageProps> = ({ userAcc }) => {
             Aceptar
           </Button>
         </DialogActions>
-      </Dialog>
+      </CustomDialog>
 
       <Backdrop style={{ zIndex: 1000 }} open={formState.state === 'loading'}>
         <CircularProgressIndicator />

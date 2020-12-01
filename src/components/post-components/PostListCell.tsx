@@ -2,7 +2,6 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import Markdown from 'markdown-to-jsx';
 import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
@@ -10,6 +9,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 
+import CustomDialog from '../CustomDialog';
 import EditAndDeleteButton, { BGColor } from '../EditAndDeleteButton';
 
 const divStyle = css({
@@ -64,7 +64,6 @@ const PostListCell: React.FC<PostListCellProps> = ({
   const history = useHistory();
 
   const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   return (
@@ -81,7 +80,10 @@ const PostListCell: React.FC<PostListCellProps> = ({
       <img src={imageUrl} alt={`Imagen de ${title}`} css={imgStyle}></img>
       <Markdown>{content}</Markdown>
       <div css={buttonsDiv}>
-        <EditAndDeleteButton color={BGColor.Delete} onClick={handleOpen}>
+        <EditAndDeleteButton
+          color={BGColor.Delete}
+          onClick={() => setOpen(true)}
+        >
           Borrar
         </EditAndDeleteButton>
         <EditAndDeleteButton
@@ -92,12 +94,7 @@ const PostListCell: React.FC<PostListCellProps> = ({
         </EditAndDeleteButton>
       </div>
 
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
+      <CustomDialog open={open} onClose={handleClose}>
         <DialogTitle id="alert-dialog-title">Borrar publicación</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
@@ -110,7 +107,7 @@ const PostListCell: React.FC<PostListCellProps> = ({
             Aceptar
           </Button>
         </DialogActions>
-      </Dialog>
+      </CustomDialog>
     </div>
   );
 };

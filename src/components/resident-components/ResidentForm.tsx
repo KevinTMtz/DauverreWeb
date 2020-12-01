@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import TextField, { TextFieldProps } from '@material-ui/core/TextField';
+import TextField from '@material-ui/core/TextField';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -17,14 +17,14 @@ import InputLabel from '@material-ui/core/InputLabel';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
-import Dialog from '@material-ui/core/Dialog';
 import Backdrop from '@material-ui/core/Backdrop';
-import DateFnsAdapter from '@material-ui/lab/dateAdapter/date-fns';
+import DateFnsAdapter from '@material-ui/lab/AdapterDateFns';
 import LocalizationProvider from '@material-ui/lab/LocalizationProvider';
 import DatePicker from '@material-ui/lab/DatePicker';
 import esLocale from 'date-fns/locale/es';
 
 import CircularProgressIndicator from '../CircularProgressIndicator';
+import CustomDialog from '../CustomDialog';
 import { listAccounts } from '../../firebase/functions';
 import joinStringsAsList from '../../utils/joinStringsAsList';
 
@@ -134,10 +134,10 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
               openTo="year"
               views={['year', 'month', 'date']}
               value={resident.birthDate}
-              onChange={(birthDate: Date) =>
-                setResidentState({ ...resident, birthDate })
+              onChange={(date) =>
+                setResidentState({ ...resident, birthDate: date || new Date() })
               }
-              renderInput={(params: TextFieldProps) => (
+              renderInput={(params) => (
                 <TextField {...params} margin="normal" variant="standard" />
               )}
             />
@@ -264,9 +264,7 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
         Cancelar
       </Button>
 
-      <Dialog
-        disableBackdropClick
-        disableEscapeKeyDown
+      <CustomDialog
         open={formState.state !== 'closed' && formState.state !== 'loading'}
       >
         {formState.state === 'correct' && (
@@ -288,7 +286,7 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
             </DialogActions>
           </React.Fragment>
         )}
-      </Dialog>
+      </CustomDialog>
 
       <Backdrop style={{ zIndex: 1000 }} open={formState.state === 'loading'}>
         <CircularProgressIndicator />
