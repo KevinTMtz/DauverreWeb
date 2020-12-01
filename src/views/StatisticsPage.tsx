@@ -313,6 +313,14 @@ const StatisticsPage: React.FC = () => {
   return (
     <div>
       <PageTitle message={'Estadísticas'} />
+      <h3 style={{ textAlign: 'center' }}>
+        {new Date().toLocaleDateString('es-MX', {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        })}
+      </h3>
       <Divisor />
       <div css={styledReportDiv}>
         <PageTitle message={'Generales'} />
