@@ -4,7 +4,7 @@ export const signInWithCredentials = async (
   username: string,
   password: string,
   setUserAcc: React.Dispatch<React.SetStateAction<UserAcc | undefined>>,
-): Promise<SuccessAndURL | AuthenticationError> => {
+): Promise<SuccessState | AuthenticationError> => {
   const email = username.includes('@') ? username : `${username}@example.com`;
   try {
     const userCred = await auth.signInWithEmailAndPassword(email, password);
@@ -14,8 +14,7 @@ export const signInWithCredentials = async (
         uid: userCred.user.uid,
         claims: token.claims,
       });
-      if (token.claims.admin) return { state: 'success', url: '/menu' };
-      return { state: 'success', url: '/residents' };
+      return { state: 'success' };
     }
     return { state: 'auth error', error: 'Error en el servidor' };
   } catch (error) {

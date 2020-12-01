@@ -49,8 +49,14 @@ const App: React.FC = () => {
         <Route path="/forgotpass">
           <ForgotPasswordPage />
         </Route>
-        <PrivateRoute path="/menu" hasPermission={isAdmin(userAcc)}>
-          <MenuPage setUserAcc={setUserAcc} />
+        <PrivateRoute path="/menu" hasPermission={isLoggedIn(userAcc)}>
+          <MenuPage userAcc={userAcc} setUserAcc={setUserAcc} />
+        </PrivateRoute>
+        <PrivateRoute path="/residents" hasPermission={isLoggedIn(userAcc)}>
+          <ResidentsRouter userAcc={userAcc} />
+        </PrivateRoute>
+        <PrivateRoute path="/newpassword" hasPermission={isLoggedIn(userAcc)}>
+          <NewPasswordPage />
         </PrivateRoute>
         <PrivateRoute path="/posts" hasPermission={isAdmin(userAcc)}>
           <PostsRouter />
@@ -60,12 +66,6 @@ const App: React.FC = () => {
         </PrivateRoute>
         <PrivateRoute path="/statistics" hasPermission={isAdmin(userAcc)}>
           <StatisticsPage />
-        </PrivateRoute>
-        <PrivateRoute path="/residents" hasPermission={isLoggedIn(userAcc)}>
-          <ResidentsRouter userAcc={userAcc} />
-        </PrivateRoute>
-        <PrivateRoute path="/newpassword" hasPermission={isLoggedIn(userAcc)}>
-          <NewPasswordPage />
         </PrivateRoute>
         <Route path="/">
           <StartPage />
