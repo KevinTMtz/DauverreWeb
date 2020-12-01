@@ -3,8 +3,6 @@ import { useHistory, useLocation } from 'react-router-dom';
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 
-import { isAdmin } from '../firebase/auth';
-
 const divStyle = css({
   margin: '0px',
   padding: '8px 16px',
@@ -72,9 +70,7 @@ const Header: React.FC<HeaderProps> = ({ userAcc }) => {
     backBtn = { to: '/login', text: 'Inicia sesión' };
   } else if (url === '/login' || url === '/forgotpass') {
     backBtn = { to: '/', text: 'Cancelar' };
-  } else if (url !== '/residents' && !isAdmin(userAcc)) {
-    backBtn = { to: '/residents', text: 'Regresar' };
-  } else if (url !== '/menu' && isAdmin(userAcc)) {
+  } else if (url !== '/menu') {
     backBtn = { to: '/menu', text: 'Regresar al menú' };
   }
   return (

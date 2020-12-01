@@ -11,7 +11,7 @@ import EmojiUser from '../assets/emojis/user.svg';
 import EmojiStats from '../assets/emojis/stats.svg';
 import EmojiPassword from '../assets/emojis/password.svg';
 import EmojiPost from '../assets/emojis/post.svg';
-import { signOut } from '../firebase/auth';
+import { isAdmin, signOut } from '../firebase/auth';
 
 const styledMainDiv = css({
   display: 'flex',
@@ -76,12 +76,13 @@ const logOutButton = css({
 });
 
 interface MenuPageProps {
+  userAcc: UserAcc | undefined;
   setUserAcc: React.Dispatch<React.SetStateAction<UserAcc | undefined>>;
 }
 
-const MenuPage: React.FC<MenuPageProps> = ({ setUserAcc }) => {
+const MenuPage: React.FC<MenuPageProps> = ({ userAcc, setUserAcc }) => {
   const history = useHistory();
-  const options = [
+  const adminOptions = [
     { name: 'Publicaciones', toPath: '/posts', image: EmojiPost },
     { name: 'Residentes', toPath: '/residents', image: EmojiSenior },
     {
@@ -96,6 +97,15 @@ const MenuPage: React.FC<MenuPageProps> = ({ setUserAcc }) => {
       image: EmojiPassword,
     },
   ];
+  const userOptions = [
+    { name: 'Residentes', toPath: '/residents', image: EmojiSenior },
+    {
+      name: 'Cambiar contraseña',
+      toPath: '/newpassword',
+      image: EmojiPassword,
+    },
+  ];
+  const options = isAdmin(userAcc) ? adminOptions : userOptions;
 
   const signOutAndExit = async () => {
     await signOut();
