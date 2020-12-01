@@ -85,7 +85,6 @@ const ResidentListCell: React.FC<ResidentListCellProps> = ({
         {isVisible || (
           <h5>Este residente no se encuentra actualmente en la institución</h5>
         )}
-        <h5>ID: {residentID}</h5>
       </div>
       <button
         css={seeReportsButton}
