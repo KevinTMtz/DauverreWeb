@@ -115,9 +115,10 @@ const UserDisplay: React.FC<UserDisplayProps> = ({
     formState.state === 'waiting' && formState.substate === 'changeTelephone';
 
   const [selectedResidentID, setSelectedResidentID] = useState(
-    residents[0].residentID,
+    residents.length > 0 ? residents[0].residentID : undefined,
   );
   const resetPassword = async () => {
+    if (typeof selectedResidentID === 'undefined') return;
     setFormState({ state: 'loading' });
     const resp = await resetPasswordFromAccount(accountID, selectedResidentID);
     if (resp.state === 'success') {
@@ -149,7 +150,10 @@ const UserDisplay: React.FC<UserDisplayProps> = ({
       }}
     >
       <CardContent>
-        <h1 css={h1Style}>{joinStringsAsList(residents.map((r) => r.name))}</h1>
+        <h1 css={h1Style}>
+          {joinStringsAsList(residents.map((r) => r.name)) ||
+            'Sin residentes (Error)'}
+        </h1>
         <p css={pStyle}>Teléfono {telephone}</p>
       </CardContent>
       <CardActions css={buttonContainerStyle}>
@@ -169,6 +173,7 @@ const UserDisplay: React.FC<UserDisplayProps> = ({
             if (residents.length === 1) resetPassword();
             else setFormState({ state: 'waiting', substate: 'resetPassword' });
           }}
+          disabled={residents.length === 0}
         >
           Reiniciar constraseña
         </Button>
