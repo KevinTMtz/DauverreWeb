@@ -2,12 +2,12 @@ import { useHistory, useRouteMatch } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogTitle from '@material-ui/core/DialogTitle';
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 
+import CustomDialog from '../../components/CustomDialog';
 import PostListCell from '../../components/post-components/PostListCell';
 import PageTitle from '../../components/PageTitle';
 import { getPosts, deletePost } from '../../firebase/db/posts';
@@ -94,12 +94,7 @@ const PostsListPage: React.FC = () => {
         ))
       )}
 
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
+      <CustomDialog open={open} onClose={handleClose}>
         <DialogTitle id="alert-dialog-title">
           La publicación fue borrada exitosamente
         </DialogTitle>
@@ -108,7 +103,7 @@ const PostsListPage: React.FC = () => {
             Aceptar
           </Button>
         </DialogActions>
-      </Dialog>
+      </CustomDialog>
     </div>
   );
 };

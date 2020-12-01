@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
@@ -20,13 +19,14 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 
-import PageTitle from '../components/PageTitle';
+import CustomDialog from '../components/CustomDialog';
 import Divisor from '../components/Divisor';
+import IconAndData from '../components/statistics-components/IconAndData';
+import PageTitle from '../components/PageTitle';
 import RenderCustomAxisTickMood from '../components/statistics-components/RenderCustomAxisTickMood';
 import RenderCustomAxisTickHealth from '../components/statistics-components/RenderCustomAxisTickHealth';
 import RenderCustomAxisTickPostsOrResidents from '../components/statistics-components/RenderCustomAxisTickPostsOrResidents';
 import RenderCustomBarLabel from '../components/statistics-components/RenderCustomBarLabel';
-import IconAndData from '../components/statistics-components/IconAndData';
 
 import { getStatsDoc, restartOperationsCount } from '../firebase/db/stats';
 import { getResidents } from '../firebase/db/residents';
@@ -465,16 +465,11 @@ const StatisticsPage: React.FC = () => {
       </div>
       <Divisor />
 
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
+      <CustomDialog open={open} onClose={handleClose}>
         <DialogTitle id="alert-dialog-title">Reiniciar conteo</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            {'¿Estás seguro que quieres reiniciar el conteo de operaciones?'}
+            ¿Estás seguro que quieres reiniciar el conteo de operaciones?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -483,7 +478,7 @@ const StatisticsPage: React.FC = () => {
             Aceptar
           </Button>
         </DialogActions>
-      </Dialog>
+      </CustomDialog>
     </div>
   );
 };
