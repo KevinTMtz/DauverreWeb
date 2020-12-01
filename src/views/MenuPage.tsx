@@ -9,6 +9,7 @@ import { BGColor } from '../components/EditAndDeleteButton';
 import EmojiSenior from '../assets/emojis/senior.svg';
 import EmojiUser from '../assets/emojis/user.svg';
 import EmojiStats from '../assets/emojis/stats.svg';
+import EmojiPassword from '../assets/emojis/password.svg';
 import EmojiPost from '../assets/emojis/post.svg';
 import { signOut } from '../firebase/auth';
 
@@ -89,6 +90,11 @@ const MenuPage: React.FC<MenuPageProps> = ({ setUserAcc }) => {
       image: EmojiUser,
     },
     { name: 'Estadísticas', toPath: '/statistics', image: EmojiStats },
+    {
+      name: 'Cambiar contraseña',
+      toPath: '/newpassword',
+      image: EmojiPassword,
+    },
   ];
 
   const signOutAndExit = async () => {

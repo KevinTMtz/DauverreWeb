@@ -11,6 +11,7 @@ import AccessModule from './views/AccessModule';
 import ForgotPasswordPage from './views/ForgotPasswordPage';
 import LoginPage from './views/LoginPage';
 import MenuPage from './views/MenuPage';
+import NewPasswordPage from './views/NewPasswordPage';
 import PostsRouter from './views/post';
 import ResidentsRouter from './views/resident';
 import StartPage from './views/StartPage';
@@ -62,6 +63,9 @@ const App: React.FC = () => {
         </PrivateRoute>
         <PrivateRoute path="/residents" hasPermission={isLoggedIn(userAcc)}>
           <ResidentsRouter userAcc={userAcc} />
+        </PrivateRoute>
+        <PrivateRoute path="/newpassword" hasPermission={isLoggedIn(userAcc)}>
+          <NewPasswordPage />
         </PrivateRoute>
         <Route path="/">
           <StartPage />
