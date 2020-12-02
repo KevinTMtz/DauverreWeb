@@ -101,7 +101,7 @@ const StartPage: React.FC = () => {
     '## Nuestro propósito es atender integralmente a personas de sesenta y cinco años o más que, por sus carencias socioeconómicas o por problemas de invalidez, se vean impedidas para satisfacer sus requerimientos básicos de subsistencia y desarrollo; proporcionándoles casa, alimentación, vestido, atención médica, atención psicológica, talleres y servicios funerarios.';
 
   const founderText =
-    '# La señora María Luisa Dauverre fundó nuestra institución hace más de 100 años.';
+    '# La señora Ana Luisa Dauverre fundó nuestra institución hace más de 100 años.';
 
   const contactText =
     '### Teléfono: 55 5573 2376\n### Email: dauverreweb@gmail.com\n### Dirección: Triunfo de La Libertad 6, Tlalpan Centro II, Tlalpan, 14000 Ciudad de México, CDMX';
