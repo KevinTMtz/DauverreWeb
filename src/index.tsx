@@ -8,7 +8,6 @@ import Header from './components/Header';
 import PrivateRoute from './components/PrivateRoute';
 import { isAdmin, isLoggedIn } from './firebase/auth';
 import AccessModule from './views/AccessModule';
-import ForgotPasswordPage from './views/ForgotPasswordPage';
 import LoginPage from './views/LoginPage';
 import MenuPage from './views/MenuPage';
 import NewPasswordPage from './views/NewPasswordPage';
@@ -45,9 +44,6 @@ const App: React.FC = () => {
       <Switch>
         <Route path="/login">
           <LoginPage setUserAcc={setUserAcc} />
-        </Route>
-        <Route path="/forgotpass">
-          <ForgotPasswordPage />
         </Route>
         <PrivateRoute path="/menu" hasPermission={isLoggedIn(userAcc)}>
           <MenuPage userAcc={userAcc} setUserAcc={setUserAcc} />
