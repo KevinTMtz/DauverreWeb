@@ -68,7 +68,7 @@ const Header: React.FC<HeaderProps> = ({ userAcc }) => {
   let backBtn: { to: string; text: string } | undefined;
   if (url === '/') {
     backBtn = { to: '/login', text: 'Inicia sesión' };
-  } else if (url === '/login' || url === '/forgotpass') {
+  } else if (url === '/login') {
     backBtn = { to: '/', text: 'Cancelar' };
   } else if (url !== '/menu') {
     backBtn = { to: '/menu', text: 'Regresar al menú' };
